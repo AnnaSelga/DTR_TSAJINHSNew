@@ -9,298 +9,232 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --navy:#0d2137;--blue:#1a4a7a;--blue2:#2563eb;
-  --green:#059669;--green-bg:#d1fae5;--green-bd:#6ee7b7;
-  --red:#dc2626;--red-bg:#fee2e2;--red-bd:#fca5a5;
-  --amber:#d97706;--amber-bg:#fffbeb;--amber-bd:#fcd34d;
-  --purple:#7c3aed;
-  --surface:#fff;--bg:#f0f4f8;--border:#dde4ef;
-  --text:#0f172a;--muted:#64748b;
-  --radius:14px;
+  --green:#059669;--green-bg:#d1fae5;
+  --red:#dc2626;--red-bg:#fee2e2;
+  --amber:#d97706;--amber-bg:#fffbeb;
+  --bg:#f0f4f8;--surface:#fff;--border:#dde4ef;
+  --text:#0f172a;--muted:#64748b;--radius:14px;
 }
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
 .screen{display:none;min-height:100vh;flex-direction:column}
 .screen.active{display:flex}
 
-/* ═══ HOME ═══ */
+/* HOME */
 #screen-home{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center;text-align:center}
 .home-inner{padding:2rem;max-width:480px;width:100%}
-.home-logo{font-size:4.5rem;margin-bottom:1rem;display:block;animation:bob 3s ease-in-out infinite}
+.home-logo{font-size:4rem;margin-bottom:.75rem;display:block;animation:bob 3s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.home-title{color:#fff;font-size:1.9rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px}
-.home-sub{color:rgba(255,255,255,0.4);font-size:0.82rem;margin-bottom:2rem}
-#home-clock{display:block;color:rgba(255,255,255,0.75);font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:2px;margin-bottom:4px}
-#home-date{color:rgba(255,255,255,0.35);font-size:0.8rem;margin-bottom:2.5rem}
-.home-menu{display:grid;grid-template-columns:1fr 1fr;gap:0.875rem}
-.hmenu-btn{padding:1.5rem 1rem;border-radius:16px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;transition:all .2s;text-align:center}
-.hmenu-btn:hover{transform:translateY(-2px);background:rgba(255,255,255,0.12)}
-.hmenu-btn .icon{font-size:2rem;display:block;margin-bottom:8px}
-.hmenu-btn .label{font-size:0.9rem;font-weight:700;display:block}
-.hmenu-btn .desc{font-size:0.7rem;opacity:0.5;margin-top:3px;display:block}
-.hmenu-btn.gate{border-color:rgba(52,211,153,0.35);background:rgba(52,211,153,0.08)}
-.hmenu-btn.gate:hover{background:rgba(52,211,153,0.18)}
-.hmenu-btn.signup{border-color:rgba(96,165,250,0.35);background:rgba(96,165,250,0.08)}
-.hmenu-btn.signup:hover{background:rgba(96,165,250,0.18)}
-.hmenu-btn.teacher{border-color:rgba(167,139,250,0.35);background:rgba(167,139,250,0.08)}
-.hmenu-btn.teacher:hover{background:rgba(167,139,250,0.18)}
-.hmenu-btn.admin{border-color:rgba(251,191,36,0.35);background:rgba(251,191,36,0.08)}
-.hmenu-btn.admin:hover{background:rgba(251,191,36,0.18)}
+.home-title{color:#fff;font-size:1.8rem;font-weight:800;margin-bottom:4px}
+.home-sub{color:rgba(255,255,255,.4);font-size:.82rem;margin-bottom:1.5rem}
+#home-clock{display:block;color:rgba(255,255,255,.8);font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:2px;margin-bottom:4px}
+#home-date{color:rgba(255,255,255,.35);font-size:.78rem;margin-bottom:2rem}
+.home-menu{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.hmenu-btn{padding:1.25rem 1rem;border-radius:14px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;transition:all .2s;text-align:center}
+.hmenu-btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
+.hmenu-btn .icon{font-size:1.8rem;display:block;margin-bottom:6px}
+.hmenu-btn .label{font-size:.88rem;font-weight:700;display:block}
+.hmenu-btn .desc{font-size:.68rem;opacity:.5;margin-top:2px;display:block}
+.hmenu-btn.gate{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+.hmenu-btn.signup{border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.08)}
+.hmenu-btn.teacher{border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)}
+.hmenu-btn.admin{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
 
-/* ═══ GATE ═══ */
-/* ═══ GATE KIOSK ═══ */
-#screen-gate{background:linear-gradient(180deg,#0f2144 0%,#1a3a6b 100%);color:#fff;align-items:center;justify-content:center;position:relative;user-select:none}
-.gate-exit-btn{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);padding:.35rem .8rem;border-radius:8px;cursor:pointer;font-size:.72rem;transition:all .2s;z-index:10}
-.gate-exit-btn:hover{background:rgba(255,255,255,.15);color:#fff}
-.gate-kiosk{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1rem;gap:.5rem;width:100%;max-width:520px}
-.gate-kiosk-school{font-size:.85rem;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.3px;margin-bottom:.25rem}
-.gate-kiosk-title{font-size:1.6rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:.1rem}
-.gate-kiosk-sub{font-size:.78rem;color:rgba(255,255,255,.35);margin-bottom:.75rem}
-.gate-big-clock{font-size:5.5rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:4px;color:#fff;line-height:1;text-shadow:0 0 40px rgba(96,165,250,.4)}
-.gate-big-date{font-size:1.1rem;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:1.25rem}
-.gate-qr-card{background:#fff;border-radius:24px;padding:1.5rem 1.5rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.75rem;box-shadow:0 8px 40px rgba(0,0,0,.35)}
-.gate-daily-code{font-size:2rem;font-weight:900;letter-spacing:.5rem;color:#e85d04;font-family:'Courier New',monospace}
-.gate-code-date{font-size:.75rem;color:#94a3b8;font-weight:500}
-.gate-instruction{margin-top:1rem;font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.6}
-.gate-instruction strong{color:#f97316}
-.gate-status-bar{display:flex;align-items:center;gap:8px;background:rgba(5,150,105,.15);border:1px solid rgba(52,211,153,.25);border-radius:20px;padding:.4rem 1rem;font-size:.72rem;color:#6ee7b7;margin-top:.75rem}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0;animation:livepulse 1.5s infinite}
-@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{opacity:.8;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
-/* flash overlay support */
-.log-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:20px;display:block;text-align:center}
-.badge-in{background:rgba(5,150,105,.25);color:#34d399;border:1px solid rgba(52,211,153,.3)}
-.badge-out{background:rgba(220,38,38,.2);color:#f87171;border:1px solid rgba(248,113,113,.3)}
+/* GATE */
+#screen-gate{background:linear-gradient(180deg,#0f2144,#1a3a6b);color:#fff;align-items:center;justify-content:center;position:relative}
+.gate-exit{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);padding:.35rem .8rem;border-radius:8px;cursor:pointer;font-size:.72rem}
+.gate-kiosk{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem;gap:.5rem;max-width:520px;width:100%}
+.gate-school{font-size:.82rem;color:rgba(255,255,255,.5);font-weight:500}
+.gate-title{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:.25rem;display:flex;align-items:center;justify-content:center;gap:8px}
+.gate-sub{font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:.5rem}
+.gate-clock{font-size:5rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:3px;color:#fff;line-height:1}
+.gate-date-lbl{font-size:1rem;color:rgba(255,255,255,.5);margin-bottom:1rem}
+.gate-qr-card{background:#fff;border-radius:22px;padding:1.25rem 1.25rem .875rem;display:flex;flex-direction:column;align-items:center;gap:.625rem;box-shadow:0 8px 40px rgba(0,0,0,.35)}
+.gate-code{font-size:1.9rem;font-weight:900;letter-spacing:.5rem;color:#e85d04;font-family:'Courier New',monospace}
+.gate-code-date{font-size:.72rem;color:#94a3b8}
+.gate-hint{margin-top:.75rem;font-size:.8rem;color:rgba(255,255,255,.45);line-height:1.5}
+.gate-hint strong{color:#f97316}
+.gate-status{display:flex;align-items:center;gap:7px;background:rgba(5,150,105,.15);border:1px solid rgba(52,211,153,.25);border-radius:20px;padding:.35rem .9rem;font-size:.7rem;color:#6ee7b7;margin-top:.5rem}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:lp 1.5s infinite}
+@keyframes lp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{opacity:.8;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
 
-/* FLASH */
-.flash-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;background:rgba(0,0,0,.5)}
-.flash-overlay.show{opacity:1}
-.flash-card{border-radius:24px;padding:2.5rem 3rem;text-align:center;max-width:380px;width:90%;animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
-@keyframes popIn{from{transform:scale(.85)}to{transform:scale(1)}}
-.flash-card.fl-in{background:#d1fae5;border:3px solid #6ee7b7}
-.flash-card.fl-out{background:#fee2e2;border:3px solid #fca5a5}
-.flash-card.fl-warn{background:#fffbeb;border:3px solid #fcd34d}
-.flash-icon{font-size:4rem;display:block;margin-bottom:.5rem}
-.flash-action{font-size:2rem;font-weight:900;margin-bottom:4px}
-.flash-name{font-size:1.3rem;font-weight:700;margin-bottom:4px}
-.flash-meta{font-size:.82rem;color:#64748b;margin-bottom:.5rem}
-.flash-time{font-size:1.5rem;font-weight:800;color:#1b3a6b}
-
-/* ═══ SIGN-UP ═══ */
+/* SIGN-UP */
 #screen-signup{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center;padding:2rem}
-.signup-card{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:480px}
-.signup-card h2{font-size:1.2rem;font-weight:800;color:var(--blue);margin-bottom:.25rem;display:flex;align-items:center;gap:8px}
-.signup-card .su-sub{font-size:.78rem;color:var(--muted);margin-bottom:1.5rem}
+.su-card{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:480px}
+.su-card h2{font-size:1.15rem;font-weight:800;color:var(--blue);margin-bottom:.25rem}
+.su-card .su-sub{font-size:.78rem;color:var(--muted);margin-bottom:1.25rem}
 .su-result{text-align:center;padding:1rem 0}
-.su-result-qr{margin:1rem auto;display:inline-block;padding:1rem;background:#fff;border-radius:12px;box-shadow:0 2px 14px rgba(0,0,0,.1)}
-.pending-tag{display:inline-block;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+.su-qr-box{margin:1rem auto;display:inline-block;padding:1rem;background:#fff;border-radius:12px;box-shadow:0 2px 14px rgba(0,0,0,.1)}
+.pending-tag{display:inline-block;background:var(--amber-bg);color:var(--amber);border:1px solid #fcd34d;font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:6px}
 
-/* ═══ CHECK-IN (Teacher's Phone) ═══ */
-#screen-checkin{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center;padding:1.5rem;min-height:100vh}
-.checkin-card{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.checkin-header{text-align:center;margin-bottom:1.75rem}
-.checkin-header .ch-school{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem}
-.checkin-header h2{font-size:1.3rem;font-weight:800;color:var(--blue);margin-bottom:2px;display:flex;align-items:center;justify-content:center;gap:8px}
-.checkin-header .ch-date{font-size:.78rem;color:var(--muted);margin-top:4px}
-
-/* PIN pad */
-.pin-display{display:flex;justify-content:center;gap:.5rem;margin:1rem 0}
+/* CHECK-IN */
+#screen-checkin{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center;padding:1.5rem}
+.ci-card{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.ci-school{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;text-align:center}
+.ci-title{font-size:1.25rem;font-weight:800;color:var(--blue);text-align:center;margin-bottom:2px}
+.ci-date{font-size:.75rem;color:var(--muted);text-align:center;margin-bottom:1.25rem}
+.pin-dots{display:flex;justify-content:center;gap:.55rem;margin:.6rem 0 .2rem}
 .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);transition:all .15s}
-.pin-dot.filled{background:var(--blue);border-color:var(--blue)}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.75rem 0}
-.pin-key{padding:.9rem;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:1.2rem;font-weight:700;cursor:pointer;transition:all .15s;color:var(--text)}
-.pin-key:hover{background:#f0f4f8;border-color:var(--blue2)}
-.pin-key:active{transform:scale(.94);background:#dbeafe}
-.pin-key.pin-del{font-size:.9rem;color:var(--muted)}
-.pin-key.pin-zero{grid-column:2}
-.ci-err{color:var(--red);font-size:.8rem;text-align:center;margin-top:.5rem;min-height:1.2rem;font-weight:600}
+.pin-dot.filled{background:var(--navy);border-color:var(--navy)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin:.5rem 0}
+.pkey{padding:.8rem;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .12s;color:var(--text);display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1}
+.pkey .sub{font-size:.38rem;letter-spacing:.1rem;color:var(--muted);font-weight:600;margin-top:2px}
+.pkey:active{transform:scale(.93);background:#dbeafe;border-color:var(--blue2)}
+.pkey.pzero{grid-column:2}
+.pkey.pdel{font-size:.9rem;color:var(--muted)}
+.ci-err{color:var(--red);font-size:.75rem;text-align:center;min-height:1rem;font-weight:600;margin:.2rem 0}
+.ci-result{text-align:center;padding:.5rem 0}
+.ci-result .ri{font-size:3.5rem;display:block;margin-bottom:.5rem}
+.ci-result .ra{font-size:1.75rem;font-weight:900;margin-bottom:4px}
+.ci-result .ra.in{color:var(--green)}.ci-result .ra.out{color:var(--red)}
+.ci-result .rt{font-size:1.8rem;font-weight:800;color:var(--navy)}
+.ci-result .rs{font-size:.75rem;color:var(--muted);margin-top:4px}
+.ci-again{margin-top:1rem;background:none;border:1.5px solid var(--border);border-radius:9px;padding:.55rem 1.25rem;cursor:pointer;font-size:.82rem;color:var(--muted);font-weight:600;width:100%}
+.ci-change{margin-top:1rem;padding:.875rem;background:var(--amber-bg);border:1px solid #fcd34d;border-radius:10px;display:none}
+.ci-change p{font-size:.75rem;font-weight:700;color:var(--amber);margin-bottom:.6rem}
 
-/* result */
-.ci-result{text-align:center;padding:1rem 0}
-.ci-result .ci-icon{font-size:4rem;display:block;margin-bottom:.75rem}
-.ci-result h2{font-size:1.8rem;font-weight:900;margin-bottom:4px}
-.ci-result .ci-name{font-size:1.1rem;font-weight:700;margin-bottom:4px}
-.ci-result .ci-time{font-size:2rem;font-weight:800;color:var(--blue)}
-.ci-in{color:var(--green)}
-.ci-out{color:var(--red)}
-.ci-again{margin-top:1.25rem;background:none;border:1.5px solid var(--border);border-radius:9px;padding:.6rem 1.25rem;cursor:pointer;font-size:.82rem;color:var(--muted);font-weight:600;transition:all .2s}
-.ci-again:hover{border-color:var(--blue2);color:var(--blue)}
-
-/* ═══ FORMS (shared) ═══ */
-.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:.75rem}
-.form-group label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.form-group input,.form-group select{padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-size:.9rem;outline:none;transition:border-color .2s;color:var(--text)}
-.form-group input:focus,.form-group select:focus{border-color:var(--blue2)}
-.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.btn{padding:.65rem 1.25rem;border:none;border-radius:9px;cursor:pointer;font-size:.875rem;font-weight:700;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
-.btn-primary{background:var(--blue);color:#fff}
-.btn-primary:hover{background:var(--blue2)}
-.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
-.btn-outline:hover{border-color:var(--blue2);color:var(--blue)}
-.btn-success{background:var(--green);color:#fff}
-.btn-danger{background:var(--red);color:#fff}
-.btn-amber{background:var(--amber);color:#7c4a00;font-weight:700}
-.btn-sm{padding:.32rem .7rem;font-size:.75rem}
-
-/* ═══ LOGIN ═══ */
+/* LOGIN */
 #screen-login{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center}
 .login-card{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:340px}
 .login-card h2{font-size:1.1rem;font-weight:800;color:var(--blue);margin-bottom:.25rem}
-.login-card p{font-size:.78rem;color:var(--muted);margin-bottom:1.5rem}
+.login-card p{font-size:.78rem;color:var(--muted);margin-bottom:1.25rem}
 .err-msg{color:var(--red);font-size:.78rem;margin-bottom:.5rem;display:none}
 
-/* ═══ ADMIN ═══ */
+/* ADMIN */
 #screen-admin{background:var(--bg)}
-.admin-header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:.875rem 2rem;display:flex;align-items:center;gap:12px}
-.admin-header h1{font-size:1rem;font-weight:700}
-.admin-badge{background:rgba(251,191,36,.25);border:1px solid rgba(251,191,36,.5);color:#fbbf24;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px}
+.admin-hdr{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:.875rem 1.5rem;display:flex;align-items:center;gap:10px}
+.admin-hdr h1{font-size:.95rem;font-weight:700}
+.admin-badge{background:rgba(251,191,36,.25);border:1px solid rgba(251,191,36,.5);color:#fbbf24;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px}
 .admin-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto}
-.admin-nav button{padding:.875rem 1.35rem;border:none;background:none;cursor:pointer;font-size:.82rem;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.admin-nav button{padding:.8rem 1.25rem;border:none;background:none;cursor:pointer;font-size:.8rem;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
 .admin-nav button.active{color:var(--blue);border-bottom-color:var(--blue2)}
 .admin-nav button:hover:not(.active){background:#f8fafc}
-.admin-tab{display:none;padding:1.5rem 2rem;max-width:1100px;margin:0 auto}
+.admin-tab{display:none;padding:1.25rem 1.5rem;max-width:1100px;margin:0 auto}
 .admin-tab.active{display:block}
 .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
-.card h3{font-size:.9rem;font-weight:700;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.card h3{font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:.875rem}
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1rem}
 .stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
 .stat-card .snum{font-size:1.75rem;font-weight:800;color:var(--blue)}
 .stat-card .slbl{font-size:.7rem;color:var(--muted);margin-top:2px}
 table{width:100%;border-collapse:collapse;font-size:.845rem}
-thead th{background:var(--navy);color:#fff;padding:.6rem .8rem;text-align:left;font-weight:600;font-size:.75rem;letter-spacing:.3px}
+thead th{background:var(--navy);color:#fff;padding:.55rem .75rem;text-align:left;font-weight:600;font-size:.75rem}
 tbody tr:nth-child(even){background:#f8fafc}
 tbody tr:hover{background:#eff6ff}
-td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
+td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
 .badge{display:inline-block;font-size:.67rem;font-weight:700;padding:2px 8px;border-radius:20px}
 .b-in{background:#d1fae5;color:#065f46}
 .b-out{background:#fee2e2;color:#991b1b}
 .b-teacher{background:#dbeafe;color:#1e40af}
 .b-staff{background:#f3e8ff;color:#5b21b6}
-.empty{text-align:center;padding:3rem;color:var(--muted)}
-.empty .eicon{font-size:2.5rem;margin-bottom:.5rem}
+.empty{text-align:center;padding:2.5rem;color:var(--muted)}
+.empty .ei{font-size:2.2rem;margin-bottom:.5rem}
 .filter-row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
-.filter-row .form-group{min-width:140px}
+.filter-row .fg{min-width:140px}
 .notif{display:inline-block;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;border-radius:50%;width:15px;height:15px;line-height:15px;text-align:center;margin-left:3px}
-
 /* ACTION BAR */
-.action-bar{display:flex;flex-wrap:wrap;gap:.5rem;padding:1rem 2rem;background:#fff;border-bottom:1px solid var(--border);max-width:1100px;margin:0 auto;width:100%}
-.action-btn{padding:.5rem 1rem;border-radius:8px;border:1.5px solid;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
-.action-btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.action-btn:active{transform:scale(.97)}
-.action-approve{background:#fff;border-color:#86efac;color:#16a34a}
-.action-approve:hover{background:#f0fdf4}
-.action-reject{background:#fff;border-color:#fca5a5;color:#dc2626}
-.action-reject:hover{background:#fff1f2}
-.action-reset{background:#fff;border-color:#fca5a5;color:#dc2626}
-.action-reset:hover{background:#fff1f2}
-.action-csv{background:#fff;border-color:#cbd5e1;color:#475569}
-.action-csv:hover{background:#f8fafc}
-.action-refresh{background:#fff;border-color:#bae6fd;color:#0369a1}
-.action-refresh:hover{background:#f0f9ff}
+.action-bar{display:flex;flex-wrap:wrap;gap:.5rem;padding:.875rem 1.5rem;background:#fff;border-bottom:1px solid var(--border)}
+.abtn{padding:.45rem .9rem;border-radius:8px;border:1.5px solid;font-size:.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap;background:#fff}
+.abtn:hover{transform:translateY(-1px)}
+.abtn.green{border-color:#86efac;color:#16a34a}.abtn.green:hover{background:#f0fdf4}
+.abtn.red{border-color:#fca5a5;color:#dc2626}.abtn.red:hover{background:#fff1f2}
+.abtn.gray{border-color:#cbd5e1;color:#475569}.abtn.gray:hover{background:#f8fafc}
+.abtn.blue{border-color:#bae6fd;color:#0369a1}.abtn.blue:hover{background:#f0f9ff}
 
+/* FORMS */
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:.75rem}
+.fg label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.fg input,.fg select{padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-size:.9rem;outline:none;transition:border-color .2s;color:var(--text);width:100%}
+.fg input:focus,.fg select:focus{border-color:var(--blue2)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.btn{padding:.6rem 1.2rem;border:none;border-radius:9px;cursor:pointer;font-size:.875rem;font-weight:700;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue2)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}.btn-outline:hover{border-color:var(--blue2);color:var(--blue)}
+.btn-success{background:var(--green);color:#fff}
+.btn-danger{background:var(--red);color:#fff}
+.btn-amber{background:var(--amber);color:#7c4a00;font-weight:700}
+.btn-sm{padding:.3rem .7rem;font-size:.75rem}
 
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#0f172a;color:#fff;padding:.7rem 1.2rem;border-radius:var(--radius);font-size:.85rem;font-weight:500;opacity:0;transform:translateY(8px);transition:all .3s;z-index:9999;max-width:300px}
+/* LOADING */
+#loading{position:fixed;inset:0;background:rgba(13,33,55,.8);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;color:#fff;font-size:.95rem;font-weight:600}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{font-size:2rem;animation:spin 1s linear infinite}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--text);color:#fff;padding:.7rem 1.2rem;border-radius:var(--radius);font-size:.85rem;font-weight:500;opacity:0;transform:translateY(8px);transition:all .3s;z-index:9999;max-width:300px}
 .toast.show{opacity:1;transform:translateY(0)}
 
 @media(max-width:700px){
-  .gate-body{grid-template-columns:1fr}
-  .gate-info-side{display:none}
   .home-menu{grid-template-columns:1fr}
-  .form-row2{grid-template-columns:1fr}
-  .admin-tab{padding:1rem}
+  .row2{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr 1fr}
+  .admin-tab{padding:1rem}
+  .action-bar{padding:.75rem 1rem}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ HOME ═══ -->
+<!-- HOME -->
 <div class="screen active" id="screen-home">
   <div class="home-inner">
     <span class="home-logo">🏫</span>
     <div class="home-title" id="home-school-name">School DTR</div>
     <div class="home-sub">Teacher Daily Time Record System</div>
-    <span id="home-clock">00:00:00</span>
+    <span id="home-clock">--:--:--</span>
     <div id="home-date"></div>
     <div class="home-menu">
       <button class="hmenu-btn gate" onclick="goGate()">
-        <span class="icon">📺</span>
-        <span class="label">Gate Display</span>
-        <span class="desc">Show QR code at the gate</span>
+        <span class="icon">📺</span><span class="label">Gate Display</span><span class="desc">Show QR code at the gate</span>
       </button>
       <button class="hmenu-btn signup" onclick="goSignup()">
-        <span class="icon">✍️</span>
-        <span class="label">Register</span>
-        <span class="desc">New teacher sign-up</span>
+        <span class="icon">✍️</span><span class="label">Register</span><span class="desc">New teacher sign-up</span>
       </button>
-      <button class="hmenu-btn teacher" onclick="goTeacherLogin()" style="grid-column:1/-1">
-        <span class="icon">👤</span>
-        <span class="label">Teacher / Staff Login</span>
-        <span class="desc">Log your Time In / Time Out using Employee ID & PIN</span>
+      <button class="hmenu-btn teacher" style="grid-column:1/-1" onclick="goCheckinDirect()">
+        <span class="icon">👤</span><span class="label">Teacher / Staff Login</span><span class="desc">Log Time In / Time Out using Employee ID & PIN</span>
       </button>
-      <button class="hmenu-btn admin" onclick="goLogin()" style="grid-column:1/-1">
-        <span class="icon">🔐</span>
-        <span class="label">Admin Panel</span>
-        <span class="desc">Manage attendance records & approvals</span>
+      <button class="hmenu-btn admin" style="grid-column:1/-1" onclick="goLogin()">
+        <span class="icon">🔐</span><span class="label">Admin Panel</span><span class="desc">Manage attendance records & approvals</span>
       </button>
     </div>
   </div>
 </div>
 
-<!-- ═══ GATE DISPLAY ═══ -->
+<!-- GATE -->
 <div class="screen" id="screen-gate">
-  <button class="gate-exit-btn" onclick="goHome()">✕ Exit</button>
+  <button class="gate-exit" onclick="goHome()">✕ Exit</button>
   <div class="gate-kiosk">
-    <div class="gate-kiosk-school" id="gate-school-display">School DTR</div>
-    <div class="gate-kiosk-title">⏱️ Daily Time Record</div>
-    <div class="gate-kiosk-sub">Scan the QR code below to Time In / Time Out</div>
-    <div class="gate-big-clock" id="gate-clock">12:00:00 AM</div>
-    <div class="gate-big-date" id="gate-date">Monday, January 1, 2025</div>
+    <div class="gate-school" id="gate-school-lbl">School DTR</div>
+    <div class="gate-title">⏱️ Daily Time Record</div>
+    <div class="gate-sub">Scan the QR code below to Time In / Time Out</div>
+    <div class="gate-clock" id="gate-clock">--:--:-- --</div>
+    <div class="gate-date-lbl" id="gate-date"></div>
     <div class="gate-qr-card">
       <div id="gate-qr-code"></div>
-      <div class="gate-daily-code" id="gate-daily-code">——————</div>
+      <div class="gate-code" id="gate-code">------</div>
       <div class="gate-code-date" id="gate-code-date"></div>
     </div>
-    <div class="gate-instruction">
-      Open <strong>DTR page</strong> on your phone → Login → <strong>Scan this QR code</strong>
-    </div>
-    <div class="gate-status-bar">
-      <div class="live-dot"></div>
-      <span>Connected | Code active for <span id="gate-active-date"></span></span>
-    </div>
+    <div class="gate-hint">Open <strong>DTR page</strong> on your phone → Login → <strong>Scan this QR code</strong></div>
+    <div class="gate-status"><div class="live-dot"></div><span>Connected | Code active for <span id="gate-active"></span></span></div>
   </div>
 </div>
 
-<!-- FLASH -->
-<div class="flash-overlay" id="flash-overlay">
-  <div class="flash-card" id="flash-card">
-    <span class="flash-icon" id="flash-icon">✅</span>
-    <div class="flash-action" id="flash-action">TIME IN</div>
-    <div class="flash-name" id="flash-name"></div>
-    <div class="flash-meta" id="flash-meta"></div>
-    <div class="flash-time" id="flash-time"></div>
-  </div>
-</div>
-
-<!-- ═══ SIGN-UP ═══ -->
+<!-- SIGN-UP -->
 <div class="screen" id="screen-signup">
-  <div class="signup-card">
+  <div class="su-card">
     <h2>✍️ Teacher Registration</h2>
-    <p class="su-sub">Fill out the form to register and get your attendance QR code.</p>
+    <p class="su-sub">Fill out the form to get your QR attendance code.</p>
     <div id="su-form">
-      <div class="form-row2">
-        <div class="form-group"><label>Full Name *</label><input type="text" id="su-name" placeholder="Juan dela Cruz"></div>
-        <div class="form-group"><label>Employee ID *</label><input type="text" id="su-id" placeholder="T-2025-001"></div>
+      <div class="row2">
+        <div class="fg"><label>Full Name *</label><input type="text" id="su-name" placeholder="Juan dela Cruz"></div>
+        <div class="fg"><label>Employee ID *</label><input type="text" id="su-id" placeholder="T-2025-001"></div>
       </div>
-      <div class="form-row2">
-        <div class="form-group"><label>Role *</label>
-          <select id="su-type">
-            <option value="teacher">Teacher</option>
-            <option value="staff">Staff</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Department / Subject</label><input type="text" id="su-section" placeholder="Science Dept."></div>
+      <div class="row2">
+        <div class="fg"><label>Role *</label><select id="su-type"><option value="teacher">Teacher</option><option value="staff">Staff</option></select></div>
+        <div class="fg"><label>Department</label><input type="text" id="su-sec" placeholder="Science Dept."></div>
       </div>
-      <div class="form-group"><label>Email (optional)</label><input type="email" id="su-email" placeholder="juan@school.edu.ph"></div>
+      <div class="fg"><label>Email (optional)</label><input type="email" id="su-email" placeholder="juan@school.edu.ph"></div>
       <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:9px;padding:.75rem;font-size:.78rem;color:#92400e;margin-bottom:1rem">
-        ⏳ Your registration needs admin approval before you can log attendance. Your default PIN will be <strong>1234</strong> — change it after your first login.
+        ⏳ Your registration needs admin approval. Default PIN: <strong>1234</strong>
       </div>
       <div style="display:flex;gap:.75rem">
         <button class="btn btn-primary" style="flex:1" onclick="submitSignup()">✅ Submit Registration</button>
@@ -311,62 +245,52 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
   </div>
 </div>
 
-<!-- ═══ CHECK-IN (Teacher's Phone) ═══ -->
+<!-- CHECK-IN -->
 <div class="screen" id="screen-checkin">
-  <div class="checkin-card">
-    <div class="checkin-header">
-      <div class="ch-school" id="ci-school-label">School DTR</div>
-      <h2>👤 Employee Login</h2>
-      <div class="ch-date" id="ci-date-display"></div>
-    </div>
+  <div class="ci-card">
+    <div class="ci-school" id="ci-school">School DTR</div>
+    <div class="ci-title">👤 Employee Login</div>
+    <div class="ci-date" id="ci-date"></div>
     <div id="ci-form">
-      <div class="form-group">
-        <label>Employee ID</label>
-        <input type="text" id="ci-id" placeholder="e.g. T-2024-001" style="font-size:1rem;font-weight:600" onkeydown="if(event.key==='Enter')focusPin()">
-      </div>
-      <div class="form-group">
+      <div class="fg"><label>Employee ID</label><input type="text" id="ci-id" placeholder="e.g. T-2024-001" autocomplete="off"></div>
+      <div class="fg">
         <label>PIN Code</label>
-        <div class="pin-display" id="pin-display">
-          <div class="pin-dot" id="pd0"></div>
-          <div class="pin-dot" id="pd1"></div>
-          <div class="pin-dot" id="pd2"></div>
-          <div class="pin-dot" id="pd3"></div>
-        </div>
-        <div class="pin-pad" id="pin-pad">
-          <button class="pin-key" onclick="pinPress('1')">1</button>
-          <button class="pin-key" onclick="pinPress('2')">2</button>
-          <button class="pin-key" onclick="pinPress('3')">3</button>
-          <button class="pin-key" onclick="pinPress('4')">4</button>
-          <button class="pin-key" onclick="pinPress('5')">5</button>
-          <button class="pin-key" onclick="pinPress('6')">6</button>
-          <button class="pin-key" onclick="pinPress('7')">7</button>
-          <button class="pin-key" onclick="pinPress('8')">8</button>
-          <button class="pin-key" onclick="pinPress('9')">9</button>
-          <button class="pin-key pin-zero" onclick="pinPress('0')">0</button>
-          <button class="pin-key pin-del" onclick="pinDel()">⌫</button>
+        <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+        <div class="pin-pad">
+          <button class="pkey" onclick="pp('1')">1<span class="sub"></span></button>
+          <button class="pkey" onclick="pp('2')">2<span class="sub">ABC</span></button>
+          <button class="pkey" onclick="pp('3')">3<span class="sub">DEF</span></button>
+          <button class="pkey" onclick="pp('4')">4<span class="sub">GHI</span></button>
+          <button class="pkey" onclick="pp('5')">5<span class="sub">JKL</span></button>
+          <button class="pkey" onclick="pp('6')">6<span class="sub">MNO</span></button>
+          <button class="pkey" onclick="pp('7')">7<span class="sub">PQRS</span></button>
+          <button class="pkey" onclick="pp('8')">8<span class="sub">TUV</span></button>
+          <button class="pkey" onclick="pp('9')">9<span class="sub">WXYZ</span></button>
+          <button class="pkey pzero" onclick="pp('0')">0</button>
+          <button class="pkey pdel" onclick="pdel()">⌫</button>
         </div>
       </div>
       <div class="ci-err" id="ci-err"></div>
-      <button class="btn btn-primary" style="width:100%;padding:.9rem;font-size:1rem;margin-top:.5rem;justify-content:center" onclick="submitCheckin()">Login ➤</button>
-      <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:.75rem">First time? Use your Employee ID and default PIN: <strong>1234</strong></p>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:.875rem" onclick="submitCI()">Login ➤</button>
+      <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:.6rem">First time? Default PIN: <strong>1234</strong></p>
+      <button onclick="goHome()" style="margin-top:.75rem;width:100%;background:none;border:1.5px solid var(--border);border-radius:9px;padding:.55rem;cursor:pointer;font-size:.8rem;color:var(--muted)">← Back to Home</button>
     </div>
-    <div id="ci-result" style="display:none"></div>
-    <!-- Change PIN section (shown after first login) -->
-    <div id="ci-change-pin" style="display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
-      <p style="font-size:.78rem;font-weight:700;color:var(--amber);margin-bottom:.75rem">🔑 Please change your default PIN</p>
-      <div class="form-group"><label>New PIN (4 digits)</label><input type="password" id="new-pin" maxlength="4" placeholder="••••" inputmode="numeric"></div>
-      <div class="form-group"><label>Confirm New PIN</label><input type="password" id="new-pin2" maxlength="4" placeholder="••••" inputmode="numeric"></div>
-      <button class="btn btn-primary btn-sm" onclick="changePin()">Save New PIN</button>
+    <div class="ci-result" id="ci-result" style="display:none"></div>
+    <div class="ci-change" id="ci-change">
+      <p>🔑 Please change your default PIN for security.</p>
+      <div class="fg"><label>New PIN (4 digits)</label><input type="password" id="new-pin" inputmode="numeric" maxlength="4" placeholder="••••"></div>
+      <div class="fg"><label>Confirm PIN</label><input type="password" id="new-pin2" inputmode="numeric" maxlength="4" placeholder="••••"></div>
+      <button class="btn btn-success btn-sm" onclick="changePin()">Save PIN</button>
     </div>
   </div>
 </div>
 
-<!-- ═══ LOGIN ═══ -->
+<!-- ADMIN LOGIN -->
 <div class="screen" id="screen-login">
   <div class="login-card">
     <h2>🔐 Admin Login</h2>
     <p>Enter your admin password to continue.</p>
-    <div class="form-group"><label>Password</label><input type="password" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="fg"><label>Password</label><input type="password" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="err-msg" id="login-err">❌ Incorrect password.</div>
     <div style="display:flex;gap:.75rem">
       <button class="btn btn-primary" style="flex:1" onclick="doLogin()">Login</button>
@@ -376,19 +300,15 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
   </div>
 </div>
 
-<!-- ═══ ADMIN PANEL ═══ -->
+<!-- ADMIN PANEL -->
 <div class="screen" id="screen-admin">
-  <div class="admin-header">
-    <span style="font-size:1.1rem">🏫</span>
-    <h1 id="admin-school-title">Admin Panel</h1>
-    <span class="admin-badge">ADMIN</span>
-    <div style="margin-left:auto">
-      <button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:none;color:#fff" onclick="goHome()">← Exit</button>
-    </div>
+  <div class="admin-hdr">
+    <span>🏫</span><h1 id="admin-title">Admin Panel</h1><span class="admin-badge">ADMIN</span>
+    <div style="margin-left:auto"><button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:none;color:#fff" onclick="goHome()">← Exit</button></div>
   </div>
   <div class="admin-nav">
     <button class="active" onclick="aTab('dashboard',this)">📊 Dashboard</button>
-    <button onclick="aTab('pending',this)">✍️ Registrations <span class="notif" id="pending-notif" style="display:none">0</span></button>
+    <button onclick="aTab('pending',this)">✍️ Registrations <span class="notif" id="pnotif" style="display:none">0</span></button>
     <button onclick="aTab('people',this)">👥 Teachers</button>
     <button onclick="aTab('records',this)">📋 Records</button>
     <button onclick="aTab('settings',this)">⚙️ Settings</button>
@@ -399,79 +319,66 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
     <div class="stats-row">
       <div class="stat-card"><div class="snum" id="d-today">0</div><div class="slbl">Present Today</div></div>
       <div class="stat-card"><div class="snum" id="d-total">0</div><div class="slbl">Total Teachers</div></div>
-      <div class="stat-card"><div class="snum" id="d-pending">0</div><div class="slbl">Pending Registrations</div></div>
+      <div class="stat-card"><div class="snum" id="d-pend">0</div><div class="slbl">Pending</div></div>
     </div>
-    <div class="card">
-      <h3>📋 Today's Attendance</h3>
-      <div id="today-table"><div class="empty"><div class="eicon">📋</div><p>No attendance recorded today.</p></div></div>
-    </div>
+    <div class="card"><h3>📋 Today's Attendance</h3><div id="today-tbl"><div class="empty"><div class="ei">📋</div><p>No attendance today.</p></div></div></div>
   </div>
 
   <!-- REGISTRATIONS -->
   <div class="admin-tab" id="atab-pending">
-    <!-- ACTION BUTTONS -->
     <div class="action-bar">
-      <button class="action-btn action-approve" onclick="approveAll()">✅ Approve All</button>
-      <button class="action-btn action-reject" onclick="rejectAll()">🗑️ Reject All</button>
-      <button class="action-btn action-reset" onclick="resetAllEmployees()">👥 Reset All Employees</button>
-      <button class="action-btn action-csv" onclick="exportCSV()">📄 Export CSV</button>
-      <button class="action-btn action-refresh" onclick="renderSignupLists();updatePendingNotif();toast('🔄 Refreshed!')">🔄 Refresh</button>
+      <button class="abtn green" onclick="approveAll()">✅ Approve All</button>
+      <button class="abtn red" onclick="rejectAll()">🗑️ Reject All</button>
+      <button class="abtn red" onclick="resetAllEmp()">👥 Reset All Employees</button>
+      <button class="abtn gray" onclick="exportCSV()">📄 Export CSV</button>
+      <button class="abtn blue" onclick="renderSignupLists()">🔄 Refresh</button>
     </div>
-    <div class="card">
-      <h3>⏳ Pending Approval</h3>
-      <div id="pending-list"><div class="empty"><div class="eicon">✅</div><p>No pending registrations.</p></div></div>
-    </div>
-    <div class="card">
-      <h3>✅ Approved Teachers</h3>
-      <div id="approved-list"></div>
-    </div>
+    <div class="card"><h3>⏳ Pending Approval</h3><div id="pending-list"><div class="empty"><div class="ei">✅</div><p>No pending registrations.</p></div></div></div>
+    <div class="card"><h3>✅ Approved Teachers</h3><div id="approved-list"></div></div>
   </div>
 
   <!-- TEACHERS -->
   <div class="admin-tab" id="atab-people">
-    <div class="card">
-      <h3>➕ Add Teacher Manually</h3>
-      <div class="form-row2">
-        <div class="form-group"><label>Full Name</label><input type="text" id="m-name" placeholder="Juan dela Cruz"></div>
-        <div class="form-group"><label>Employee ID</label><input type="text" id="m-id" placeholder="T-2025-001"></div>
+    <div class="card"><h3>➕ Add Teacher Manually</h3>
+      <div class="row2">
+        <div class="fg"><label>Full Name</label><input type="text" id="m-name" placeholder="Juan dela Cruz"></div>
+        <div class="fg"><label>Employee ID</label><input type="text" id="m-id" placeholder="T-2025-001"></div>
       </div>
-      <div class="form-row2">
-        <div class="form-group"><label>Role</label><select id="m-type"><option value="teacher">Teacher</option><option value="staff">Staff</option></select></div>
-        <div class="form-group"><label>Department</label><input type="text" id="m-sec" placeholder="Science Dept."></div>
+      <div class="row2">
+        <div class="fg"><label>Role</label><select id="m-type"><option value="teacher">Teacher</option><option value="staff">Staff</option></select></div>
+        <div class="fg"><label>Department</label><input type="text" id="m-sec" placeholder="Science Dept."></div>
       </div>
       <button class="btn btn-primary" onclick="addPerson()">➕ Add Teacher</button>
     </div>
-    <div class="card" style="overflow-x:auto">
-      <h3>👥 Teacher List</h3>
+    <div class="card" style="overflow-x:auto"><h3>👥 Teacher List</h3>
       <input type="text" id="search-p" placeholder="🔍 Search..." style="width:100%;margin-bottom:1rem;padding:.55rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-size:.875rem;outline:none" oninput="renderPeople()">
-      <div id="people-table"></div>
+      <div id="people-tbl"></div>
     </div>
   </div>
 
   <!-- RECORDS -->
   <div class="admin-tab" id="atab-records">
-    <div class="card">
-      <h3>🔍 Filter Records</h3>
+    <div class="card"><h3>🔍 Filter</h3>
       <div class="filter-row">
-        <div class="form-group"><label>From</label><input type="date" id="f-from" onchange="renderRecords()"></div>
-        <div class="form-group"><label>To</label><input type="date" id="f-to" onchange="renderRecords()"></div>
-        <div class="form-group"><label>Name</label><input type="text" id="f-name" placeholder="All" oninput="renderRecords()"></div>
+        <div class="fg"><label>From</label><input type="date" id="f-from" onchange="renderRecords()"></div>
+        <div class="fg"><label>To</label><input type="date" id="f-to" onchange="renderRecords()"></div>
+        <div class="fg"><label>Name</label><input type="text" id="f-name" placeholder="All" oninput="renderRecords()"></div>
         <div style="display:flex;gap:.5rem;align-items:flex-end">
           <button class="btn btn-outline btn-sm" onclick="resetFilters()">🔄 Reset</button>
-          <button class="btn btn-amber btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+          <button class="btn btn-sm btn-amber" onclick="exportCSV()">⬇ CSV</button>
         </div>
       </div>
     </div>
-    <div class="card" style="overflow-x:auto"><div id="records-table"></div></div>
+    <div class="card" style="overflow-x:auto"><div id="records-tbl"></div></div>
   </div>
 
   <!-- SETTINGS -->
   <div class="admin-tab" id="atab-settings">
     <div class="card" style="max-width:420px">
-      <h3>⚙️ System Settings</h3>
-      <div class="form-group" style="margin-bottom:.875rem"><label>School Name</label><input type="text" id="s-school" placeholder="e.g. Naic NHS"></div>
-      <div class="form-group" style="margin-bottom:.875rem"><label>New Admin Password</label><input type="password" id="s-pw" placeholder="New password"></div>
-      <div class="form-group" style="margin-bottom:1rem"><label>Confirm Password</label><input type="password" id="s-pw2" placeholder="Repeat password"></div>
+      <h3>⚙️ Settings</h3>
+      <div class="fg" style="margin-bottom:.875rem"><label>School Name</label><input type="text" id="s-school" placeholder="e.g. Naic NHS"></div>
+      <div class="fg" style="margin-bottom:.875rem"><label>New Admin Password</label><input type="password" id="s-pw" placeholder="New password"></div>
+      <div class="fg" style="margin-bottom:1rem"><label>Confirm Password</label><input type="password" id="s-pw2" placeholder="Repeat"></div>
       <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
       <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
         <p style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">⚠️ Danger Zone</p>
@@ -481,321 +388,179 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
   </div>
 </div>
 
+<div id="loading"><div class="spinner">⏳</div><div id="loading-msg">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══ FIREBASE CONFIG ════════════════════════════════════════
-const DB = 'https://schooldtr-b83bb-default-rtdb.firebaseio.com';
-
-async function fbGet(path){
-  try{
-    const r = await fetch(DB+path+'.json');
-    const d = await r.json();
-    return d || (path.includes('settings') ? {} : []);
-  } catch(e){ return path.includes('settings') ? {} : []; }
-}
-async function fbSet(path, data){
-  try{
-    await fetch(DB+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  } catch(e){ console.error('Firebase write error',e); }
-}
+// ═══ FIREBASE ═══════════════════════════════════════════════
+const DB='https://schooldtr-b83bb-default-rtdb.firebaseio.com';
+async function fbGet(p){try{const r=await fetch(DB+p+'.json');return await r.json();}catch(e){return null;}}
+async function fbSet(p,d){try{await fetch(DB+p+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});}catch(e){console.error(e);}}
 
 // ═══ DATA ═══════════════════════════════════════════════════
-let people  = [];
-let records = [];
-let signups = [];
-let settings= {school:'School DTR', password:'admin123'};
+let people=[],records=[],signups=[],settings={school:'School DTR',password:'admin123'};
+const AC=['#1b3a6b','#0f766e','#7c3aed','#b45309','#be185d','#0369a1','#065f46','#9f1239'];
+const TL={teacher:'Teacher',staff:'Staff'};
+const TC={teacher:'b-teacher',staff:'b-staff'};
+const clean=v=>{if(!v)return[];const a=Array.isArray(v)?v:Object.values(v);return a.filter(x=>x&&typeof x==='object');};
 
-const avatarColors=['#1b3a6b','#0f766e','#7c3aed','#b45309','#be185d','#0369a1','#065f46','#9f1239'];
-const typeLabel={teacher:'Teacher',staff:'Staff'};
-const typeClass={teacher:'b-teacher',staff:'b-staff'};
-
-async function save(){
+async function fbLoad(){
+  const [p,r,s,st]=await Promise.all([fbGet('/people'),fbGet('/records'),fbGet('/signups'),fbGet('/settings')]);
+  people=clean(p); records=clean(r); signups=clean(s);
+  settings=(st&&st.school)?st:{school:'School DTR',password:'admin123'};
+}
+async function fbSave(){
   await Promise.all([
-    fbSet('/people',  people.length  ? people  : null),
-    fbSet('/records', records.length ? records : null),
-    fbSet('/signups', signups.length ? signups : null),
+    fbSet('/people', people.length?people:null),
+    fbSet('/records',records.length?records:null),
+    fbSet('/signups',signups.length?signups:null),
     fbSet('/settings',settings),
   ]);
 }
-const clean=v=>{
-  if(!v) return [];
-  const arr=Array.isArray(v)?v:Object.values(v);
-  return arr.filter(x=>x&&typeof x==='object');
-};
-async function loadAll(){
-  const [p,r,s,st] = await Promise.all([
-    fbGet('/people'),
-    fbGet('/records'),
-    fbGet('/signups'),
-    fbGet('/settings'),
-  ]);
-  people  = clean(p);
-  records = clean(r);
-  signups = clean(s);
-  settings= (st&&st.school)?st:{school:'School DTR',password:'admin123'};
-}
-}
 
-function getInitials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}
-function today(){return new Date().toLocaleDateString('en-CA')}
-function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true})}
-
-// Show loading overlay
-function showLoading(msg='Loading...'){
-  let el=document.getElementById('fb-loading');
-  if(!el){
-    el=document.createElement('div');
-    el.id='fb-loading';
-    el.style.cssText='position:fixed;inset:0;background:rgba(13,33,55,.75);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:600;gap:.75rem';
-    el.innerHTML='<div style="font-size:2rem;animation:spin 1s linear infinite">⏳</div><div id="fb-loading-msg"></div>';
-    document.body.appendChild(el);
-    const s=document.createElement('style');s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s);
-  }
-  document.getElementById('fb-loading-msg').textContent=msg;
-  el.style.display='flex';
-  // Auto-hide after 6 seconds to prevent blocking UI
-  clearTimeout(window._loadTimeout);
-  window._loadTimeout=setTimeout(hideLoading, 6000);
+function showLoad(m='Saving...'){
+  document.getElementById('loading-msg').textContent=m;
+  document.getElementById('loading').style.display='flex';
+  clearTimeout(window._lt);
+  window._lt=setTimeout(hideLoad,8000);
 }
-function hideLoading(){
-  clearTimeout(window._loadTimeout);
-  const el=document.getElementById('fb-loading');
-  if(el)el.style.display='none';
-}
+function hideLoad(){clearTimeout(window._lt);document.getElementById('loading').style.display='none';}
 
-// Init — load from Firebase on page load
-showLoading('Connecting to database...');
-loadAll().then(()=>{
-  hideLoading();
-  applySchoolName();
-  updatePendingNotif();
-  if(window.location.search.includes('checkin=')) initCheckin();
-}).catch(()=>{
-  hideLoading();
-  applySchoolName();
-  toast('⚠️ Cannot connect to database. Check internet connection.');
-});
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function today(){return new Date().toLocaleDateString('en-CA');}
+function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true});}
+function getInits(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
 
 // ═══ CLOCK ══════════════════════════════════════════════════
-function updateClocks(){
+function tick(){
   const now=new Date();
+  const t24=now.toLocaleTimeString('en-PH',{hour12:false});
   const t12=now.toLocaleTimeString('en-PH',{hour12:true});
-  const tHome=now.toLocaleTimeString('en-PH',{hour12:false});
   const d=now.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const hEl=document.getElementById('home-clock'); if(hEl)hEl.textContent=tHome;
-  const hdEl=document.getElementById('home-date'); if(hdEl)hdEl.textContent=d;
-  // Gate kiosk big clock
-  const gcEl=document.getElementById('gate-clock'); if(gcEl)gcEl.textContent=t12;
-  const gdEl=document.getElementById('gate-date'); if(gdEl)gdEl.textContent=d;
+  const hc=document.getElementById('home-clock'); if(hc)hc.textContent=t24;
+  const hd=document.getElementById('home-date'); if(hd)hd.textContent=d;
+  const gc=document.getElementById('gate-clock'); if(gc)gc.textContent=t12;
+  const gd=document.getElementById('gate-date'); if(gd)gd.textContent=d;
 }
-setInterval(updateClocks,1000);
-updateClocks();
+setInterval(tick,1000); tick();
 
-// ═══ SCREEN NAV ═════════════════════════════════════════════
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
-}
-function goHome(){stopGate();showScreen('home');applySchoolName()}
-function goSignup(){
-  document.getElementById('su-form').style.display='block';
-  document.getElementById('su-result').style.display='none';
-  showScreen('signup');
-}
-function goLogin(){showScreen('login');setTimeout(()=>document.getElementById('login-pw').focus(),100)}
-function goAdmin(){
-  showScreen('admin');
-  document.getElementById('admin-school-title').textContent=settings.school+' — Admin';
-  refreshDashboard();
-  updatePendingNotif();
-  // Auto-refresh pending count every 10 seconds
-  clearInterval(window._adminPollTimer);
-  window._adminPollTimer=setInterval(updatePendingNotif,10000);
-}
-function applySchoolName(){
-  document.getElementById('home-school-name').textContent=settings.school;
-  document.getElementById('gate-school-display').textContent=settings.school+' — Gate Attendance';
+// ═══ SCHOOL NAME ════════════════════════════════════════════
+function applyName(){
+  const n=settings.school||'School DTR';
+  const el=document.getElementById('home-school-name'); if(el)el.textContent=n;
+  const gl=document.getElementById('gate-school-lbl'); if(gl)gl.textContent=n;
+  const ci=document.getElementById('ci-school'); if(ci)ci.textContent=n;
+  const at=document.getElementById('admin-title'); if(at)at.textContent=n+' — Admin';
 }
 
-// ═══ GATE ═══════════════════════════════════════════════════
-let gatePollTimer=null, gateRefreshTimer=null, gateToken='';
+// ═══ NAVIGATION ═════════════════════════════════════════════
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');}
+function goHome(){showScreen('home');applyName();}
+function goSignup(){document.getElementById('su-form').style.display='block';document.getElementById('su-result').style.display='none';showScreen('signup');}
+function goLogin(){showScreen('login');setTimeout(()=>document.getElementById('login-pw').focus(),100);}
+function goCheckinDirect(){
+  resetCI();
+  document.getElementById('ci-date').textContent=new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  showScreen('checkin');
+}
 
+// ═══ GATE DISPLAY ═══════════════════════════════════════════
+let gateTimer=null,gateCode='';
 function goGate(){
   showScreen('gate');
-  generateGateQR();
-  gateRefreshTimer=setInterval(()=>{if(!gateToken||getDailyCode(today())!==gateToken)generateGateQR();},60000);
+  document.getElementById('gate-school-lbl').textContent=settings.school;
+  makeGateQR();
+  clearInterval(gateTimer);
+  gateTimer=setInterval(()=>{if(getDailyCode()!==gateCode)makeGateQR();},60000);
 }
-function stopGate(){clearInterval(gatePollTimer);clearInterval(gateRefreshTimer);}
-
-function generateGateQR(){
-  const d=today();
-  // Generate a random 6-char alphanumeric code seeded by date
-  const seed=d.replace(/-/g,'');
-  let hash=0; for(let i=0;i<seed.length;i++){hash=(hash<<5)-hash+seed.charCodeAt(i);hash|=0;}
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code=''; let h=Math.abs(hash);
-  for(let i=0;i<6;i++){code+=chars[h%chars.length];h=Math.floor(h/chars.length)||Math.abs(hash*(i+7));}
-  gateToken=code;
-  const url='https://annaselga.github.io/DTR_TSAJINHSNew/?checkin='+encodeURIComponent(code)+'&date='+d;
-  const el=document.getElementById('gate-qr-code');
-  el.innerHTML='';
+function getDailyCode(){
+  const d=today(),seed=d.replace(/-/g,'');
+  let h=0;for(let i=0;i<seed.length;i++){h=(h<<5)-h+seed.charCodeAt(i);h|=0;}
+  const C='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c='',hh=Math.abs(h);
+  for(let i=0;i<6;i++){c+=C[hh%C.length];hh=Math.floor(hh/C.length)||Math.abs(h*(i+7));}
+  return c;
+}
+function makeGateQR(){
+  const d=today(); gateCode=getDailyCode();
+  const url='https://annaselga.github.io/DTR_TSAJINHSNew/?checkin='+encodeURIComponent(gateCode)+'&date='+d;
+  const el=document.getElementById('gate-qr-code'); el.innerHTML='';
   new QRCode(el,{text:url,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
-  const codeEl=document.getElementById('gate-daily-code'); if(codeEl)codeEl.textContent=code;
-  const dateEl=document.getElementById('gate-code-date'); if(dateEl)dateEl.textContent=d;
-  const activeEl=document.getElementById('gate-active-date'); if(activeEl)activeEl.textContent=d;
-  const schoolEl=document.getElementById('gate-school-display'); if(schoolEl)schoolEl.textContent=settings.school;
-  applySchoolName();
+  document.getElementById('gate-code').textContent=gateCode;
+  document.getElementById('gate-code-date').textContent=d;
+  document.getElementById('gate-active').textContent=d;
 }
 
-function updateGateStats(){
-  const t=today(), recs=records.filter(r=>r.date===t);
-  document.getElementById('gs-present').textContent=new Set(recs.map(r=>r.personId)).size;
-  document.getElementById('gs-in').textContent=recs.length;
-  document.getElementById('gs-out').textContent=recs.filter(r=>r.timeOut).length;
-}
-
-function renderGateLog(){
-  const t=today(), recs=records.filter(r=>r.date===t).slice(-8).reverse();
-  const log=document.getElementById('gate-log');
-  if(!recs.length){log.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:.8rem;text-align:center;padding:2rem 0">No attendance recorded yet today...</div>';return;}
-  log.innerHTML=recs.map((r,i)=>`<div class="log-entry">
-    <div class="log-avatar" style="background:${avatarColors[i%avatarColors.length]}">${getInitials(r.name)}</div>
-    <div style="flex:1;min-width:0"><div class="log-name">${r.name}</div><div class="log-meta">${r.section||''}</div></div>
-    <div style="text-align:right">
-      <span class="log-badge badge-in">IN ${r.timeIn}</span>
-      ${r.timeOut?`<span class="log-badge badge-out" style="margin-top:3px">OUT ${r.timeOut}</span>`:''}
-    </div>
-  </div>`).join('');
+// ═══ CHECK-IN (from QR scan) ════════════════════════════════
+function initCheckin(){
+  const p=new URLSearchParams(window.location.search);
+  const token=p.get('checkin'),date=p.get('date');
+  if(!token)return;
+  resetCI();
+  document.getElementById('ci-date').textContent=new Date(date+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  showScreen('checkin');
+  if(token!==getDailyCode()){
+    document.getElementById('ci-form').innerHTML='<div style="text-align:center;padding:1rem"><div style="font-size:3rem">❌</div><p style="font-weight:700;color:var(--red);margin-top:.5rem">Invalid or Expired QR Code</p><p style="font-size:.8rem;color:var(--muted);margin-top:.5rem">Please scan today\'s QR code from the gate screen.</p></div>';
+  }
 }
 
 // ═══ PIN PAD ════════════════════════════════════════════════
-let pinValue='';
-function pinPress(digit){
-  if(pinValue.length>=4)return;
-  pinValue+=digit;
-  updatePinDisplay();
-  if(pinValue.length===4)setTimeout(submitCheckin,200);
-}
-function pinDel(){pinValue=pinValue.slice(0,-1);updatePinDisplay();}
-function updatePinDisplay(){
-  for(let i=0;i<4;i++){
-    document.getElementById('pd'+i).classList.toggle('filled',i<pinValue.length);
-  }
-}
-function focusPin(){pinValue='';updatePinDisplay();}
-
-// ═══ CHECK-IN ═══════════════════════════════════════════════
-let checkinCurrentPerson=null;
-
-function getDailyCode(d){
-  const seed=d.replace(/-/g,'');
-  let hash=0; for(let i=0;i<seed.length;i++){hash=(hash<<5)-hash+seed.charCodeAt(i);hash|=0;}
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code=''; let h=Math.abs(hash);
-  for(let i=0;i<6;i++){code+=chars[h%chars.length];h=Math.floor(h/chars.length)||Math.abs(hash*(i+7));}
-  return code;
+let pinVal='',ciPerson=null;
+function pp(d){if(pinVal.length>=4)return;pinVal+=d;dots();if(pinVal.length===4)setTimeout(submitCI,200);}
+function pdel(){pinVal=pinVal.slice(0,-1);dots();}
+function dots(e){for(let i=0;i<4;i++){const el=document.getElementById('pd'+i);if(el)el.className='pin-dot'+(i<pinVal.length?(e?' error':' filled'):'');}}
+function ciErr(m){document.getElementById('ci-err').textContent=m;dots(true);pinVal='';setTimeout(()=>dots(),600);}
+function resetCI(){
+  pinVal='';dots();ciPerson=null;
+  const f=document.getElementById('ci-form');if(f)f.style.display='block';
+  const r=document.getElementById('ci-result');if(r)r.style.display='none';
+  const ch=document.getElementById('ci-change');if(ch)ch.style.display='none';
+  const id=document.getElementById('ci-id');if(id)id.value='';
+  const err=document.getElementById('ci-err');if(err)err.textContent='';
+  const np=document.getElementById('new-pin');if(np)np.value='';
+  const np2=document.getElementById('new-pin2');if(np2)np2.value='';
 }
 
-function initCheckin(){
-  const params=new URLSearchParams(window.location.search);
-  const token=params.get('checkin');
-  const date=params.get('date');
-  if(!token)return;
-  showScreen('checkin');
-  document.getElementById('ci-school-label').textContent=settings.school;
-  document.getElementById('ci-date-display').textContent=
-    new Date(date+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const expected=getDailyCode(date);
-  if(token!==expected){
-    document.getElementById('ci-form').innerHTML=`<div style="text-align:center;padding:1rem">
-      <div style="font-size:3rem">❌</div>
-      <p style="font-weight:700;color:var(--red);margin-top:.5rem">Invalid or Expired QR Code</p>
-      <p style="font-size:.8rem;color:var(--muted);margin-top:.5rem">Please scan today's QR code from the gate screen.</p>
-    </div>`;
-  }
-}
-
-async function submitCheckin(){
+async function submitCI(){
   const id=document.getElementById('ci-id').value.trim();
-  const errEl=document.getElementById('ci-err');
-  errEl.textContent='';
-  if(!id){errEl.textContent='Please enter your Employee ID.';pinValue='';updatePinDisplay();return;}
-  if(pinValue.length<4){errEl.textContent='Please enter your 4-digit PIN.';return;}
-
-  // Check pending
-  const pending=signups.find(s=>s.id===id&&s.status==='pending');
-  if(pending){
-    pinValue='';updatePinDisplay();
-    errEl.textContent='Your account is pending approval. Please contact the admin.';
-    return;
-  }
-
+  if(!id){ciErr('Please enter your Employee ID.');return;}
+  if(pinVal.length<4){ciErr('Please enter your 4-digit PIN.');return;}
+  showLoad('Verifying...');
+  await fbLoad();
+  hideLoad();
+  const pend=signups.find(s=>s.id===id&&s.status==='pending');
+  if(pend){ciErr('Account pending admin approval.');return;}
   const person=people.find(p=>p.id===id);
-  if(!person){pinValue='';updatePinDisplay();errEl.textContent='Employee ID not found. Please register first.';return;}
-
-  // Validate PIN
-  const correctPin=person.pin||'1234';
-  if(pinValue!==correctPin){
-    pinValue='';updatePinDisplay();
-    errEl.textContent='Incorrect PIN. Please try again.';
-    return;
-  }
-
-  checkinCurrentPerson=person;
-  const t=today();
-  const todayRecs=records.filter(r=>r.date===t&&r.personId===person.id);
-  const lastRec=todayRecs[todayRecs.length-1];
-  const isIn=!lastRec||lastRec.timeOut;
-  const time=timeNow();
-
-  if(isIn){
-    records.push({date:t,personId:person.id,name:person.name,type:person.type,section:person.section||'',timeIn:time,timeOut:null,uid:Date.now()});
-  } else {
-    lastRec.timeOut=time;
-  }
-  showLoading('Recording attendance...');
-  await save();
-  hideLoading();
-
+  if(!person){ciErr('Employee ID not found. Please register first.');return;}
+  if(person.type==='student'){ciErr('This portal is for Teachers & Staff only.');return;}
+  if(pinVal!==(person.pin||'1234')){ciErr('Incorrect PIN. Try again.');return;}
+  ciPerson=person;
+  const t=today(),recs=records.filter(r=>r.date===t&&r.personId===person.id);
+  const last=recs[recs.length-1],isIn=!last||last.timeOut,time=timeNow();
+  if(isIn)records.push({date:t,personId:person.id,name:person.name,type:person.type,section:person.section||'',timeIn:time,timeOut:null,uid:Date.now()});
+  else last.timeOut=time;
+  showLoad('Recording attendance...');
+  await fbSet('/records',records.length?records:null);
+  hideLoad();
+  pinVal='';dots();
   document.getElementById('ci-form').style.display='none';
   const res=document.getElementById('ci-result');
   res.style.display='block';
-  res.innerHTML=`<div class="ci-result">
-    <span class="ci-icon">${isIn?'🟢':'🔴'}</span>
-    <h2 class="${isIn?'ci-in':'ci-out'}">${isIn?'TIME IN':'TIME OUT'}</h2>
-    <div class="ci-name">${person.name}</div>
-    <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">${person.section||''} · ${typeLabel[person.type]||person.type}</div>
-    <div class="ci-time">${time}</div>
-    <p style="font-size:.75rem;color:var(--muted);margin-top:1rem">${new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric'})}</p>
-    <button class="ci-again" onclick="resetCheckin()">← Log another</button>
-  </div>`;
-
-  // Prompt PIN change if still using default
-  if(correctPin==='1234'){
-    document.getElementById('ci-change-pin').style.display='block';
-  }
+  res.innerHTML=`<span class="ri">${isIn?'🟢':'🔴'}</span><div class="ra ${isIn?'in':'out'}">${isIn?'TIME IN':'TIME OUT'}</div><div style="font-size:1rem;font-weight:700;margin-bottom:3px">${person.name}</div><div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">${person.section||''}</div><div class="rt">${time}</div><div class="rs">${new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric'})}</div><button class="ci-again" onclick="resetCI();document.getElementById('ci-date').textContent=new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'})">← Log another</button>`;
+  if((person.pin||'1234')==='1234')document.getElementById('ci-change').style.display='block';
 }
 
-function resetCheckin(){
-  document.getElementById('ci-form').style.display='block';
-  document.getElementById('ci-result').style.display='none';
-  document.getElementById('ci-change-pin').style.display='none';
-  document.getElementById('ci-id').value='';
-  document.getElementById('ci-err').textContent='';
-  pinValue='';updatePinDisplay();
-  checkinCurrentPerson=null;
-}
-
-function changePin(){
-  const p1=document.getElementById('new-pin').value;
-  const p2=document.getElementById('new-pin2').value;
-  if(!/^\d{4}$/.test(p1)){toast('⚠️ PIN must be exactly 4 digits.');return;}
+async function changePin(){
+  const p1=document.getElementById('new-pin').value,p2=document.getElementById('new-pin2').value;
+  if(!/^\d{4}$/.test(p1)){toast('⚠️ PIN must be 4 digits.');return;}
   if(p1!==p2){toast('⚠️ PINs do not match.');return;}
-  if(!checkinCurrentPerson)return;
-  const person=people.find(p=>p.uid===checkinCurrentPerson.uid);
-  if(person){person.pin=p1;save();}
-  document.getElementById('ci-change-pin').style.display='none';
+  if(!ciPerson)return;
+  showLoad('Saving PIN...');
+  await fbLoad();
+  const idx=people.findIndex(p=>p.uid===ciPerson.uid);
+  if(idx>=0){people[idx].pin=p1;await fbSet('/people',people.length?people:null);}
+  hideLoad();
+  document.getElementById('ci-change').style.display='none';
   toast('✅ PIN changed successfully!');
 }
 
@@ -804,48 +569,39 @@ async function submitSignup(){
   const name=document.getElementById('su-name').value.trim();
   const id=document.getElementById('su-id').value.trim();
   const type=document.getElementById('su-type').value;
-  const section=document.getElementById('su-section').value.trim();
+  const sec=document.getElementById('su-sec').value.trim();
   const email=document.getElementById('su-email').value.trim();
-  if(!name||!id){toast('⚠️ Full name and Employee ID are required.');return;}
-  showLoading('Checking ID...');
-  await loadAll();
-  hideLoading();
+  if(!name||!id){toast('⚠️ Name and Employee ID are required.');return;}
+  showLoad('Checking...');
+  await fbLoad();
+  hideLoad();
   if([...people,...signups].find(p=>p.id===id)){toast('⚠️ This Employee ID already exists.');return;}
-  signups.push({name,id,type,section,email,pin:'1234',uid:Date.now(),status:'pending',signupDate:today()});
-  showLoading('Submitting registration...');
-  await save();
-  hideLoading();
-  updatePendingNotif();
+  signups.push({name,id,type,section:sec,email,pin:'1234',uid:Date.now(),status:'pending',signupDate:today()});
+  showLoad('Submitting...');
+  await fbSet('/signups',signups.length?signups:null);
+  hideLoad();
   document.getElementById('su-form').style.display='none';
-  const res=document.getElementById('su-result');
-  res.style.display='block';
-  res.innerHTML=`<div class="su-result">
-    <div style="font-size:2.5rem">🎉</div>
-    <h3 style="font-size:1rem;font-weight:800;color:var(--green);margin:.5rem 0">Registration Submitted!</h3>
-    <p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem">Wait for admin approval. Your default PIN is <strong>1234</strong>.</p>
-    <div class="su-result-qr" id="su-qr-out"></div>
-    <div style="font-weight:700;font-size:.95rem;margin-top:.5rem">${name}</div>
-    <div style="font-size:.75rem;color:var(--muted)">${id} · ${typeLabel[type]||type}</div>
-    <div class="pending-tag">⏳ PENDING APPROVAL</div>
-    <div style="margin-top:1.25rem;display:flex;gap:.5rem;justify-content:center">
-      <button class="btn btn-outline btn-sm" onclick="goSignup()">← Register another</button>
-      <button class="btn btn-outline btn-sm" onclick="goHome()">🏠 Home</button>
-    </div>
-  </div>`;
-  setTimeout(()=>{
-    const el=document.getElementById('su-qr-out');
-    if(el&&typeof QRCode!=='undefined') new QRCode(el,{text:id+'|'+name,width:130,height:130,correctLevel:QRCode.CorrectLevel.M});
-  },80);
-  toast('✅ Registration submitted! Waiting for admin approval.');
+  const res=document.getElementById('su-result');res.style.display='block';
+  res.innerHTML=`<div class="su-result"><div style="font-size:2.5rem">🎉</div><h3 style="font-size:1rem;font-weight:800;color:var(--green);margin:.5rem 0">Registration Submitted!</h3><p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem">Wait for admin approval. Your default PIN is <strong>1234</strong>.</p><div class="su-qr-box" id="su-qr"></div><div style="font-weight:700;font-size:.95rem;margin-top:.5rem">${name}</div><div style="font-size:.75rem;color:var(--muted)">${id} · ${TL[type]||type}</div><div class="pending-tag">⏳ PENDING APPROVAL</div><div style="margin-top:1.25rem;display:flex;gap:.5rem;justify-content:center"><button class="btn btn-outline btn-sm" onclick="goSignup()">← Register another</button><button class="btn btn-outline btn-sm" onclick="goHome()">🏠 Home</button></div></div>`;
+  setTimeout(()=>{const el=document.getElementById('su-qr');if(el&&typeof QRCode!=='undefined')new QRCode(el,{text:id+'|'+name,width:130,height:130,correctLevel:QRCode.CorrectLevel.M});},80);
+  toast('✅ Registration submitted!');
 }
 
 // ═══ ADMIN LOGIN ════════════════════════════════════════════
-function doLogin(){
+async function doLogin(){
   const pw=document.getElementById('login-pw').value;
+  document.getElementById('login-err').style.display='none';
+  showLoad('Verifying...');
+  await fbLoad();
+  hideLoad();
   if(pw===settings.password){
     document.getElementById('login-pw').value='';
-    document.getElementById('login-err').style.display='none';
-    goAdmin();
+    showScreen('admin');
+    applyName();
+    refreshDashboard();
+    updateNotif();
+    clearInterval(window._adminPoll);
+    window._adminPoll=setInterval(updateNotif,10000);
   } else {
     document.getElementById('login-err').style.display='block';
   }
@@ -855,187 +611,119 @@ function doLogin(){
 function aTab(name,btn){
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('atab-'+name).classList.add('active');
-  btn.classList.add('active');
+  document.getElementById('atab-'+name).classList.add('active');btn.classList.add('active');
   if(name==='dashboard')refreshDashboard();
   if(name==='pending')renderSignupLists();
   if(name==='people')renderPeople();
   if(name==='records'){setDefaultDates();renderRecords();}
-  if(name==='settings')loadSettings();
+  if(name==='settings')document.getElementById('s-school').value=settings.school||'';
 }
 
+// ═══ DASHBOARD ══════════════════════════════════════════════
 async function refreshDashboard(){
-  showLoading('Loading dashboard...');
-  await loadAll();
-  hideLoading();
-  const t=today(), recs=records.filter(r=>r.date===t);
+  showLoad('Loading...');await fbLoad();hideLoad();
+  const t=today(),recs=records.filter(r=>r.date===t);
   document.getElementById('d-today').textContent=new Set(recs.map(r=>r.personId)).size;
   document.getElementById('d-total').textContent=people.length;
-  document.getElementById('d-pending').textContent=signups.filter(s=>s.status==='pending').length;
-  const wrap=document.getElementById('today-table');
-  if(!recs.length){wrap.innerHTML='<div class="empty"><div class="eicon">📋</div><p>No attendance recorded today.</p></div>';return;}
-  wrap.innerHTML=`<table><thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Time In</th><th>Time Out</th><th>Hours</th></tr></thead><tbody>
-    ${recs.map(r=>`<tr>
-      <td style="font-weight:600">${r.name}</td>
-      <td><span class="badge ${typeClass[r.type]||'b-teacher'}">${typeLabel[r.type]||r.type}</span></td>
-      <td style="color:var(--muted)">${r.section||'-'}</td>
-      <td><span class="badge b-in">${r.timeIn}</span></td>
-      <td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td>
-      <td style="font-weight:600">${calcHours(r.timeIn,r.timeOut)}</td>
-    </tr>`).join('')}
-  </tbody></table>`;
+  document.getElementById('d-pend').textContent=signups.filter(s=>s.status==='pending').length;
+  const w=document.getElementById('today-tbl');
+  if(!recs.length){w.innerHTML='<div class="empty"><div class="ei">📋</div><p>No attendance today.</p></div>';return;}
+  w.innerHTML=`<table><thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Time In</th><th>Time Out</th><th>Hours</th></tr></thead><tbody>${recs.map(r=>`<tr><td style="font-weight:600">${r.name}</td><td><span class="badge ${TC[r.type]||'b-teacher'}">${TL[r.type]||r.type}</span></td><td>${r.section||'-'}</td><td><span class="badge b-in">${r.timeIn}</span></td><td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td><td style="font-weight:600">${calcH(r.timeIn,r.timeOut)}</td></tr>`).join('')}</tbody></table>`;
+}
+
+// ═══ NOTIF ══════════════════════════════════════════════════
+async function updateNotif(){
+  const s=await fbGet('/signups');
+  const arr=clean(s);
+  const c=arr.filter(x=>x.status==='pending').length;
+  const dot=document.getElementById('pnotif');
+  if(dot){if(c>0){dot.textContent=c;dot.style.display='inline-block';}else dot.style.display='none';}
 }
 
 // ═══ APPROVALS ══════════════════════════════════════════════
-async function updatePendingNotif(){
-  try{
-    const s=await fbGet('/signups');
-    const arr=Array.isArray(s)?s:Object.values(s||{});
-    const c=arr.filter(x=>x&&x.status==='pending').length;
-    const dot=document.getElementById('pending-notif');
-    if(dot){if(c>0){dot.textContent=c;dot.style.display='inline-block';}else dot.style.display='none';}
-  }catch(e){}
+async function renderSignupLists(){
+  showLoad('Loading registrations...');await fbLoad();hideLoad();
+  const pend=signups.filter(s=>s.status==='pending');
+  const pl=document.getElementById('pending-list');
+  pl.innerHTML=pend.length?pend.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:.75rem 0;border-bottom:1px solid var(--border)">
+    <div style="width:36px;height:36px;border-radius:50%;background:${AC[0]};color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0">${getInits(s.name)}</div>
+    <div style="flex:1"><div style="font-weight:600;font-size:.88rem">${s.name}</div><div style="font-size:.72rem;color:var(--muted)">${s.id} · <span class="badge ${TC[s.type]||'b-teacher'}">${TL[s.type]||s.type}</span>${s.section?' · '+s.section:''}${s.email?' · '+s.email:''}</div><div style="font-size:.68rem;color:var(--muted)">Registered: ${s.signupDate||''}</div></div>
+    <div style="display:flex;gap:4px"><button class="btn btn-success btn-sm" onclick="approveOne(${s.uid})">✅</button><button class="btn btn-danger btn-sm" onclick="rejectOne(${s.uid})">✕</button></div>
+  </div>`).join(''):'<div class="empty"><div class="ei">✅</div><p>No pending registrations.</p></div>';
+  const al=document.getElementById('approved-list');
+  al.innerHTML=people.length?`<table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Department</th><th>PIN</th><th></th></tr></thead><tbody>${people.map(p=>`<tr><td style="font-weight:600">${p.name}</td><td style="font-family:monospace;font-size:.8rem">${p.id}</td><td><span class="badge ${TC[p.type]||'b-teacher'}">${TL[p.type]||p.type}</span></td><td>${p.section||'-'}</td><td><button class="btn btn-amber btn-sm" onclick="resetPin(${p.uid})">🔑 Reset</button></td><td><button class="btn btn-danger btn-sm" onclick="delPerson(${p.uid})">🗑️</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty"><div class="ei">👤</div><p>No approved teachers yet.</p></div>';
+  updateNotif();
+}
+
+async function approveOne(uid){
+  showLoad('Approving...');await fbLoad();
+  const idx=signups.findIndex(s=>s.uid===uid);if(idx<0){hideLoad();return;}
+  const s=signups.splice(idx,1)[0];s.status='approved';people.push(s);
+  await fbSave();hideLoad();renderSignupLists();toast('✅ '+s.name+' approved!');
+}
+async function rejectOne(uid){
+  if(!confirm('Reject this registration?'))return;
+  showLoad('Rejecting...');await fbLoad();
+  signups=signups.filter(s=>s.uid!==uid);
+  await fbSet('/signups',signups.length?signups:null);
+  hideLoad();renderSignupLists();toast('🗑️ Rejected.');
 }
 async function approveAll(){
   if(!confirm('Approve ALL pending registrations?'))return;
-  showLoading('Approving all...');
-  await loadAll();
-  const pending=signups.filter(s=>s.status==='pending');
-  if(!pending.length){hideLoading();toast('No pending registrations.');return;}
-  pending.forEach(s=>{s.status='approved';people.push({...s});});
-  signups=signups.filter(s=>s.status!=='approved'||!pending.find(p=>p.uid===s.uid));
-  signups=signups.filter(s=>s.status==='pending'?false:true);
-  // remove approved ones from signups
-  signups=[];
-  await save();
-  hideLoading();
-  renderSignupLists();updatePendingNotif();
-  toast('✅ All '+pending.length+' registrations approved!');
+  showLoad('Approving all...');await fbLoad();
+  const pend=signups.filter(s=>s.status==='pending');
+  if(!pend.length){hideLoad();toast('No pending registrations.');return;}
+  pend.forEach(s=>{s.status='approved';people.push({...s});});
+  signups=signups.filter(s=>s.status!=='pending');
+  await fbSave();hideLoad();renderSignupLists();toast('✅ All '+pend.length+' approved!');
 }
 async function rejectAll(){
-  if(!confirm('Reject and DELETE all pending registrations?'))return;
-  showLoading('Rejecting all...');
-  await loadAll();
-  const before=signups.filter(s=>s.status==='pending').length;
+  if(!confirm('Reject ALL pending registrations?'))return;
+  showLoad('Rejecting all...');await fbLoad();
+  const n=signups.filter(s=>s.status==='pending').length;
   signups=signups.filter(s=>s.status!=='pending');
-  await save();
-  hideLoading();
-  renderSignupLists();updatePendingNotif();
-  toast('🗑️ '+before+' pending registrations rejected.');
+  await fbSet('/signups',signups.length?signups:null);
+  hideLoad();renderSignupLists();toast('🗑️ '+n+' rejected.');
 }
-async function resetAllEmployees(){
-  if(!confirm('This will DELETE all approved teachers and their data. Are you sure?'))return;
-  if(!confirm('FINAL WARNING: All employee records will be lost!'))return;
-  showLoading('Resetting all employees...');
-  people=[];signups=[];records=[];
-  await save();
-  hideLoading();
-  renderSignupLists();updatePendingNotif();
-  toast('🗑️ All employee data has been reset.');
-}
-
-  showLoading('Approving...');
-  await loadAll();
-  const idx=signups.findIndex(s=>s.uid===uid);
-  if(idx<0){hideLoading();return;}
-  const s=signups.splice(idx,1)[0];
-  s.status='approved';
-  people.push(s);
-  await save();
-  hideLoading();
-  renderSignupLists();updatePendingNotif();
-  toast('✅ '+s.name+' approved!');
-}
-async function rejectSignup(uid){
-  if(!confirm('Reject this registration?'))return;
-  showLoading('Rejecting...');
-  await loadAll();
-  signups=signups.filter(s=>s.uid!==uid);
-  await save();
-  hideLoading();
-  renderSignupLists();updatePendingNotif();
-  toast('🗑️ Registration rejected.');
-}
-async function renderSignupLists(){
-  showLoading('Loading registrations...');
-  await loadAll();
-  hideLoading();
-  const pending=signups.filter(s=>s.status==='pending');
-  const pendingEl=document.getElementById('pending-list');
-  if(!pending.length){
-    pendingEl.innerHTML='<div class="empty"><div class="eicon">✅</div><p>No pending registrations.<br><span style="font-size:.72rem;color:#94a3b8">Total in storage: '+signups.length+'</span></p></div>';
-  } else {
-    pendingEl.innerHTML=pending.map(s=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:.75rem 0;border-bottom:1px solid var(--border)">
-      <div style="width:38px;height:38px;border-radius:50%;background:${avatarColors[0]};color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0">${getInitials(s.name)}</div>
-      <div style="flex:1">
-        <div style="font-weight:600;font-size:.88rem">${s.name}</div>
-        <div style="font-size:.72rem;color:var(--muted)">${s.id} · <span class="badge ${typeClass[s.type]||'b-teacher'}">${typeLabel[s.type]||s.type}</span> · ${s.section||''}${s.email?' · '+s.email:''}</div>
-        <div style="font-size:.7rem;color:var(--muted)">Registered: ${s.signupDate}</div>
-      </div>
-      <div style="display:flex;gap:4px">
-        <button class="btn btn-success btn-sm" onclick="approveSignup(${s.uid})">✅ Approve</button>
-        <button class="btn btn-danger btn-sm" onclick="rejectSignup(${s.uid})">✕</button>
-      </div>
-    </div>`).join('');
-  }
-
-  document.getElementById('approved-list').innerHTML=people.length?`
-    <table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Department</th><th>PIN</th><th></th></tr></thead><tbody>
-    ${people.map(p=>`<tr>
-      <td style="font-weight:600">${p.name}</td>
-      <td style="font-family:monospace;font-size:.8rem">${p.id}</td>
-      <td><span class="badge ${typeClass[p.type]||'b-teacher'}">${typeLabel[p.type]||p.type}</span></td>
-      <td>${p.section||'-'}</td>
-      <td><button class="btn btn-amber btn-sm" onclick="resetPin(${p.uid})">🔑 Reset PIN</button></td>
-      <td><button class="btn btn-danger btn-sm" onclick="deletePerson(${p.uid})">🗑️</button></td>
-    </tr>`).join('')}
-    </tbody></table>`:'<div class="empty"><div class="eicon">👤</div><p>No approved teachers yet.</p></div>';
+async function resetAllEmp(){
+  if(!confirm('Delete ALL employees and records? This cannot be undone!'))return;
+  if(!confirm('FINAL WARNING: This will delete everything!'))return;
+  showLoad('Resetting...');people=[];records=[];signups=[];
+  await fbSave();hideLoad();renderSignupLists();updateNotif();toast('🗑️ All data reset.');
 }
 
 // ═══ PEOPLE ═════════════════════════════════════════════════
 async function addPerson(){
-  const name=document.getElementById('m-name').value.trim();
-  const id=document.getElementById('m-id').value.trim();
-  const type=document.getElementById('m-type').value;
-  const sec=document.getElementById('m-sec').value.trim();
-  if(!name||!id){toast('⚠️ Name and Employee ID are required.');return;}
-  if(people.find(p=>p.id===id)){toast('⚠️ This Employee ID already exists.');return;}
+  const name=document.getElementById('m-name').value.trim(),id=document.getElementById('m-id').value.trim();
+  const type=document.getElementById('m-type').value,sec=document.getElementById('m-sec').value.trim();
+  if(!name||!id){toast('⚠️ Name and ID required.');return;}
+  showLoad('Adding...');await fbLoad();
+  if(people.find(p=>p.id===id)){hideLoad();toast('⚠️ ID already exists.');return;}
   people.push({name,id,type,section:sec,pin:'1234',uid:Date.now(),status:'approved'});
-  showLoading('Saving...');await save();hideLoading();
-  renderPeople();
-  document.getElementById('m-name').value='';
-  document.getElementById('m-id').value='';
-  document.getElementById('m-sec').value='';
-  toast('✅ '+name+' added! Default PIN: 1234');
+  await fbSet('/people',people.length?people:null);hideLoad();
+  ['m-name','m-id','m-sec'].forEach(i=>document.getElementById(i).value='');
+  renderPeople();toast('✅ '+name+' added!');
 }
-async function deletePerson(uid){
+async function delPerson(uid){
   if(!confirm('Delete this teacher?'))return;
+  showLoad('Deleting...');await fbLoad();
   people=people.filter(p=>p.uid!==uid);
-  showLoading('Deleting...');await save();hideLoading();
-  renderPeople();renderSignupLists();
-  toast('🗑️ Deleted.');
+  await fbSet('/people',people.length?people:null);hideLoad();
+  renderPeople();renderSignupLists();toast('🗑️ Deleted.');
 }
 async function resetPin(uid){
-  if(!confirm('Reset this teacher\'s PIN to 1234?'))return;
+  if(!confirm('Reset PIN to 1234?'))return;
+  showLoad('Resetting PIN...');await fbLoad();
   const p=people.find(p=>p.uid===uid);
-  if(p){p.pin='1234';showLoading('Saving...');await save();hideLoading();toast('🔑 PIN reset to 1234 for '+p.name);}
+  if(p){p.pin='1234';await fbSet('/people',people.length?people:null);}
+  hideLoad();toast('🔑 PIN reset to 1234.');renderSignupLists();
 }
 function renderPeople(){
   const q=(document.getElementById('search-p')||{value:''}).value.toLowerCase();
-  const filtered=people.filter(p=>p.name.toLowerCase().includes(q)||p.id.toLowerCase().includes(q));
-  const wrap=document.getElementById('people-table');
-  if(!filtered.length){wrap.innerHTML='<div class="empty"><div class="eicon">👤</div><p>No results found.</p></div>';return;}
-  wrap.innerHTML=`<table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Department</th><th>PIN</th><th></th></tr></thead><tbody>
-    ${filtered.map(p=>`<tr>
-      <td style="font-weight:600">${p.name}</td>
-      <td style="font-family:monospace;font-size:.8rem">${p.id}</td>
-      <td><span class="badge ${typeClass[p.type]||'b-teacher'}">${typeLabel[p.type]||p.type}</span></td>
-      <td>${p.section||'-'}</td>
-      <td><button class="btn btn-amber btn-sm" onclick="resetPin(${p.uid})">🔑 Reset PIN</button></td>
-      <td><button class="btn btn-danger btn-sm" onclick="deletePerson(${p.uid})">🗑️</button></td>
-    </tr>`).join('')}
-  </tbody></table>`;
+  const f=people.filter(p=>p.name.toLowerCase().includes(q)||p.id.toLowerCase().includes(q));
+  const w=document.getElementById('people-tbl');
+  if(!f.length){w.innerHTML='<div class="empty"><div class="ei">👤</div><p>No results.</p></div>';return;}
+  w.innerHTML=`<table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Department</th><th>PIN</th><th></th></tr></thead><tbody>${f.map(p=>`<tr><td style="font-weight:600">${p.name}</td><td style="font-family:monospace;font-size:.8rem">${p.id}</td><td><span class="badge ${TC[p.type]||'b-teacher'}">${TL[p.type]||p.type}</span></td><td>${p.section||'-'}</td><td><button class="btn btn-amber btn-sm" onclick="resetPin(${p.uid})">🔑 Reset</button></td><td><button class="btn btn-danger btn-sm" onclick="delPerson(${p.uid})">🗑️</button></td></tr>`).join('')}</tbody></table>`;
 }
 
 // ═══ RECORDS ════════════════════════════════════════════════
@@ -1045,72 +733,55 @@ function setDefaultDates(){
   if(!document.getElementById('f-to').value)document.getElementById('f-to').value=t;
 }
 function resetFilters(){document.getElementById('f-name').value='';setDefaultDates();renderRecords();}
-function calcHours(ti,to){
+function calcH(ti,to){
   if(!ti||!to)return'-';
   const p=t=>{const[tm,ap]=t.split(' ');let[h,m]=tm.split(':').map(Number);if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+m;};
-  const d=p(to)-p(ti);
-  return d>0?(d/60).toFixed(1)+'h':'-';
+  const d=p(to)-p(ti);return d>0?(d/60).toFixed(1)+'h':'-';
 }
-function renderRecords(){
+async function renderRecords(){
+  showLoad('Loading records...');await fbLoad();hideLoad();
   const from=document.getElementById('f-from').value,to=document.getElementById('f-to').value;
   const name=document.getElementById('f-name').value.toLowerCase();
-  const f=records.filter(r=>{
-    if(from&&r.date<from)return false;
-    if(to&&r.date>to)return false;
-    if(name&&!r.name.toLowerCase().includes(name))return false;
-    return true;
-  });
-  const wrap=document.getElementById('records-table');
-  if(!f.length){wrap.innerHTML='<div class="empty"><div class="eicon">📋</div><p>No records found.</p></div>';return;}
-  wrap.innerHTML=`<table><thead><tr><th>Date</th><th>Name</th><th>Role</th><th>Department</th><th>Time In</th><th>Time Out</th><th>Hours</th></tr></thead><tbody>
-    ${f.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<tr>
-      <td>${r.date}</td><td style="font-weight:600">${r.name}</td>
-      <td><span class="badge ${typeClass[r.type]||'b-teacher'}">${typeLabel[r.type]||r.type}</span></td>
-      <td>${r.section||'-'}</td>
-      <td><span class="badge b-in">${r.timeIn}</span></td>
-      <td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td>
-      <td style="font-weight:600">${calcHours(r.timeIn,r.timeOut)}</td>
-    </tr>`).join('')}
-  </tbody></table>`;
+  const f=records.filter(r=>{if(from&&r.date<from)return false;if(to&&r.date>to)return false;if(name&&!r.name.toLowerCase().includes(name))return false;return true;});
+  const w=document.getElementById('records-tbl');
+  if(!f.length){w.innerHTML='<div class="empty"><div class="ei">📋</div><p>No records found.</p></div>';return;}
+  w.innerHTML=`<table><thead><tr><th>Date</th><th>Name</th><th>Role</th><th>Dept</th><th>Time In</th><th>Time Out</th><th>Hours</th></tr></thead><tbody>${f.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<tr><td>${r.date}</td><td style="font-weight:600">${r.name}</td><td><span class="badge ${TC[r.type]||'b-teacher'}">${TL[r.type]||r.type}</span></td><td>${r.section||'-'}</td><td><span class="badge b-in">${r.timeIn}</span></td><td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td><td style="font-weight:600">${calcH(r.timeIn,r.timeOut)}</td></tr>`).join('')}</tbody></table>`;
 }
 function exportCSV(){
-  const from=document.getElementById('f-from').value,to=document.getElementById('f-to').value;
+  const from=document.getElementById('f-from')?document.getElementById('f-from').value:'',to=document.getElementById('f-to')?document.getElementById('f-to').value:'';
   const f=records.filter(r=>{if(from&&r.date<from)return false;if(to&&r.date>to)return false;return true;});
   if(!f.length){toast('⚠️ No data to export.');return;}
   const h=['Date','Name','Role','Department','Time In','Time Out','Hours'];
-  const rows=f.map(r=>[r.date,r.name,typeLabel[r.type]||r.type,r.section||'',r.timeIn,r.timeOut||'',calcHours(r.timeIn,r.timeOut)]);
+  const rows=f.map(r=>[r.date,r.name,TL[r.type]||r.type,r.section||'',r.timeIn,r.timeOut||'',calcH(r.timeIn,r.timeOut)]);
   const csv=[h,...rows].map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
-  a.download='DTR_'+(from||'all')+'_'+(to||'all')+'.csv';
-  a.click();
-  toast('⬇️ CSV exported!');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='DTR_'+(from||'all')+'_'+(to||'all')+'.csv';a.click();toast('⬇️ CSV exported!');
 }
 
 // ═══ SETTINGS ═══════════════════════════════════════════════
-function loadSettings(){document.getElementById('s-school').value=settings.school||'';}
 async function saveSettings(){
   const school=document.getElementById('s-school').value.trim();
   const pw=document.getElementById('s-pw').value,pw2=document.getElementById('s-pw2').value;
   if(school)settings.school=school;
   if(pw){if(pw!==pw2){toast('⚠️ Passwords do not match.');return;}settings.password=pw;document.getElementById('s-pw').value='';document.getElementById('s-pw2').value='';}
-  showLoading('Saving settings...');await fbSet('/settings',settings);hideLoading();
-  applySchoolName();toast('✅ Settings saved!');
+  showLoad('Saving...');await fbSet('/settings',settings);hideLoad();
+  applyName();toast('✅ Settings saved!');
 }
 async function clearAll(){
-  if(!confirm('This will delete ALL data! Are you sure?'))return;
-  if(!confirm('FINAL WARNING: This cannot be undone!'))return;
-  people=[];records=[];signups=[];
-  showLoading('Clearing data...');await save();hideLoading();
-  toast('🗑️ All data cleared.');refreshDashboard();updatePendingNotif();
+  if(!confirm('Delete ALL data? Cannot be undone!'))return;
+  if(!confirm('FINAL WARNING!'))return;
+  showLoad('Clearing...');people=[];records=[];signups=[];await fbSave();hideLoad();
+  refreshDashboard();updateNotif();toast('🗑️ All data cleared.');
 }
 
-// ═══ TOAST ══════════════════════════════════════════════════
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
-}
+// ═══ INIT ═══════════════════════════════════════════════════
+applyName();
+// Load Firebase data silently in background
+fbLoad().then(()=>{
+  applyName();
+  updateNotif();
+  if(window.location.search.includes('checkin='))initCheckin();
+}).catch(e=>console.warn('Firebase init error:',e));
 </script>
 </body>
 </html>
