@@ -394,7 +394,10 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
   <!-- REGISTRATIONS -->
   <div class="admin-tab" id="atab-pending">
     <div class="card">
-      <h3>⏳ Pending Approval</h3>
+      <h3 style="display:flex;justify-content:space-between;align-items:center">
+        ⏳ Pending Approval
+        <button onclick="renderSignupLists();updatePendingNotif();toast('🔄 Refreshed!')" style="background:#e0f2fe;border:none;color:#0369a1;font-size:.72rem;font-weight:700;padding:.3rem .75rem;border-radius:7px;cursor:pointer">🔄 Refresh</button>
+      </h3>
       <div id="pending-list"><div class="empty"><div class="eicon">✅</div><p>No pending registrations.</p></div></div>
     </div>
     <div class="card">
@@ -815,7 +818,11 @@ function renderSignupLists(){
   signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
   people=JSON.parse(localStorage.getItem('dtr_people')||'[]');
   const pending=signups.filter(s=>s.status==='pending');
-  document.getElementById('pending-list').innerHTML=pending.length?pending.map(s=>`
+  const pendingEl=document.getElementById('pending-list');
+  if(!pending.length){
+    pendingEl.innerHTML='<div class="empty"><div class="eicon">✅</div><p>No pending registrations.<br><span style="font-size:.72rem;color:#94a3b8">Total in storage: '+signups.length+'</span></p></div>';
+  } else {
+    pendingEl.innerHTML=pending.map(s=>`
     <div style="display:flex;align-items:center;gap:10px;padding:.75rem 0;border-bottom:1px solid var(--border)">
       <div style="width:38px;height:38px;border-radius:50%;background:${avatarColors[0]};color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0">${getInitials(s.name)}</div>
       <div style="flex:1">
@@ -827,7 +834,8 @@ function renderSignupLists(){
         <button class="btn btn-success btn-sm" onclick="approveSignup(${s.uid})">✅ Approve</button>
         <button class="btn btn-danger btn-sm" onclick="rejectSignup(${s.uid})">✕</button>
       </div>
-    </div>`).join(''):'<div class="empty"><div class="eicon">✅</div><p>No pending registrations.</p></div>';
+    </div>`).join('');
+  }
 
   document.getElementById('approved-list').innerHTML=people.length?`
     <table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Department</th><th>PIN</th><th></th></tr></thead><tbody>
