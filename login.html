@@ -236,7 +236,7 @@ html,body{min-height:100%;background:var(--bg);font-family:'Segoe UI',system-ui,
 
 <script>
 // ═══ FIREBASE ═══════════════════════════════════════════════
-const DB='https://schooldtr-b83bb-default-rtdb.firebaseio.com';
+const DB='https://schooldtr-b83bb-default-rtdb.asia-southeast1.firebasedatabase.app';
 async function fbGet(path){
   try{const r=await fetch(DB+path+'.json');const d=await r.json();return d||(path.includes('settings')?{}:[]);}
   catch(e){return path.includes('settings')?{}:[];}
