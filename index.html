@@ -544,11 +544,25 @@ function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true})}
 // Show loading overlay
 function showLoading(msg='Loading...'){
   let el=document.getElementById('fb-loading');
-  if(!el){el=document.createElement('div');el.id='fb-loading';el.style.cssText='position:fixed;inset:0;background:rgba(13,33,55,.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:600;gap:.75rem';el.innerHTML='<div style="font-size:2.5rem;animation:spin 1s linear infinite">⏳</div><div id="fb-loading-msg"></div>';document.body.appendChild(el);const s=document.createElement('style');s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s);}
+  if(!el){
+    el=document.createElement('div');
+    el.id='fb-loading';
+    el.style.cssText='position:fixed;inset:0;background:rgba(13,33,55,.75);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:600;gap:.75rem';
+    el.innerHTML='<div style="font-size:2rem;animation:spin 1s linear infinite">⏳</div><div id="fb-loading-msg"></div>';
+    document.body.appendChild(el);
+    const s=document.createElement('style');s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s);
+  }
   document.getElementById('fb-loading-msg').textContent=msg;
   el.style.display='flex';
+  // Auto-hide after 6 seconds to prevent blocking UI
+  clearTimeout(window._loadTimeout);
+  window._loadTimeout=setTimeout(hideLoading, 6000);
 }
-function hideLoading(){const el=document.getElementById('fb-loading');if(el)el.style.display='none';}
+function hideLoading(){
+  clearTimeout(window._loadTimeout);
+  const el=document.getElementById('fb-loading');
+  if(el)el.style.display='none';
+}
 
 // Init — load from Firebase on page load
 showLoading('Connecting to database...');
@@ -557,7 +571,11 @@ loadAll().then(()=>{
   applySchoolName();
   updatePendingNotif();
   if(window.location.search.includes('checkin=')) initCheckin();
-}).catch(()=>{ hideLoading(); toast('⚠️ Cannot connect to database. Check internet.'); });
+}).catch(()=>{
+  hideLoading();
+  applySchoolName();
+  toast('⚠️ Cannot connect to database. Check internet connection.');
+});
 
 // ═══ CLOCK ══════════════════════════════════════════════════
 function updateClocks(){

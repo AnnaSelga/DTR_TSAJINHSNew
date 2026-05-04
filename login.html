@@ -245,15 +245,16 @@ async function fbSet(path,data){
   try{await fetch(DB+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
   catch(e){console.error(e);}
 }
+const clean=v=>{if(!v)return[];const a=Array.isArray(v)?v:Object.values(v);return a.filter(x=>x&&typeof x==='object');};
 async function loadAll(){
   let [p,r,s,st]=await Promise.all([fbGet('/people'),fbGet('/records'),fbGet('/signups'),fbGet('/settings')]);
-  people =Array.isArray(p)?p:Object.values(p||{});
-  records=Array.isArray(r)?r:Object.values(r||{});
-  signups=Array.isArray(s)?s:Object.values(s||{});
+  people =clean(p);
+  records=clean(r);
+  signups=clean(s);
   settings=st&&st.school?st:{school:'School DTR',password:'admin123'};
 }
-async function saveRecs(){await fbSet('/records',records);}
-async function savePpl() {await fbSet('/people', people);}
+async function saveRecs(){await fbSet('/records',records.length?records:null);}
+async function savePpl() {await fbSet('/people', people.length?people:null);}
 
 // ═══ DATA ═══════════════════════════════════════════════════
 let people=[],records=[],signups=[],settings={school:'School DTR'};
@@ -263,12 +264,14 @@ function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true})}
 
 function showLoad(m='Loading...'){
   let el=document.getElementById('fb-load');
-  if(!el){el=document.createElement('div');el.id='fb-load';el.style.cssText='position:fixed;inset:0;background:rgba(13,33,55,.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:.95rem;font-weight:600;gap:.75rem';document.body.appendChild(el);}
+  if(!el){el=document.createElement('div');el.id='fb-load';el.style.cssText='position:fixed;inset:0;background:rgba(13,33,55,.75);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:.95rem;font-weight:600;gap:.75rem';document.body.appendChild(el);}
   el.innerHTML='<div style="font-size:2rem;animation:sp 1s linear infinite">⏳</div><div>'+m+'</div>';
   el.style.display='flex';
   if(!document.getElementById('sp-style')){const s=document.createElement('style');s.id='sp-style';s.textContent='@keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);}
+  clearTimeout(window._lt);
+  window._lt=setTimeout(hideLoad, 6000);
 }
-function hideLoad(){const el=document.getElementById('fb-load');if(el)el.style.display='none';}
+function hideLoad(){clearTimeout(window._lt);const el=document.getElementById('fb-load');if(el)el.style.display='none';}
 
 // Init — load school name on page load
 showLoad('Connecting...');
