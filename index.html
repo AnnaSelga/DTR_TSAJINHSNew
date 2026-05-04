@@ -179,7 +179,23 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
 .filter-row .form-group{min-width:140px}
 .notif{display:inline-block;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;border-radius:50%;width:15px;height:15px;line-height:15px;text-align:center;margin-left:3px}
 
-/* TOAST */
+/* ACTION BAR */
+.action-bar{display:flex;flex-wrap:wrap;gap:.5rem;padding:1rem 2rem;background:#fff;border-bottom:1px solid var(--border);max-width:1100px;margin:0 auto;width:100%}
+.action-btn{padding:.5rem 1rem;border-radius:8px;border:1.5px solid;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
+.action-btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.action-btn:active{transform:scale(.97)}
+.action-approve{background:#fff;border-color:#86efac;color:#16a34a}
+.action-approve:hover{background:#f0fdf4}
+.action-reject{background:#fff;border-color:#fca5a5;color:#dc2626}
+.action-reject:hover{background:#fff1f2}
+.action-reset{background:#fff;border-color:#fca5a5;color:#dc2626}
+.action-reset:hover{background:#fff1f2}
+.action-csv{background:#fff;border-color:#cbd5e1;color:#475569}
+.action-csv:hover{background:#f8fafc}
+.action-refresh{background:#fff;border-color:#bae6fd;color:#0369a1}
+.action-refresh:hover{background:#f0f9ff}
+
+
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#0f172a;color:#fff;padding:.7rem 1.2rem;border-radius:var(--radius);font-size:.85rem;font-weight:500;opacity:0;transform:translateY(8px);transition:all .3s;z-index:9999;max-width:300px}
 .toast.show{opacity:1;transform:translateY(0)}
 
@@ -393,11 +409,16 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
 
   <!-- REGISTRATIONS -->
   <div class="admin-tab" id="atab-pending">
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar">
+      <button class="action-btn action-approve" onclick="approveAll()">✅ Approve All</button>
+      <button class="action-btn action-reject" onclick="rejectAll()">🗑️ Reject All</button>
+      <button class="action-btn action-reset" onclick="resetAllEmployees()">👥 Reset All Employees</button>
+      <button class="action-btn action-csv" onclick="exportCSV()">📄 Export CSV</button>
+      <button class="action-btn action-refresh" onclick="renderSignupLists();updatePendingNotif();toast('🔄 Refreshed!')">🔄 Refresh</button>
+    </div>
     <div class="card">
-      <h3 style="display:flex;justify-content:space-between;align-items:center">
-        ⏳ Pending Approval
-        <button onclick="renderSignupLists();updatePendingNotif();toast('🔄 Refreshed!')" style="background:#e0f2fe;border:none;color:#0369a1;font-size:.72rem;font-weight:700;padding:.3rem .75rem;border-radius:7px;cursor:pointer">🔄 Refresh</button>
-      </h3>
+      <h3>⏳ Pending Approval</h3>
       <div id="pending-list"><div class="empty"><div class="eicon">✅</div><p>No pending registrations.</p></div></div>
     </div>
     <div class="card">
@@ -491,23 +512,29 @@ const typeClass={teacher:'b-teacher',staff:'b-staff'};
 
 async function save(){
   await Promise.all([
-    fbSet('/people',  people),
-    fbSet('/records', records),
-    fbSet('/signups', signups),
+    fbSet('/people',  people.length  ? people  : null),
+    fbSet('/records', records.length ? records : null),
+    fbSet('/signups', signups.length ? signups : null),
     fbSet('/settings',settings),
   ]);
 }
+const clean=v=>{
+  if(!v) return [];
+  const arr=Array.isArray(v)?v:Object.values(v);
+  return arr.filter(x=>x&&typeof x==='object');
+};
 async function loadAll(){
-  [people, records, signups, settings] = await Promise.all([
+  const [p,r,s,st] = await Promise.all([
     fbGet('/people'),
     fbGet('/records'),
     fbGet('/signups'),
     fbGet('/settings'),
   ]);
-  if(!Array.isArray(people))  people  = Object.values(people||{});
-  if(!Array.isArray(records)) records = Object.values(records||{});
-  if(!Array.isArray(signups)) signups = Object.values(signups||{});
-  if(!settings.school) settings = {school:'School DTR',password:'admin123'};
+  people  = clean(p);
+  records = clean(r);
+  signups = clean(s);
+  settings= (st&&st.school)?st:{school:'School DTR',password:'admin123'};
+}
 }
 
 function getInitials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}
@@ -851,7 +878,44 @@ async function updatePendingNotif(){
     if(dot){if(c>0){dot.textContent=c;dot.style.display='inline-block';}else dot.style.display='none';}
   }catch(e){}
 }
-async function approveSignup(uid){
+async function approveAll(){
+  if(!confirm('Approve ALL pending registrations?'))return;
+  showLoading('Approving all...');
+  await loadAll();
+  const pending=signups.filter(s=>s.status==='pending');
+  if(!pending.length){hideLoading();toast('No pending registrations.');return;}
+  pending.forEach(s=>{s.status='approved';people.push({...s});});
+  signups=signups.filter(s=>s.status!=='approved'||!pending.find(p=>p.uid===s.uid));
+  signups=signups.filter(s=>s.status==='pending'?false:true);
+  // remove approved ones from signups
+  signups=[];
+  await save();
+  hideLoading();
+  renderSignupLists();updatePendingNotif();
+  toast('✅ All '+pending.length+' registrations approved!');
+}
+async function rejectAll(){
+  if(!confirm('Reject and DELETE all pending registrations?'))return;
+  showLoading('Rejecting all...');
+  await loadAll();
+  const before=signups.filter(s=>s.status==='pending').length;
+  signups=signups.filter(s=>s.status!=='pending');
+  await save();
+  hideLoading();
+  renderSignupLists();updatePendingNotif();
+  toast('🗑️ '+before+' pending registrations rejected.');
+}
+async function resetAllEmployees(){
+  if(!confirm('This will DELETE all approved teachers and their data. Are you sure?'))return;
+  if(!confirm('FINAL WARNING: All employee records will be lost!'))return;
+  showLoading('Resetting all employees...');
+  people=[];signups=[];records=[];
+  await save();
+  hideLoading();
+  renderSignupLists();updatePendingNotif();
+  toast('🗑️ All employee data has been reset.');
+}
+
   showLoading('Approving...');
   await loadAll();
   const idx=signups.findIndex(s=>s.uid===uid);
