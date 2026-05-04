@@ -191,7 +191,6 @@ html,body{min-height:100%;background:var(--bg);font-family:'Segoe UI',system-ui,
             <span class="si">📷</span>
             <span>Scan the QR code displayed at the school entrance</span>
           </div>
-          <div id="qr-reader" style="display:none"></div>
         </div>
         <button class="scan-btn" id="scan-btn" onclick="toggleScanner()">📷 Scan QR Code</button>
         <div class="manual-wrap">
@@ -220,6 +219,17 @@ html,body{min-height:100%;background:var(--bg);font-family:'Segoe UI',system-ui,
       <button class="logout-btn" onclick="doLogout()">🚪 Log Out</button>
     </div>
   </div>
+</div>
+
+<!-- FULLSCREEN SCANNER OVERLAY -->
+<div id="scanner-overlay" style="display:none;position:fixed;inset:0;background:#000;z-index:999;flex-direction:column;align-items:center;justify-content:center">
+  <div style="color:#fff;font-size:.85rem;font-weight:600;margin-bottom:1rem;text-align:center;padding:0 1rem">
+    📷 Point your camera at the QR code on the gate screen
+  </div>
+  <div id="qr-reader" style="width:100%;max-width:360px;border-radius:12px;overflow:hidden"></div>
+  <button onclick="stopScanner()" style="margin-top:1.5rem;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:.75rem 2rem;border-radius:50px;font-size:.9rem;font-weight:700;cursor:pointer">
+    ✕ Cancel
+  </button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -308,20 +318,33 @@ function switchTab(name,btn){
 let scanner=null,scanning=false;
 function toggleScanner(){scanning?stopScanner():startScanner();}
 function startScanner(){
-  scanning=true;
-  document.getElementById('scan-idle').style.display='none';
-  document.getElementById('qr-reader').style.display='block';
-  document.getElementById('scan-btn').innerHTML='⏹ Stop Scanner';
-  document.getElementById('scan-btn').classList.add('stop');
+  const overlay=document.getElementById('scanner-overlay');
+  overlay.style.display='flex';
+  // Destroy previous instance if any
+  if(scanner){try{scanner.clear();}catch(e){}}
   scanner=new Html5Qrcode('qr-reader');
-  scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:200,height:200}},onScan,()=>{})
-    .catch(()=>{toast('❌ Cannot access camera. Use manual code.');stopScanner();});
+  scanner.start(
+    {facingMode:'environment'},
+    {fps:10,qrbox:{width:250,height:250}},
+    onScan,
+    ()=>{}
+  ).then(()=>{
+    scanning=true;
+    document.getElementById('scan-btn').innerHTML='⏹ Stop Scanner';
+    document.getElementById('scan-btn').classList.add('stop');
+  }).catch(err=>{
+    overlay.style.display='none';
+    toast('❌ Camera not accessible. Please allow camera permission or use manual code.');
+    console.error(err);
+  });
 }
 function stopScanner(){
-  if(scanner&&scanning)scanner.stop().catch(()=>{});
+  const overlay=document.getElementById('scanner-overlay');
+  overlay.style.display='none';
+  if(scanner&&scanning){
+    scanner.stop().then(()=>{scanner.clear();}).catch(()=>{});
+  }
   scanning=false;
-  document.getElementById('scan-idle').style.display='flex';
-  document.getElementById('qr-reader').style.display='none';
   document.getElementById('scan-btn').innerHTML='📷 Scan QR Code';
   document.getElementById('scan-btn').classList.remove('stop');
 }
