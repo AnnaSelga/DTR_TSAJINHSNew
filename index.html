@@ -440,8 +440,8 @@ function getDailyCode(){
 }
 function makeGateQR(){
   const d=today();gCode=getDailyCode();
-  const url='https://annaselga.github.io/DTR_TSAJINHSNew/?checkin='+encodeURIComponent(gCode)+'&date='+d;
   const el=document.getElementById('gate-qr');el.innerHTML='';
+  const url='https://annaselga.github.io/DTR_TSAJINHSNew/login.html?code='+gCode+'&date='+d;
   new QRCode(el,{text:url,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
   document.getElementById('gate-code').textContent=gCode;
   document.getElementById('gate-code-date').textContent=d;

@@ -382,9 +382,8 @@ function stopScanner(){
 }
 function onScan(text){
   stopScanner();
-  let code=text;
-  try{const u=new URL(text);code=u.searchParams.get('checkin')||text;}catch(e){}
-  processCode(code.trim().toUpperCase());
+  // QR code now contains just the 6-char daily code directly
+  processCode(text.trim().toUpperCase());
 }
 function submitManual(){
   const code=document.getElementById('manual-code').value.trim().toUpperCase();
@@ -478,6 +477,49 @@ function doLogout(){
 
 // Toast
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+// ═══ URL CODE (from QR scan) ═══════════════════════════════
+// Check if opened via QR scan — show banner and auto-process after login
+const _urlParams=new URLSearchParams(window.location.search);
+const _urlCode=_urlParams.get('code');
+const _urlDate=_urlParams.get('date');
+
+if(_urlCode){
+  // Show a banner so teacher knows to login for attendance
+  const banner=document.createElement('div');
+  banner.style.cssText='background:linear-gradient(135deg,#059669,#047857);color:#fff;text-align:center;padding:.75rem;font-size:.85rem;font-weight:700;position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:center;gap:8px';
+  banner.innerHTML='📷 QR Scanned! Log in to record your attendance.';
+  document.body.prepend(banner);
+  document.body.style.paddingTop='48px';
+
+  // After login, automatically process the scanned code
+  const _origShowDashboard=showDashboard;
+  window.showDashboard=function(){
+    _origShowDashboard();
+    // Validate code then record
+    setTimeout(async()=>{
+      const today=new Date().toLocaleDateString('en-CA');
+      if(_urlDate&&_urlDate!==today){
+        toast('❌ Expired QR Code. Please scan today\'s code at the gate.');
+        return;
+      }
+      // Use getDailyCode to validate
+      function getDC(){
+        const d=today||new Date().toLocaleDateString('en-CA'),seed=d.replace(/-/g,'');
+        let h=0;for(let i=0;i<seed.length;i++){h=(h<<5)-h+seed.charCodeAt(i);h|=0;}
+        const C='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='',hh=Math.abs(h);
+        for(let i=0;i<6;i++){c+=C[hh%C.length];hh=Math.floor(hh/C.length)||Math.abs(h*(i+7));}
+        return c;
+      }
+      if(_urlCode.toUpperCase()!==getDC()){
+        toast('❌ Invalid QR Code. Please scan today\'s gate QR code.');
+        return;
+      }
+      await processCode(_urlCode.toUpperCase());
+    },500);
+  };
+}
+
 </script>
 </body>
 </html>
