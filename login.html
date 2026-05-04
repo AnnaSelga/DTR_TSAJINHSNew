@@ -235,21 +235,49 @@ html,body{min-height:100%;background:var(--bg);font-family:'Segoe UI',system-ui,
 <div class="toast" id="toast"></div>
 
 <script>
-function getPeople()  {return JSON.parse(localStorage.getItem('dtr_people')||'[]')}
-function getRecords() {return JSON.parse(localStorage.getItem('dtr_records')||'[]')}
-function getSettings(){return JSON.parse(localStorage.getItem('dtr_settings')||'{"school":"School DTR"}')}
-function saveRecs(r)  {localStorage.setItem('dtr_records',JSON.stringify(r))}
-function savePpl(p)   {localStorage.setItem('dtr_people',JSON.stringify(p))}
-function todayStr()   {return new Date().toLocaleDateString('en-CA')}
-function timeNow()    {return new Date().toLocaleTimeString('en-PH',{hour12:true})}
+// ═══ FIREBASE ═══════════════════════════════════════════════
+const DB='https://schooldtr-b83bb-default-rtdb.firebaseio.com';
+async function fbGet(path){
+  try{const r=await fetch(DB+path+'.json');const d=await r.json();return d||(path.includes('settings')?{}:[]);}
+  catch(e){return path.includes('settings')?{}:[];}
+}
+async function fbSet(path,data){
+  try{await fetch(DB+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+  catch(e){console.error(e);}
+}
+async function loadAll(){
+  let [p,r,s,st]=await Promise.all([fbGet('/people'),fbGet('/records'),fbGet('/signups'),fbGet('/settings')]);
+  people =Array.isArray(p)?p:Object.values(p||{});
+  records=Array.isArray(r)?r:Object.values(r||{});
+  signups=Array.isArray(s)?s:Object.values(s||{});
+  settings=st&&st.school?st:{school:'School DTR',password:'admin123'};
+}
+async function saveRecs(){await fbSet('/records',records);}
+async function savePpl() {await fbSet('/people', people);}
 
-// Init
-(()=>{
-  const s=getSettings();
-  document.getElementById('login-school-lbl').textContent=s.school;
+// ═══ DATA ═══════════════════════════════════════════════════
+let people=[],records=[],signups=[],settings={school:'School DTR'};
+
+function todayStr(){return new Date().toLocaleDateString('en-CA')}
+function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true})}
+
+function showLoad(m='Loading...'){
+  let el=document.getElementById('fb-load');
+  if(!el){el=document.createElement('div');el.id='fb-load';el.style.cssText='position:fixed;inset:0;background:rgba(13,33,55,.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:.95rem;font-weight:600;gap:.75rem';document.body.appendChild(el);}
+  el.innerHTML='<div style="font-size:2rem;animation:sp 1s linear infinite">⏳</div><div>'+m+'</div>';
+  el.style.display='flex';
+  if(!document.getElementById('sp-style')){const s=document.createElement('style');s.id='sp-style';s.textContent='@keyframes sp{to{transform:rotate(360deg)}}';document.head.appendChild(s);}
+}
+function hideLoad(){const el=document.getElementById('fb-load');if(el)el.style.display='none';}
+
+// Init — load school name on page load
+showLoad('Connecting...');
+loadAll().then(()=>{
+  hideLoad();
+  document.getElementById('login-school-lbl').textContent=settings.school||'School DTR';
   document.getElementById('login-date-lbl').textContent=
     new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-})();
+}).catch(()=>{hideLoad();});
 
 // Clock
 function tick(){
@@ -270,12 +298,13 @@ function clearErr(){document.getElementById('login-err').textContent='';}
 function showErr(m){document.getElementById('login-err').textContent=m;dots(true);pinVal='';setTimeout(dots,600);}
 
 // Login
-function doLogin(){
-  const people=getPeople();
+async function doLogin(){
+  showLoad('Verifying...');
+  await loadAll();
+  hideLoad();
   const id=document.getElementById('emp-id').value.trim();
   if(!id){showErr('Please enter your Employee ID.');return;}
   if(pinVal.length<4){showErr('Please enter your 4-digit PIN.');return;}
-  const signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
   if(signups.find(s=>s.id===id&&s.status==='pending')){showErr('Account pending admin approval.');return;}
   const person=people.find(p=>p.id===id);
   if(!person){showErr('Employee ID not found. Please register first.');return;}
@@ -296,7 +325,7 @@ function showDashboard(){
 }
 
 function updateStatus(){
-  const recs=getRecords().filter(r=>r.date===todayStr()&&r.personId===currentUser.id);
+  const recs=records.filter(r=>r.date===todayStr()&&r.personId===currentUser.id);
   const last=recs[recs.length-1];
   const dot=document.getElementById('sdot'),lbl=document.getElementById('slbl'),st=document.getElementById('stime');
   if(!last){dot.className='status-dot none';lbl.textContent='No record today';st.textContent='';}
@@ -370,9 +399,10 @@ function getDailyCode(){
   return code;
 }
 
-function processCode(code){
+async function processCode(code){
   if(code!==getDailyCode()){toast("❌ Invalid or expired code. Scan today's QR code at the gate.");return;}
-  const records=getRecords();
+  showLoad('Recording attendance...');
+  await loadAll();
   const t=todayStr();
   const recs=records.filter(r=>r.date===t&&r.personId===currentUser.id);
   const last=recs[recs.length-1];
@@ -380,7 +410,8 @@ function processCode(code){
   const time=timeNow();
   if(isIn)records.push({date:t,personId:currentUser.id,name:currentUser.name,type:currentUser.type,section:currentUser.section||'',timeIn:time,timeOut:null,uid:Date.now()});
   else last.timeOut=time;
-  saveRecs(records);
+  await saveRecs();
+  hideLoad();
   // Show result
   document.getElementById('scan-ui').style.display='none';
   const res=document.getElementById('attend-result');
@@ -407,8 +438,11 @@ function calcHrs(ti,to){
   const p=t=>{const[tm,ap]=t.split(' ');let[h,m]=tm.split(':').map(Number);if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+m;};
   const d=p(to)-p(ti);return d>0?(d/60).toFixed(1)+' hrs':'';
 }
-function renderHistory(){
-  const mine=getRecords().filter(r=>r.personId===currentUser.id).sort((a,b)=>b.date.localeCompare(a.date));
+async function renderHistory(){
+  showLoad('Loading history...');
+  await loadAll();
+  hideLoad();
+  const mine=records.filter(r=>r.personId===currentUser.id).sort((a,b)=>b.date.localeCompare(a.date));
   const wrap=document.getElementById('history-list');
   if(!mine.length){wrap.innerHTML='<div class="history-empty">No attendance records yet.</div>';return;}
   wrap.innerHTML=mine.slice(0,30).map(r=>`<div class="hist-item">
@@ -418,12 +452,15 @@ function renderHistory(){
 }
 
 // Settings
-function savePin(){
+async function savePin(){
   const p1=document.getElementById('s-p1').value,p2=document.getElementById('s-p2').value;
   if(!/^\d{4}$/.test(p1)){toast('⚠️ PIN must be 4 digits.');return;}
   if(p1!==p2){toast('⚠️ PINs do not match.');return;}
-  const people=getPeople(),idx=people.findIndex(p=>p.uid===currentUser.uid);
-  if(idx>=0){people[idx].pin=p1;currentUser=people[idx];savePpl(people);}
+  showLoad('Saving PIN...');
+  await loadAll();
+  const idx=people.findIndex(p=>p.uid===currentUser.uid);
+  if(idx>=0){people[idx].pin=p1;currentUser=people[idx];await savePpl();}
+  hideLoad();
   document.getElementById('s-p1').value='';document.getElementById('s-p2').value='';
   toast('✅ PIN changed!');
 }

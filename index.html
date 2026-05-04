@@ -463,25 +463,74 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
 <div class="toast" id="toast"></div>
 
 <script>
+// ═══ FIREBASE CONFIG ════════════════════════════════════════
+const DB = 'https://schooldtr-b83bb-default-rtdb.firebaseio.com';
+
+async function fbGet(path){
+  try{
+    const r = await fetch(DB+path+'.json');
+    const d = await r.json();
+    return d || (path.includes('settings') ? {} : []);
+  } catch(e){ return path.includes('settings') ? {} : []; }
+}
+async function fbSet(path, data){
+  try{
+    await fetch(DB+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  } catch(e){ console.error('Firebase write error',e); }
+}
+
 // ═══ DATA ═══════════════════════════════════════════════════
-let people  = JSON.parse(localStorage.getItem('dtr_people')  || '[]');
-let records = JSON.parse(localStorage.getItem('dtr_records') || '[]');
-let signups = JSON.parse(localStorage.getItem('dtr_signups') || '[]');
-let settings= JSON.parse(localStorage.getItem('dtr_settings')|| '{"school":"School DTR","password":"admin123"}');
+let people  = [];
+let records = [];
+let signups = [];
+let settings= {school:'School DTR', password:'admin123'};
 
 const avatarColors=['#1b3a6b','#0f766e','#7c3aed','#b45309','#be185d','#0369a1','#065f46','#9f1239'];
 const typeLabel={teacher:'Teacher',staff:'Staff'};
 const typeClass={teacher:'b-teacher',staff:'b-staff'};
 
-function save(){
-  localStorage.setItem('dtr_people',  JSON.stringify(people));
-  localStorage.setItem('dtr_records', JSON.stringify(records));
-  localStorage.setItem('dtr_signups', JSON.stringify(signups));
-  localStorage.setItem('dtr_settings',JSON.stringify(settings));
+async function save(){
+  await Promise.all([
+    fbSet('/people',  people),
+    fbSet('/records', records),
+    fbSet('/signups', signups),
+    fbSet('/settings',settings),
+  ]);
 }
+async function loadAll(){
+  [people, records, signups, settings] = await Promise.all([
+    fbGet('/people'),
+    fbGet('/records'),
+    fbGet('/signups'),
+    fbGet('/settings'),
+  ]);
+  if(!Array.isArray(people))  people  = Object.values(people||{});
+  if(!Array.isArray(records)) records = Object.values(records||{});
+  if(!Array.isArray(signups)) signups = Object.values(signups||{});
+  if(!settings.school) settings = {school:'School DTR',password:'admin123'};
+}
+
 function getInitials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}
 function today(){return new Date().toLocaleDateString('en-CA')}
 function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true})}
+
+// Show loading overlay
+function showLoading(msg='Loading...'){
+  let el=document.getElementById('fb-loading');
+  if(!el){el=document.createElement('div');el.id='fb-loading';el.style.cssText='position:fixed;inset:0;background:rgba(13,33,55,.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:600;gap:.75rem';el.innerHTML='<div style="font-size:2.5rem;animation:spin 1s linear infinite">⏳</div><div id="fb-loading-msg"></div>';document.body.appendChild(el);const s=document.createElement('style');s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s);}
+  document.getElementById('fb-loading-msg').textContent=msg;
+  el.style.display='flex';
+}
+function hideLoading(){const el=document.getElementById('fb-loading');if(el)el.style.display='none';}
+
+// Init — load from Firebase on page load
+showLoading('Connecting to database...');
+loadAll().then(()=>{
+  hideLoading();
+  applySchoolName();
+  updatePendingNotif();
+  if(window.location.search.includes('checkin=')) initCheckin();
+}).catch(()=>{ hideLoading(); toast('⚠️ Cannot connect to database. Check internet.'); });
 
 // ═══ CLOCK ══════════════════════════════════════════════════
 function updateClocks(){
@@ -622,7 +671,7 @@ function initCheckin(){
   }
 }
 
-function submitCheckin(){
+async function submitCheckin(){
   const id=document.getElementById('ci-id').value.trim();
   const errEl=document.getElementById('ci-err');
   errEl.textContent='';
@@ -660,8 +709,9 @@ function submitCheckin(){
   } else {
     lastRec.timeOut=time;
   }
-  save();
-  pinValue='';updatePinDisplay();
+  showLoading('Recording attendance...');
+  await save();
+  hideLoading();
 
   document.getElementById('ci-form').style.display='none';
   const res=document.getElementById('ci-result');
@@ -705,16 +755,21 @@ function changePin(){
 }
 
 // ═══ SIGN-UP ════════════════════════════════════════════════
-function submitSignup(){
+async function submitSignup(){
   const name=document.getElementById('su-name').value.trim();
   const id=document.getElementById('su-id').value.trim();
   const type=document.getElementById('su-type').value;
   const section=document.getElementById('su-section').value.trim();
   const email=document.getElementById('su-email').value.trim();
   if(!name||!id){toast('⚠️ Full name and Employee ID are required.');return;}
+  showLoading('Checking ID...');
+  await loadAll();
+  hideLoading();
   if([...people,...signups].find(p=>p.id===id)){toast('⚠️ This Employee ID already exists.');return;}
   signups.push({name,id,type,section,email,pin:'1234',uid:Date.now(),status:'pending',signupDate:today()});
-  save();
+  showLoading('Submitting registration...');
+  await save();
+  hideLoading();
   updatePendingNotif();
   document.getElementById('su-form').style.display='none';
   const res=document.getElementById('su-result');
@@ -764,12 +819,10 @@ function aTab(name,btn){
   if(name==='settings')loadSettings();
 }
 
-// ═══ DASHBOARD ══════════════════════════════════════════════
-function refreshDashboard(){
-  // Always read fresh
-  people=JSON.parse(localStorage.getItem('dtr_people')||'[]');
-  records=JSON.parse(localStorage.getItem('dtr_records')||'[]');
-  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
+async function refreshDashboard(){
+  showLoading('Loading dashboard...');
+  await loadAll();
+  hideLoading();
   const t=today(), recs=records.filter(r=>r.date===t);
   document.getElementById('d-today').textContent=new Set(recs.map(r=>r.personId)).size;
   document.getElementById('d-total').textContent=people.length;
@@ -789,34 +842,42 @@ function refreshDashboard(){
 }
 
 // ═══ APPROVALS ══════════════════════════════════════════════
-function updatePendingNotif(){
-  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
-  const c=signups.filter(s=>s.status==='pending').length;
-  const dot=document.getElementById('pending-notif');
-  if(c>0){dot.textContent=c;dot.style.display='inline-block';}else dot.style.display='none';
+async function updatePendingNotif(){
+  try{
+    const s=await fbGet('/signups');
+    const arr=Array.isArray(s)?s:Object.values(s||{});
+    const c=arr.filter(x=>x&&x.status==='pending').length;
+    const dot=document.getElementById('pending-notif');
+    if(dot){if(c>0){dot.textContent=c;dot.style.display='inline-block';}else dot.style.display='none';}
+  }catch(e){}
 }
-function approveSignup(uid){
-  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
-  people=JSON.parse(localStorage.getItem('dtr_people')||'[]');
+async function approveSignup(uid){
+  showLoading('Approving...');
+  await loadAll();
   const idx=signups.findIndex(s=>s.uid===uid);
-  if(idx<0)return;
+  if(idx<0){hideLoading();return;}
   const s=signups.splice(idx,1)[0];
   s.status='approved';
   people.push(s);
-  save();renderSignupLists();updatePendingNotif();
+  await save();
+  hideLoading();
+  renderSignupLists();updatePendingNotif();
   toast('✅ '+s.name+' approved!');
 }
-function rejectSignup(uid){
+async function rejectSignup(uid){
   if(!confirm('Reject this registration?'))return;
-  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
+  showLoading('Rejecting...');
+  await loadAll();
   signups=signups.filter(s=>s.uid!==uid);
-  save();renderSignupLists();updatePendingNotif();
+  await save();
+  hideLoading();
+  renderSignupLists();updatePendingNotif();
   toast('🗑️ Registration rejected.');
 }
-function renderSignupLists(){
-  // Always read fresh from localStorage
-  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
-  people=JSON.parse(localStorage.getItem('dtr_people')||'[]');
+async function renderSignupLists(){
+  showLoading('Loading registrations...');
+  await loadAll();
+  hideLoading();
   const pending=signups.filter(s=>s.status==='pending');
   const pendingEl=document.getElementById('pending-list');
   if(!pending.length){
@@ -851,7 +912,7 @@ function renderSignupLists(){
 }
 
 // ═══ PEOPLE ═════════════════════════════════════════════════
-function addPerson(){
+async function addPerson(){
   const name=document.getElementById('m-name').value.trim();
   const id=document.getElementById('m-id').value.trim();
   const type=document.getElementById('m-type').value;
@@ -859,22 +920,24 @@ function addPerson(){
   if(!name||!id){toast('⚠️ Name and Employee ID are required.');return;}
   if(people.find(p=>p.id===id)){toast('⚠️ This Employee ID already exists.');return;}
   people.push({name,id,type,section:sec,pin:'1234',uid:Date.now(),status:'approved'});
-  save();renderPeople();
+  showLoading('Saving...');await save();hideLoading();
+  renderPeople();
   document.getElementById('m-name').value='';
   document.getElementById('m-id').value='';
   document.getElementById('m-sec').value='';
   toast('✅ '+name+' added! Default PIN: 1234');
 }
-function deletePerson(uid){
+async function deletePerson(uid){
   if(!confirm('Delete this teacher?'))return;
   people=people.filter(p=>p.uid!==uid);
-  save();renderPeople();renderSignupLists();
+  showLoading('Deleting...');await save();hideLoading();
+  renderPeople();renderSignupLists();
   toast('🗑️ Deleted.');
 }
-function resetPin(uid){
+async function resetPin(uid){
   if(!confirm('Reset this teacher\'s PIN to 1234?'))return;
   const p=people.find(p=>p.uid===uid);
-  if(p){p.pin='1234';save();toast('🔑 PIN reset to 1234 for '+p.name);}
+  if(p){p.pin='1234';showLoading('Saving...');await save();hideLoading();toast('🔑 PIN reset to 1234 for '+p.name);}
 }
 function renderPeople(){
   const q=(document.getElementById('search-p')||{value:''}).value.toLowerCase();
@@ -944,17 +1007,19 @@ function exportCSV(){
 
 // ═══ SETTINGS ═══════════════════════════════════════════════
 function loadSettings(){document.getElementById('s-school').value=settings.school||'';}
-function saveSettings(){
+async function saveSettings(){
   const school=document.getElementById('s-school').value.trim();
   const pw=document.getElementById('s-pw').value,pw2=document.getElementById('s-pw2').value;
   if(school)settings.school=school;
   if(pw){if(pw!==pw2){toast('⚠️ Passwords do not match.');return;}settings.password=pw;document.getElementById('s-pw').value='';document.getElementById('s-pw2').value='';}
-  save();applySchoolName();toast('✅ Settings saved!');
+  showLoading('Saving settings...');await fbSet('/settings',settings);hideLoading();
+  applySchoolName();toast('✅ Settings saved!');
 }
-function clearAll(){
+async function clearAll(){
   if(!confirm('This will delete ALL data! Are you sure?'))return;
   if(!confirm('FINAL WARNING: This cannot be undone!'))return;
-  people=[];records=[];signups=[];save();
+  people=[];records=[];signups=[];
+  showLoading('Clearing data...');await save();hideLoading();
   toast('🗑️ All data cleared.');refreshDashboard();updatePendingNotif();
 }
 
@@ -964,10 +1029,6 @@ function toast(msg){
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
 }
-
-// ═══ INIT ═══════════════════════════════════════════════════
-applySchoolName();
-if(window.location.search.includes('checkin='))initCheckin();
 </script>
 </body>
 </html>
