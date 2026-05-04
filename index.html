@@ -283,7 +283,10 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
   <div class="adm-hdr">
     <span>🏫</span><h1 id="adm-title">Admin Panel</h1><span class="adm-badge">ADMIN</span>
     <div class="adm-hdr-btns">
-      <button class="btn btn-sm btn-or" onclick="printQR()">🖨️ Print QR</button>
+      <button class="btn btn-sm btn-or" onclick="showTodaysCode()">🔑 Today's Code</button>
+      <button class="btn btn-sm btn-or" onclick="showWeeklyCodes()">📅 Generate Weekly Codes</button>
+      <button class="btn btn-sm btn-o" onclick="window.open('https://annaselga.github.io/DTR_TSAJINHSNew/login.html','_blank')" style="background:#fff">🌐 Open DTR Page ↗</button>
+      <button class="btn btn-sm btn-o" onclick="printQR()" style="background:#fff">🖨️ Print QR</button>
       <button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:none;color:#fff" onclick="goHome()">← Exit</button>
     </div>
   </div>
@@ -463,7 +466,31 @@ function goCIDirect(){
   ss('s-ci');
 }
 
-// ══ DAILY CODE ═════════════════════════════════════════════
+function showTodaysCode(){
+  const code=getDailyCode();
+  const url=getQRUrl();
+  alert('📋 TODAY\'S ATTENDANCE CODE\n\n'+
+    'Date: '+today()+'\n'+
+    'Code: '+code+'\n\n'+
+    'QR Link:\n'+url+'\n\n'+
+    'Share this link or show the QR code from the Dashboard.');
+}
+
+function showWeeklyCodes(){
+  const codes=[];
+  for(let i=0;i<7;i++){
+    const d=new Date();d.setDate(d.getDate()+i);
+    const dStr=d.toLocaleDateString('en-CA');
+    const seed=dStr.replace(/-/g,'');
+    let h=0;for(let j=0;j<seed.length;j++){h=(h<<5)-h+seed.charCodeAt(j);h|=0;}
+    const C='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='',hh=Math.abs(h);
+    for(let k=0;k<6;k++){c+=C[hh%C.length];hh=Math.floor(hh/C.length)||Math.abs(h*(k+7));}
+    const label=i===0?'Today':i===1?'Tomorrow':d.toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric'});
+    codes.push(label+': '+c);
+  }
+  alert('📅 WEEKLY ATTENDANCE CODES\n\n'+codes.join('\n')+'\n\n⚠️ Keep these codes confidential.\nShare only the QR code, not the codes directly.');
+}
+
 function getDailyCode(){
   const d=today(),seed=d.replace(/-/g,'');
   let h=0;for(let i=0;i<seed.length;i++){h=(h<<5)-h+seed.charCodeAt(i);h|=0;}
