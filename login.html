@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Teacher Login — DTR</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --navy:#0d2137;--blue:#1a4a7a;--blue2:#2563eb;
+  --green:#059669;--red:#dc2626;--amber:#d97706;
+  --border:#dde4ef;--muted:#64748b;--text:#0f172a;
+}
+body{
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:linear-gradient(160deg,#0d2137 0%,#1a3a6b 60%,#0f2144 100%);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.25rem;
+}
+
+/* CARD */
+.card{
+  background:#fff;border-radius:22px;padding:2rem 1.75rem;
+  width:100%;max-width:380px;
+  box-shadow:0 24px 64px rgba(0,0,0,0.45);
+}
+
+/* HEADER */
+.card-header{text-align:center;margin-bottom:1.75rem}
+.school-name{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.5rem}
+.card-title{font-size:1.35rem;font-weight:800;color:var(--blue);margin-bottom:3px;display:flex;align-items:center;justify-content:center;gap:8px}
+.card-date{font-size:.78rem;color:var(--muted)}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+.field label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.field input{
+  padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:10px;
+  font-size:1.05rem;font-weight:600;outline:none;transition:border-color .2s;color:var(--text);
+  width:100%;
+}
+.field input:focus{border-color:var(--blue2)}
+.field input::placeholder{font-weight:400;font-size:.9rem}
+
+/* PIN DOTS */
+.pin-label-row{display:flex;justify-content:space-between;align-items:center}
+.pin-label-row label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.pin-toggle{font-size:.72rem;color:var(--blue2);cursor:pointer;font-weight:600;border:none;background:none;padding:0}
+.pin-dots{display:flex;justify-content:center;gap:.6rem;margin:.75rem 0 .25rem}
+.pin-dot{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid var(--border);background:#fff;
+  transition:all .15s;
+}
+.pin-dot.filled{background:var(--blue);border-color:var(--blue)}
+.pin-dot.error{background:var(--red);border-color:var(--red);animation:shake .3s ease}
+
+/* PIN PAD */
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0 .25rem}
+.pkey{
+  padding:1rem;border:1.5px solid var(--border);border-radius:11px;
+  background:#fff;font-size:1.3rem;font-weight:700;cursor:pointer;
+  transition:all .12s;color:var(--text);line-height:1;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+}
+.pkey:hover{background:#f0f4f8;border-color:#94a3b8}
+.pkey:active{transform:scale(.93);background:#dbeafe;border-color:var(--blue2)}
+.pkey .sub{font-size:.45rem;letter-spacing:.12rem;color:var(--muted);font-weight:600;margin-top:2px;height:.7rem}
+.pkey.pzero{grid-column:2}
+.pkey.pdel{font-size:1rem;color:var(--muted)}
+
+/* ERROR MSG */
+.err-msg{color:var(--red);font-size:.78rem;text-align:center;min-height:1.1rem;font-weight:600;margin:.25rem 0}
+
+/* LOGIN BTN */
+.login-btn{
+  width:100%;padding:.9rem;border:none;border-radius:11px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;font-size:1rem;font-weight:800;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:.5rem;
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.4)}
+.login-btn:active{transform:scale(.98)}
+.hint{font-size:.68rem;color:var(--muted);text-align:center;margin-top:.75rem}
+
+/* RESULT SCREEN */
+.result{display:none;text-align:center;padding:.5rem 0}
+.result-icon{font-size:4.5rem;display:block;margin-bottom:.5rem;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+.result-action{font-size:2rem;font-weight:900;margin-bottom:4px}
+.result-action.in{color:var(--green)}
+.result-action.out{color:var(--red)}
+.result-name{font-size:1.15rem;font-weight:700;margin-bottom:3px;color:var(--text)}
+.result-dept{font-size:.78rem;color:var(--muted);margin-bottom:.75rem}
+.result-time{font-size:2.2rem;font-weight:900;color:var(--blue);margin-bottom:.25rem}
+.result-date{font-size:.75rem;color:var(--muted)}
+.result-again{
+  margin-top:1.25rem;background:none;border:1.5px solid var(--border);
+  border-radius:9px;padding:.6rem 1.5rem;cursor:pointer;font-size:.85rem;
+  color:var(--muted);font-weight:600;transition:all .2s;width:100%;
+}
+.result-again:hover{border-color:var(--blue2);color:var(--blue)}
+
+/* CHANGE PIN */
+.change-pin-wrap{
+  margin-top:1rem;padding:1rem;border-radius:12px;
+  background:#fffbeb;border:1.5px solid #fcd34d;display:none;
+}
+.change-pin-wrap p{font-size:.78rem;font-weight:700;color:var(--amber);margin-bottom:.75rem}
+.change-pin-wrap .field{margin-bottom:.6rem}
+.change-pin-wrap .field input{font-size:.9rem;padding:.55rem .75rem}
+.save-pin-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:.55rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;width:100%}
+
+/* FOOTER */
+.page-footer{margin-top:1.5rem;text-align:center;color:rgba(255,255,255,.3);font-size:.72rem}
+.page-footer a{color:rgba(255,255,255,.45);text-decoration:none}
+.page-footer a:hover{color:rgba(255,255,255,.7)}
+
+/* ANIMATIONS */
+@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fadeUp .35s ease}
+</style>
+</head>
+<body>
+
+<div class="card" id="main-card">
+  <!-- HEADER -->
+  <div class="card-header">
+    <div class="school-name" id="school-name-label">School DTR</div>
+    <div class="card-title">👤 Employee Login</div>
+    <div class="card-date" id="today-label"></div>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <div id="login-form">
+    <div class="field">
+      <label>Employee ID</label>
+      <input type="text" id="emp-id" placeholder="e.g. T-2024-001" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('emp-id').blur()">
+    </div>
+
+    <div class="field">
+      <div class="pin-label-row">
+        <label>PIN Code</label>
+        <button class="pin-toggle" id="pin-toggle-btn" onclick="togglePinInput()">Use keyboard instead</button>
+      </div>
+      <!-- Visual PIN dots -->
+      <div class="pin-dots" id="pin-dots">
+        <div class="pin-dot" id="pd0"></div>
+        <div class="pin-dot" id="pd1"></div>
+        <div class="pin-dot" id="pd2"></div>
+        <div class="pin-dot" id="pd3"></div>
+      </div>
+      <!-- Numpad -->
+      <div class="pin-pad" id="pin-pad">
+        <button class="pkey" onclick="pinPress('1')">1<span class="sub"></span></button>
+        <button class="pkey" onclick="pinPress('2')">2<span class="sub">ABC</span></button>
+        <button class="pkey" onclick="pinPress('3')">3<span class="sub">DEF</span></button>
+        <button class="pkey" onclick="pinPress('4')">4<span class="sub">GHI</span></button>
+        <button class="pkey" onclick="pinPress('5')">5<span class="sub">JKL</span></button>
+        <button class="pkey" onclick="pinPress('6')">6<span class="sub">MNO</span></button>
+        <button class="pkey" onclick="pinPress('7')">7<span class="sub">PQRS</span></button>
+        <button class="pkey" onclick="pinPress('8')">8<span class="sub">TUV</span></button>
+        <button class="pkey" onclick="pinPress('9')">9<span class="sub">WXYZ</span></button>
+        <button class="pkey pzero" onclick="pinPress('0')">0</button>
+        <button class="pkey pdel" onclick="pinDel()">⌫</button>
+      </div>
+      <!-- Keyboard fallback -->
+      <input type="password" id="pin-keyboard" inputmode="numeric" maxlength="4" placeholder="4-digit PIN" style="display:none;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:10px;font-size:1.2rem;font-weight:700;outline:none;width:100%;text-align:center;letter-spacing:.4rem;transition:border-color .2s" oninput="syncKeyboardPin()" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <div class="err-msg" id="err-msg"></div>
+    <button class="login-btn" onclick="doLogin()">Login ➤</button>
+    <div class="hint">First time? Use your Employee ID and default PIN: <strong>1234</strong></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result" id="login-result">
+    <span class="result-icon" id="r-icon">🟢</span>
+    <div class="result-action" id="r-action">TIME IN</div>
+    <div class="result-name" id="r-name">Juan dela Cruz</div>
+    <div class="result-dept" id="r-dept">Science Dept. · Teacher</div>
+    <div class="result-time" id="r-time">08:00 AM</div>
+    <div class="result-date" id="r-date"></div>
+    <button class="result-again" onclick="resetLogin()">← Log another</button>
+  </div>
+
+  <!-- CHANGE PIN PROMPT -->
+  <div class="change-pin-wrap" id="change-pin-wrap">
+    <p>🔑 You are using the default PIN. Please change it now for security.</p>
+    <div class="field">
+      <label>New PIN (4 digits)</label>
+      <input type="password" id="new-pin" inputmode="numeric" maxlength="4" placeholder="••••">
+    </div>
+    <div class="field">
+      <label>Confirm New PIN</label>
+      <input type="password" id="new-pin2" inputmode="numeric" maxlength="4" placeholder="••••">
+    </div>
+    <button class="save-pin-btn" onclick="savePin()">✅ Save New PIN</button>
+  </div>
+</div>
+
+<div class="page-footer">
+  <a href="https://annaselga.github.io/DTR_TSAJINHSNew/" target="_blank">← Back to Main DTR Site</a>
+</div>
+
+<script>
+// ═══ DATA (shared localStorage with main site) ═══════════════
+let people  = JSON.parse(localStorage.getItem('dtr_people')  || '[]');
+let records = JSON.parse(localStorage.getItem('dtr_records') || '[]');
+let settings= JSON.parse(localStorage.getItem('dtr_settings')|| '{"school":"School DTR","password":"admin123"}');
+
+function saveRecords(){localStorage.setItem('dtr_records',JSON.stringify(records));}
+function savePeople(){localStorage.setItem('dtr_people',JSON.stringify(people));}
+
+function today(){return new Date().toLocaleDateString('en-CA');}
+function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true});}
+
+// ═══ INIT ════════════════════════════════════════════════════
+document.getElementById('school-name-label').textContent = settings.school;
+document.getElementById('today-label').textContent =
+  new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+// ═══ PIN PAD ════════════════════════════════════════════════
+let pinValue = '';
+let usingKeyboard = false;
+
+function pinPress(d){
+  if(pinValue.length>=4) return;
+  pinValue += d;
+  updateDots();
+  clearErr();
+  if(pinValue.length===4) setTimeout(doLogin, 250);
+}
+
+function pinDel(){
+  pinValue = pinValue.slice(0,-1);
+  updateDots();
+  clearErr();
+}
+
+function updateDots(error){
+  for(let i=0;i<4;i++){
+    const dot = document.getElementById('pd'+i);
+    dot.className = 'pin-dot' + (i < pinValue.length ? (error ? ' error' : ' filled') : '');
+  }
+}
+
+function syncKeyboardPin(){
+  pinValue = document.getElementById('pin-keyboard').value;
+  clearErr();
+}
+
+function togglePinInput(){
+  usingKeyboard = !usingKeyboard;
+  document.getElementById('pin-pad').style.display   = usingKeyboard ? 'none' : 'grid';
+  document.getElementById('pin-dots').style.display  = usingKeyboard ? 'none' : 'flex';
+  document.getElementById('pin-keyboard').style.display = usingKeyboard ? 'block' : 'none';
+  document.getElementById('pin-toggle-btn').textContent = usingKeyboard ? 'Use numpad instead' : 'Use keyboard instead';
+  if(usingKeyboard) document.getElementById('pin-keyboard').focus();
+  pinValue = '';
+  if(!usingKeyboard) updateDots();
+  else document.getElementById('pin-keyboard').value = '';
+}
+
+function clearErr(){ document.getElementById('err-msg').textContent = ''; }
+
+function showErr(msg){
+  document.getElementById('err-msg').textContent = msg;
+  if(!usingKeyboard) updateDots(true);
+  pinValue = '';
+  if(usingKeyboard) document.getElementById('pin-keyboard').value = '';
+  setTimeout(()=>{ if(!usingKeyboard) updateDots(); }, 600);
+}
+
+// ═══ LOGIN ══════════════════════════════════════════════════
+let currentPerson = null;
+
+function doLogin(){
+  // Re-read from storage in case admin added someone
+  people  = JSON.parse(localStorage.getItem('dtr_people')  || '[]');
+  records = JSON.parse(localStorage.getItem('dtr_records') || '[]');
+
+  const id = document.getElementById('emp-id').value.trim();
+  if(!id){ showErr('Please enter your Employee ID.'); return; }
+
+  const pin = usingKeyboard ? document.getElementById('pin-keyboard').value : pinValue;
+  if(pin.length < 4){ showErr('Please enter your 4-digit PIN.'); return; }
+
+  // Check if pending
+  const signups = JSON.parse(localStorage.getItem('dtr_signups')||'[]');
+  if(signups.find(s=>s.id===id&&s.status==='pending')){
+    showErr('Your account is pending admin approval.');
+    return;
+  }
+
+  const person = people.find(p=>p.id===id);
+  if(!person){ showErr('Employee ID not found. Please register first.'); return; }
+
+  // Only allow teacher/staff
+  if(person.type==='student'){ showErr('This portal is for Teachers and Staff only.'); return; }
+
+  const correctPin = person.pin || '1234';
+  if(pin !== correctPin){ showErr('Incorrect PIN. Please try again.'); return; }
+
+  currentPerson = person;
+
+  // Record attendance
+  const t = today();
+  const todayRecs = records.filter(r=>r.date===t && r.personId===person.id);
+  const lastRec = todayRecs[todayRecs.length-1];
+  const isIn = !lastRec || lastRec.timeOut;
+  const time = timeNow();
+
+  if(isIn){
+    records.push({date:t, personId:person.id, name:person.name, type:person.type, section:person.section||'', timeIn:time, timeOut:null, uid:Date.now()});
+  } else {
+    lastRec.timeOut = time;
+  }
+  saveRecords();
+
+  // Show result
+  document.getElementById('login-form').style.display = 'none';
+  const res = document.getElementById('login-result');
+  res.style.display = 'block';
+  document.getElementById('r-icon').textContent = isIn ? '🟢' : '🔴';
+  document.getElementById('r-action').textContent = isIn ? 'TIME IN' : 'TIME OUT';
+  document.getElementById('r-action').className = 'result-action ' + (isIn ? 'in' : 'out');
+  document.getElementById('r-name').textContent = person.name;
+  document.getElementById('r-dept').textContent = (person.section||'') + (person.section?' · ':'') + (person.type==='teacher'?'Teacher':'Staff');
+  document.getElementById('r-time').textContent = time;
+  document.getElementById('r-date').textContent = new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  // Prompt PIN change if still default
+  if(correctPin === '1234'){
+    document.getElementById('change-pin-wrap').style.display = 'block';
+  }
+}
+
+function resetLogin(){
+  document.getElementById('login-form').style.display = 'block';
+  document.getElementById('login-result').style.display = 'none';
+  document.getElementById('change-pin-wrap').style.display = 'none';
+  document.getElementById('emp-id').value = '';
+  document.getElementById('new-pin').value = '';
+  document.getElementById('new-pin2').value = '';
+  pinValue = '';
+  updateDots();
+  if(usingKeyboard) document.getElementById('pin-keyboard').value='';
+  clearErr();
+  currentPerson = null;
+}
+
+function savePin(){
+  const p1 = document.getElementById('new-pin').value;
+  const p2 = document.getElementById('new-pin2').value;
+  if(!/^\d{4}$/.test(p1)){ alert('PIN must be exactly 4 digits.'); return; }
+  if(p1!==p2){ alert('PINs do not match.'); return; }
+  const idx = people.findIndex(p=>p.uid===currentPerson.uid);
+  if(idx>=0){ people[idx].pin=p1; savePeople(); }
+  document.getElementById('change-pin-wrap').style.display = 'none';
+  document.getElementById('change-pin-wrap').innerHTML = '<p style="color:var(--green);font-weight:700;text-align:center">✅ PIN changed successfully!</p>';
+  document.getElementById('change-pin-wrap').style.display = 'block';
+  setTimeout(()=>{ document.getElementById('change-pin-wrap').style.display='none'; }, 3000);
+}
+</script>
+</body>
+</html>
