@@ -621,7 +621,42 @@ async function loadDash(){
   document.getElementById('d-pend').textContent=sigs.filter(s=>s.status==='pending').length;
   const w=document.getElementById('d-tbl');
   if(!todayR.length){w.innerHTML='<div class="empty"><div class="ei">📋</div><p>No attendance today.</p></div>';return;}
-  w.innerHTML=`<table><thead><tr><th>Name</th><th>Role</th><th>Dept</th><th>Time In</th><th>Time Out</th><th>Hours</th></tr></thead><tbody>${todayR.map(r=>`<tr><td style="font-weight:600">${r.name}</td><td><span class="badge ${TC[r.type]||'b-t'}">${TL[r.type]||r.type}</span></td><td>${r.section||'-'}</td><td><span class="badge b-in">${r.timeIn}</span></td><td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td><td>${calcH(r.timeIn,r.timeOut)}</td></tr>`).join('')}</tbody></table>`;
+  w.innerHTML=`
+    <div style="display:flex;justify-content:flex-end;margin-bottom:.75rem">
+      <button class="btn btn-d btn-sm" onclick="clearTodayRecs()">🗑️ Clear Today's Records</button>
+    </div>
+    <table><thead><tr><th>Name</th><th>Role</th><th>Dept</th><th>Time In</th><th>Time Out</th><th>Hours</th><th></th></tr></thead><tbody>
+    ${todayR.map(r=>`<tr>
+      <td style="font-weight:600">${r.name}</td>
+      <td><span class="badge ${TC[r.type]||'b-t'}">${TL[r.type]||r.type}</span></td>
+      <td>${r.section||'-'}</td>
+      <td><span class="badge b-in">${r.timeIn}</span></td>
+      <td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td>
+      <td>${calcH(r.timeIn,r.timeOut)}</td>
+      <td><button class="btn btn-d btn-sm" onclick="delRecord(${r.uid})" title="Delete this record">🗑️</button></td>
+    </tr>`).join('')}
+    </tbody></table>`;
+}
+
+async function delRecord(uid){
+  if(!confirm('Delete this attendance record?'))return;
+  load('Deleting...');
+  await fbDel('/records/'+uid);
+  unload();
+  toast('🗑️ Record deleted.');
+  loadDash();
+}
+async function clearTodayRecs(){
+  if(!confirm('Delete ALL of today\'s attendance records?'))return;
+  load('Clearing...');
+  const allRecs=await fbGet('/records');
+  const recs=allRecs?Object.values(allRecs).filter(x=>x):[];
+  const t=today();
+  const todayR=recs.filter(r=>r.date===t);
+  await Promise.all(todayR.map(r=>fbDel('/records/'+r.uid)));
+  unload();
+  toast('🗑️ Today\'s records cleared.');
+  loadDash();
 }
 
 async function loadNotif(){
