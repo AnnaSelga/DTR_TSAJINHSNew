@@ -8,96 +8,113 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--navy:#0d2137;--blue:#1a4a7a;--blue2:#2563eb;--green:#059669;--red:#dc2626;--amber:#d97706;--bg:#f0f4f8;--border:#dde4ef;--muted:#64748b;--text:#0f172a}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);min-height:100vh}
+:root{
+  --navy:#0d2137;--blue:#1a4a7a;--blue2:#2563eb;
+  --green:#059669;--red:#dc2626;--amber:#d97706;
+  --orange:#e85d04;--orange2:#f97316;
+  --bg:#f0f4f8;--surface:#fff;--border:#dde4ef;
+  --text:#0f172a;--muted:#64748b;--radius:14px;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);min-height:100vh;color:var(--text)}
 .screen{display:none;min-height:100vh;flex-direction:column}
 .screen.active{display:flex}
-/* HOME */
+
+/* ── HOME ── */
 #s-home{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center;text-align:center}
-.home-wrap{padding:2rem;max-width:460px;width:100%}
-.home-logo{font-size:4rem;display:block;margin-bottom:.75rem;animation:bob 3s ease-in-out infinite}
+.hw{padding:2rem;max-width:420px;width:100%}
+.hw .logo{font-size:4rem;display:block;margin-bottom:.75rem;animation:bob 3s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.home-title{color:#fff;font-size:1.75rem;font-weight:800;margin-bottom:2px}
-.home-sub{color:rgba(255,255,255,.4);font-size:.8rem;margin-bottom:1.5rem}
-#home-clock{display:block;color:rgba(255,255,255,.8);font-size:2rem;font-weight:700;letter-spacing:2px;margin-bottom:3px;font-variant-numeric:tabular-nums}
-#home-date{color:rgba(255,255,255,.35);font-size:.75rem;margin-bottom:1.75rem}
+.hw .title{color:#fff;font-size:1.75rem;font-weight:800;margin-bottom:3px}
+.hw .sub{color:rgba(255,255,255,.4);font-size:.8rem;margin-bottom:1.5rem}
+#hclock{display:block;color:rgba(255,255,255,.8);font-size:2rem;font-weight:700;letter-spacing:2px;margin-bottom:3px;font-variant-numeric:tabular-nums}
+#hdate{color:rgba(255,255,255,.35);font-size:.75rem;margin-bottom:1.75rem}
 .hmenu{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.hbtn{padding:1.25rem 1rem;border-radius:14px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;text-align:center;transition:all .2s}
-.hbtn:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
-.hbtn .ic{font-size:1.8rem;display:block;margin-bottom:5px}
-.hbtn .lb{font-size:.88rem;font-weight:700;display:block}
-.hbtn .dc{font-size:.68rem;opacity:.5;margin-top:2px;display:block}
-.hbtn.gate{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
-.hbtn.signup{border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.08)}
-.hbtn.teacher{border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)}
-.hbtn.admin{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+.hb{padding:1.25rem 1rem;border-radius:14px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;text-align:center;transition:all .2s}
+.hb:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
+.hb .ic{font-size:1.8rem;display:block;margin-bottom:5px}
+.hb .lb{font-size:.88rem;font-weight:700;display:block}
+.hb .dc{font-size:.68rem;opacity:.5;margin-top:2px;display:block}
+.hb.su{border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.08)}
+.hb.tc{border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)}
+.hb.ad{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
 .ver{margin-top:1rem;color:rgba(255,255,255,.2);font-size:.65rem}
-/* GATE */
-#s-gate{background:linear-gradient(180deg,#0f2144,#1a3a6b);color:#fff;align-items:center;justify-content:center;position:relative}
-.gate-exit{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);padding:.35rem .8rem;border-radius:8px;cursor:pointer;font-size:.72rem}
-.gate-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem;gap:.5rem;max-width:500px;width:100%}
-.gate-school{font-size:.8rem;color:rgba(255,255,255,.5);font-weight:500}
-.gate-title{font-size:1.4rem;font-weight:800}
-.gate-sub{font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:.5rem}
-.gate-clock{font-size:5rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:3px;line-height:1}
-.gate-date-txt{font-size:1rem;color:rgba(255,255,255,.5);margin-bottom:1rem}
-.gate-qr-card{background:#fff;border-radius:22px;padding:1.25rem 1.25rem .875rem;display:flex;flex-direction:column;align-items:center;gap:.625rem;box-shadow:0 8px 40px rgba(0,0,0,.35)}
-.gate-code{font-size:2rem;font-weight:900;letter-spacing:.5rem;color:#e85d04;font-family:monospace}
-.gate-code-date{font-size:.72rem;color:#94a3b8}
-.gate-hint{margin-top:.75rem;font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.6}
-.gate-hint strong{color:#f97316}
-.live-bar{display:flex;align-items:center;gap:7px;background:rgba(5,150,105,.15);border:1px solid rgba(52,211,153,.25);border-radius:20px;padding:.35rem .9rem;font-size:.7rem;color:#6ee7b7;margin-top:.5rem}
-.ldot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:lp 1.5s infinite}
-@keyframes lp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{opacity:.8;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
-/* SIGNUP */
+
+/* ── SIGNUP ── */
 #s-signup{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center;padding:2rem}
 .su-card{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:480px}
 .su-card h2{font-size:1.15rem;font-weight:800;color:var(--blue);margin-bottom:.25rem}
 .su-card p{font-size:.78rem;color:var(--muted);margin-bottom:1.25rem}
-/* CHECKIN */
+
+/* ── CHECK-IN ── */
 #s-ci{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center;padding:1.5rem}
 .ci-card{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
 .ci-school{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;text-align:center}
 .ci-title{font-size:1.25rem;font-weight:800;color:var(--blue);text-align:center;margin-bottom:2px}
 .ci-date{font-size:.75rem;color:var(--muted);text-align:center;margin-bottom:1.25rem}
-.pin-dots{display:flex;justify-content:center;gap:.55rem;margin:.6rem 0 .2rem}
-.pdot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);transition:all .15s}
-.pdot.on{background:var(--navy);border-color:var(--navy)}
-.pdot.err{background:var(--red);border-color:var(--red);animation:shk .3s}
+.pdots{display:flex;justify-content:center;gap:.55rem;margin:.6rem 0 .2rem}
+.pd{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);transition:all .15s}
+.pd.on{background:var(--navy);border-color:var(--navy)}
+.pd.err{background:var(--red);border-color:var(--red);animation:shk .3s}
 @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin:.5rem 0}
+.ppad{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin:.5rem 0}
 .pk{padding:.8rem;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .12s;color:var(--text);display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1}
 .pk .sb{font-size:.38rem;letter-spacing:.1rem;color:var(--muted);font-weight:600;margin-top:2px}
 .pk:active{transform:scale(.93);background:#dbeafe;border-color:var(--blue2)}
 .pk.pz{grid-column:2}
-.pk.pd{font-size:.9rem;color:var(--muted)}
+.pk.pd2{font-size:.9rem;color:var(--muted)}
 .ci-err{color:var(--red);font-size:.75rem;text-align:center;min-height:1rem;font-weight:600;margin:.2rem 0}
-.ci-res{text-align:center;padding:.5rem 0;display:none}
+.ci-res{text-align:center;padding:.5rem 0;display:none;animation:pop .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 .ci-res .ri{font-size:3.5rem;display:block;margin-bottom:.5rem}
 .ci-res .ra{font-size:1.75rem;font-weight:900;margin-bottom:4px}
 .ci-res .ra.in{color:var(--green)}.ci-res .ra.out{color:var(--red)}
 .ci-res .rt{font-size:1.8rem;font-weight:800;color:var(--navy)}
-.ci-res .rs{font-size:.75rem;color:var(--muted);margin-top:4px}
 .ci-again{margin-top:1rem;background:none;border:1.5px solid var(--border);border-radius:9px;padding:.55rem 1.25rem;cursor:pointer;font-size:.82rem;color:var(--muted);font-weight:600;width:100%}
-/* LOGIN */
+
+/* ── ADMIN LOGIN ── */
 #s-login{background:linear-gradient(155deg,#0d2137,#0f3460 60%,#1a1a2e);align-items:center;justify-content:center}
 .lc{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:340px}
 .lc h2{font-size:1.1rem;font-weight:800;color:var(--blue);margin-bottom:.25rem}
 .lc p{font-size:.78rem;color:var(--muted);margin-bottom:1.25rem}
-/* ADMIN */
+
+/* ── ADMIN PANEL ── */
 #s-admin{background:var(--bg)}
-.adm-hdr{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:.875rem 1.5rem;display:flex;align-items:center;gap:10px}
+.adm-hdr{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:.875rem 1.5rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .adm-hdr h1{font-size:.95rem;font-weight:700}
 .adm-badge{background:rgba(251,191,36,.25);border:1px solid rgba(251,191,36,.5);color:#fbbf24;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px}
+.adm-hdr-btns{margin-left:auto;display:flex;gap:.5rem;flex-wrap:wrap}
 .adm-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto}
 .adm-nav button{padding:.8rem 1.25rem;border:none;background:none;cursor:pointer;font-size:.8rem;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
 .adm-nav button.active{color:var(--blue);border-bottom-color:var(--blue2)}
-.adm-tab{display:none;padding:1.25rem 1.5rem;max-width:1100px;margin:0 auto}
+.adm-nav button:hover:not(.active){background:#f8fafc}
+.adm-tab{display:none;padding:1.25rem 1.5rem;max-width:1100px;margin:0 auto;width:100%}
 .adm-tab.active{display:block}
-.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.qr-section{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
+.qr-section h3{font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:1rem}
+.qr-box{display:inline-flex;flex-direction:column;align-items:center;gap:.5rem;background:#fff;border-radius:14px;padding:1rem;box-shadow:0 2px 14px rgba(0,0,0,.1)}
+.daily-code{font-size:1.5rem;font-weight:900;letter-spacing:.4rem;color:var(--orange);font-family:monospace}
+.code-date{font-size:.7rem;color:var(--muted)}
+.qr-btns{display:flex;gap:.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap}
+.records-section{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.records-section h3{font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
+.big-num{font-size:3rem;font-weight:900;color:var(--green);text-align:center;margin:.5rem 0}
+.big-lbl{font-size:.78rem;color:var(--muted);text-align:center}
+
+/* ── SCHEDULE SECTION ── */
+.sched-section{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+.sched-section h3{font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:.25rem}
+.sched-section p{font-size:.75rem;color:var(--muted);margin-bottom:1rem}
+.sched-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.sched-note{font-size:.75rem;color:var(--muted);margin-top:.75rem;padding:.75rem;background:#f8fafc;border-radius:8px;grid-column:1/-1}
+
+/* ── COMMON CARDS ── */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
 .card h3{font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:.875rem}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1rem}
-.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1rem;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem}
+.stat{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
 .stat .n{font-size:1.75rem;font-weight:800;color:var(--blue)}
 .stat .l{font-size:.7rem;color:var(--muted);margin-top:2px}
 table{width:100%;border-collapse:collapse;font-size:.845rem}
@@ -108,6 +125,8 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
 .badge{display:inline-block;font-size:.67rem;font-weight:700;padding:2px 8px;border-radius:20px}
 .b-in{background:#d1fae5;color:#065f46}
 .b-out{background:#fee2e2;color:#991b1b}
+.b-late{background:#fef9c3;color:#854d0e}
+.b-ut{background:#fee2e2;color:#991b1b}
 .b-t{background:#dbeafe;color:#1e40af}
 .b-s{background:#f3e8ff;color:#5b21b6}
 .empty{text-align:center;padding:2.5rem;color:var(--muted)}
@@ -120,7 +139,6 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
 .ab.gy{border-color:#cbd5e1;color:#475569}.ab.gy:hover{background:#f8fafc}
 .ab.bl{border-color:#bae6fd;color:#0369a1}.ab.bl:hover{background:#f0f9ff}
 .notif{display:inline-block;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;border-radius:50%;width:15px;height:15px;line-height:15px;text-align:center;margin-left:3px}
-/* FORMS */
 .fg{display:flex;flex-direction:column;gap:4px;margin-bottom:.75rem}
 .fg label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 .fg input,.fg select{padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-size:.9rem;outline:none;transition:border-color .2s;color:var(--text);width:100%}
@@ -132,59 +150,54 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
 .btn-s{background:var(--green);color:#fff}
 .btn-d{background:var(--red);color:#fff}
 .btn-a{background:var(--amber);color:#7c4a00}
+.btn-or{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;border:none}
 .btn-sm{padding:.3rem .7rem;font-size:.75rem}
 .frow{display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
 .frow .fg{min-width:140px}
+
+/* PRINT */
+@media print{
+  body *{visibility:hidden}
+  #print-area,#print-area *{visibility:visible}
+  #print-area{position:fixed;top:0;left:0;width:100%;text-align:center;padding:2rem}
+}
+#print-area{display:none}
+
 /* LOADING */
 #ld{position:fixed;inset:0;background:rgba(13,33,55,.8);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;color:#fff;font-size:.95rem;font-weight:600}
 @keyframes spin{to{transform:rotate(360deg)}}
 .sp{font-size:2rem;animation:spin 1s linear infinite}
-/* TOAST */
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--text);color:#fff;padding:.7rem 1.2rem;border-radius:14px;font-size:.85rem;font-weight:500;opacity:0;transform:translateY(8px);transition:all .3s;z-index:9999;max-width:300px}
 .toast.show{opacity:1;transform:translateY(0)}
-@media(max-width:700px){.hmenu{grid-template-columns:1fr}.r2{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.adm-tab{padding:1rem}.abar{padding:.75rem 1rem}}
+@media(max-width:700px){
+  .hmenu,.r2{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .dash-grid,.sched-grid{grid-template-columns:1fr}
+  .adm-tab{padding:1rem}
+  .abar{padding:.75rem 1rem}
+}
 </style>
 </head>
 <body>
 
 <!-- HOME -->
 <div class="screen active" id="s-home">
-  <div class="home-wrap">
-    <span class="home-logo">🏫</span>
-    <div class="home-title" id="hn">School DTR</div>
-    <div class="home-sub">Teacher Daily Time Record System</div>
-    <span id="home-clock">--:--:--</span>
-    <div id="home-date"></div>
+  <div class="hw">
+    <span class="logo">🏫</span>
+    <div class="title" id="hn">School DTR</div>
+    <div class="sub">Teacher Daily Time Record System</div>
+    <span id="hclock">--:--:--</span>
+    <div id="hdate"></div>
     <div class="hmenu">
-      <button class="hbtn gate" onclick="goGate()"><span class="ic">📺</span><span class="lb">Gate Display</span><span class="dc">Show QR code at the gate</span></button>
-      <button class="hbtn signup" onclick="goReg()"><span class="ic">✍️</span><span class="lb">Register</span><span class="dc">New teacher sign-up</span></button>
-      <button class="hbtn teacher" style="grid-column:1/-1" onclick="goCIDirect()"><span class="ic">👤</span><span class="lb">Teacher / Staff Login</span><span class="dc">Log Time In / Time Out using Employee ID & PIN</span></button>
-      <button class="hbtn admin" style="grid-column:1/-1" onclick="goLogin()"><span class="ic">🔐</span><span class="lb">Admin Panel</span><span class="dc">Manage attendance records & approvals</span></button>
+      <button class="hb su" onclick="goReg()"><span class="ic">✍️</span><span class="lb">Register</span><span class="dc">New teacher sign-up</span></button>
+      <button class="hb tc" onclick="goCIDirect()"><span class="ic">👤</span><span class="lb">Teacher Login</span><span class="dc">Time In / Time Out</span></button>
+      <button class="hb ad" style="grid-column:1/-1" onclick="goLogin()"><span class="ic">🔐</span><span class="lb">Admin Panel</span><span class="dc">Manage records, QR code & approvals</span></button>
     </div>
-    <div class="ver">v4.0 — Firebase Direct Write</div>
+    <div class="ver">v5.0 — DTR System</div>
   </div>
 </div>
 
-<!-- GATE -->
-<div class="screen" id="s-gate">
-  <button class="gate-exit" onclick="goHome()">✕ Exit</button>
-  <div class="gate-wrap">
-    <div class="gate-school" id="gate-school">School DTR</div>
-    <div class="gate-title">⏱️ Daily Time Record</div>
-    <div class="gate-sub">Scan the QR code below to Time In / Time Out</div>
-    <div class="gate-clock" id="gate-clock">--:--:-- --</div>
-    <div class="gate-date-txt" id="gate-date"></div>
-    <div class="gate-qr-card">
-      <div id="gate-qr"></div>
-      <div class="gate-code" id="gate-code">------</div>
-      <div class="gate-code-date" id="gate-code-date"></div>
-    </div>
-    <div class="gate-hint">Open <strong>DTR page</strong> on your phone → Login → <strong>Scan this QR code</strong></div>
-    <div class="live-bar"><div class="ldot"></div><span>Connected | Code active for <span id="gate-active"></span></span></div>
-  </div>
-</div>
-
-<!-- REGISTER -->
+<!-- SIGNUP -->
 <div class="screen" id="s-signup">
   <div class="su-card">
     <h2>✍️ Teacher Registration</h2>
@@ -220,8 +233,8 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
       <div class="fg"><label>Employee ID</label><input id="ci-id" placeholder="e.g. T-2024-001" autocomplete="off"></div>
       <div class="fg">
         <label>PIN Code</label>
-        <div class="pin-dots"><div class="pdot" id="pd0"></div><div class="pdot" id="pd1"></div><div class="pdot" id="pd2"></div><div class="pdot" id="pd3"></div></div>
-        <div class="pin-pad">
+        <div class="pdots"><div class="pd" id="pd0"></div><div class="pd" id="pd1"></div><div class="pd" id="pd2"></div><div class="pd" id="pd3"></div></div>
+        <div class="ppad">
           <button class="pk" onclick="pp('1')">1<span class="sb"></span></button>
           <button class="pk" onclick="pp('2')">2<span class="sb">ABC</span></button>
           <button class="pk" onclick="pp('3')">3<span class="sb">DEF</span></button>
@@ -232,7 +245,7 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
           <button class="pk" onclick="pp('8')">8<span class="sb">TUV</span></button>
           <button class="pk" onclick="pp('9')">9<span class="sb">WXYZ</span></button>
           <button class="pk pz" onclick="pp('0')">0</button>
-          <button class="pk pd" onclick="pdel()">⌫</button>
+          <button class="pk pd2" onclick="pdel()">⌫</button>
         </div>
       </div>
       <div class="ci-err" id="ci-err"></div>
@@ -269,7 +282,10 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
 <div class="screen" id="s-admin">
   <div class="adm-hdr">
     <span>🏫</span><h1 id="adm-title">Admin Panel</h1><span class="adm-badge">ADMIN</span>
-    <div style="margin-left:auto"><button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:none;color:#fff" onclick="goHome()">← Exit</button></div>
+    <div class="adm-hdr-btns">
+      <button class="btn btn-sm btn-or" onclick="printQR()">🖨️ Print QR</button>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:none;color:#fff" onclick="goHome()">← Exit</button>
+    </div>
   </div>
   <div class="adm-nav">
     <button class="active" onclick="aTab('dash',this)">📊 Dashboard</button>
@@ -278,15 +294,50 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
     <button onclick="aTab('recs',this)">📋 Records</button>
     <button onclick="aTab('set',this)">⚙️ Settings</button>
   </div>
+
   <!-- DASHBOARD -->
   <div class="adm-tab active" id="at-dash">
-    <div class="stats">
-      <div class="stat"><div class="n" id="d-today">0</div><div class="l">Present Today</div></div>
-      <div class="stat"><div class="n" id="d-total">0</div><div class="l">Total Teachers</div></div>
-      <div class="stat"><div class="n" id="d-pend">0</div><div class="l">Pending</div></div>
+
+    <!-- Work Schedule -->
+    <div class="sched-section">
+      <h3>⏰ Work Schedule</h3>
+      <p>Set the official work hours. Late and undertime are auto-computed based on this.</p>
+      <div class="sched-grid">
+        <div class="fg"><label>Time In (Start)</label><input type="time" id="sched-in" value="07:15" onchange="saveSchedule()"></div>
+        <div class="fg"><label>Time Out (End)</label><input type="time" id="sched-out" value="16:00" onchange="saveSchedule()"></div>
+        <div class="sched-note">ℹ️ Employee is <strong>LATE</strong> if Time In is after the Start time. <strong>UNDERTIME</strong> if Time Out is before End time.</div>
+      </div>
     </div>
-    <div class="card"><h3>📋 Today's Attendance</h3><div id="d-tbl"><div class="empty"><div class="ei">📋</div><p>No attendance today.</p></div></div></div>
+
+    <!-- QR + Today's Records -->
+    <div class="dash-grid">
+      <div class="qr-section">
+        <h3>📷 Today's QR Code</h3>
+        <div class="qr-box">
+          <div id="dash-qr"></div>
+          <div class="daily-code" id="dash-code">------</div>
+          <div class="code-date" id="dash-code-date"></div>
+        </div>
+        <div class="qr-btns">
+          <button class="btn btn-or btn-sm" onclick="printQR()">🖨️ Print QR</button>
+          <button class="btn btn-o btn-sm" onclick="copyQRLink()">🔗 Copy Link</button>
+        </div>
+        <p style="font-size:.72rem;color:var(--muted);margin-top:.75rem">QR changes daily. Teachers scan this to log attendance.</p>
+      </div>
+      <div class="records-section">
+        <h3>📋 Today's Attendance <button class="btn btn-d btn-sm" onclick="clearTodayRecs()" style="font-size:.68rem">🗑️ Clear Today</button></h3>
+        <div class="big-num" id="d-today">0</div>
+        <div class="big-lbl">employees present</div>
+        <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;text-align:center">
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem"><div style="font-size:1.1rem;font-weight:800;color:var(--green)" id="d-ontime">0</div><div style="font-size:.65rem;color:var(--muted)">On Time</div></div>
+          <div style="background:#fef9c3;border-radius:8px;padding:.5rem"><div style="font-size:1.1rem;font-weight:800;color:#854d0e" id="d-late">0</div><div style="font-size:.65rem;color:var(--muted)">Late</div></div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:.5rem"><div style="font-size:1.1rem;font-weight:800;color:var(--blue)" id="d-total">0</div><div style="font-size:.65rem;color:var(--muted)">Total Teachers</div></div>
+        </div>
+        <div id="d-tbl" style="margin-top:1rem;overflow-x:auto"></div>
+      </div>
+    </div>
   </div>
+
   <!-- REGISTRATIONS -->
   <div class="adm-tab" id="at-pend">
     <div class="abar">
@@ -299,6 +350,7 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
     <div class="card"><h3>⏳ Pending Approval</h3><div id="pend-list"><div class="empty"><div class="ei">✅</div><p>No pending registrations.</p></div></div></div>
     <div class="card"><h3>✅ Approved Teachers</h3><div id="appr-list"></div></div>
   </div>
+
   <!-- TEACHERS -->
   <div class="adm-tab" id="at-ppl">
     <div class="card"><h3>➕ Add Teacher Manually</h3>
@@ -313,13 +365,14 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
       <button class="btn btn-p" onclick="addTeacher()">➕ Add Teacher</button>
     </div>
     <div class="card" style="overflow-x:auto"><h3>👥 Teacher List</h3>
-      <input id="srch" placeholder="🔍 Search..." style="width:100%;margin-bottom:1rem;padding:.55rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-size:.875rem;outline:none" oninput="renderPeople()">
+      <input id="srch" placeholder="🔍 Search..." style="width:100%;margin-bottom:1rem;padding:.55rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-size:.875rem;outline:none" oninput="loadPeople()">
       <div id="ppl-tbl"></div>
     </div>
   </div>
+
   <!-- RECORDS -->
   <div class="adm-tab" id="at-recs">
-    <div class="card"><h3>🔍 Filter</h3>
+    <div class="card"><h3>🔍 Filter Records</h3>
       <div class="frow">
         <div class="fg"><label>From</label><input type="date" id="f-from" onchange="renderRecs()"></div>
         <div class="fg"><label>To</label><input type="date" id="f-to" onchange="renderRecs()"></div>
@@ -332,10 +385,11 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
     </div>
     <div class="card" style="overflow-x:auto"><div id="recs-tbl"></div></div>
   </div>
+
   <!-- SETTINGS -->
   <div class="adm-tab" id="at-set">
     <div class="card" style="max-width:420px">
-      <h3>⚙️ Settings</h3>
+      <h3>⚙️ System Settings</h3>
       <div class="fg" style="margin-bottom:.875rem"><label>School Name</label><input id="s-school" placeholder="e.g. Naic NHS"></div>
       <div class="fg" style="margin-bottom:.875rem"><label>New Admin Password</label><input type="password" id="s-pw" placeholder="New password"></div>
       <div class="fg" style="margin-bottom:1rem"><label>Confirm Password</label><input type="password" id="s-pw2" placeholder="Repeat"></div>
@@ -348,43 +402,33 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
   </div>
 </div>
 
+<!-- PRINT AREA -->
+<div id="print-area">
+  <h2 id="pa-school" style="margin-bottom:.5rem"></h2>
+  <p style="font-size:.85rem;color:#666;margin-bottom:1rem">Daily Attendance QR Code — <span id="pa-date"></span></p>
+  <div id="pa-qr" style="display:inline-block;padding:1rem;background:#fff;border:2px solid #ddd;border-radius:12px"></div>
+  <p style="font-size:1.5rem;font-weight:900;letter-spacing:.5rem;color:#e85d04;font-family:monospace;margin-top:.5rem" id="pa-code"></p>
+  <p style="font-size:.75rem;color:#999;margin-top:.25rem">Scan with your phone to record attendance</p>
+</div>
+
 <div id="ld"><div class="sp">⏳</div><div id="ld-msg">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ══ FIREBASE — direct write per item, no array overwrite ═══
+// ══ FIREBASE ═══════════════════════════════════════════════
 const DB='https://schooldtr-b83bb-default-rtdb.asia-southeast1.firebasedatabase.app';
+async function fbGet(p){try{const r=await fetch(DB+p+'.json');if(!r.ok)throw new Error(r.status);return await r.json();}catch(e){console.warn('fbGet',p,e);return null;}}
+async function fbPut(p,d){const r=await fetch(DB+p+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});if(!r.ok){const t=await r.text();throw new Error(t);}return r.json();}
+async function fbDel(p){await fetch(DB+p+'.json',{method:'DELETE'});}
 
-async function fbGet(path){
-  try{
-    const r=await fetch(DB+path+'.json');
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    return await r.json();
-  }catch(e){console.warn('fbGet',path,e.message);return null;}
-}
-async function fbPut(path,data){
-  const r=await fetch(DB+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  if(!r.ok){const t=await r.text();throw new Error('HTTP '+r.status+': '+t);}
-  return await r.json();
-}
-async function fbDel(path){
-  await fetch(DB+path+'.json',{method:'DELETE'});
-}
+// ══ SETTINGS ═══════════════════════════════════════════════
+let settings={school:'School DTR',password:'admin123',schedIn:'07:15',schedOut:'16:00'};
+async function loadSettings(){const s=await fbGet('/settings');if(s&&s.school)settings={...settings,...s};}
 
-// ══ SETTINGS (cached) ═══════════════════════════════════════
-let settings={school:'School DTR',password:'admin123'};
-async function loadSettings(){
-  const s=await fbGet('/settings');
-  if(s&&s.school)settings=s;
-}
-async function saveSettingsDB(){
-  await fbPut('/settings',settings);
-}
-
-// ══ HELPERS ═════════════════════════════════════════════════
+// ══ HELPERS ════════════════════════════════════════════════
 function today(){return new Date().toLocaleDateString('en-CA');}
 function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true});}
-function getInits(n){return (n||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+function getInits(n){return(n||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
 function load(m){document.getElementById('ld-msg').textContent=m||'Loading...';document.getElementById('ld').style.display='flex';}
 function unload(){document.getElementById('ld').style.display='none';}
@@ -392,28 +436,24 @@ const TL={teacher:'Teacher',staff:'Staff'};
 const TC={teacher:'b-t',staff:'b-s'};
 const AC=['#1b3a6b','#0f766e','#7c3aed','#b45309','#be185d','#0369a1'];
 
-// ══ CLOCK ════════════════════════════════════════════════════
+// ══ CLOCK ══════════════════════════════════════════════════
 function tick(){
   const now=new Date();
   const t24=now.toLocaleTimeString('en-PH',{hour12:false});
-  const t12=now.toLocaleTimeString('en-PH',{hour12:true});
   const d=now.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const hc=document.getElementById('home-clock');if(hc)hc.textContent=t24;
-  const hd=document.getElementById('home-date');if(hd)hd.textContent=d;
-  const gc=document.getElementById('gate-clock');if(gc)gc.textContent=t12;
-  const gd=document.getElementById('gate-date');if(gd)gd.textContent=d;
+  const hc=document.getElementById('hclock');if(hc)hc.textContent=t24;
+  const hd=document.getElementById('hdate');if(hd)hd.textContent=d;
 }
 setInterval(tick,1000);tick();
 
-// ══ NAVIGATION ═══════════════════════════════════════════════
+// ══ NAV ════════════════════════════════════════════════════
 function ss(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function goHome(){ss('s-home');applyName();}
 function goReg(){document.getElementById('su-form').style.display='block';document.getElementById('su-done').style.display='none';document.getElementById('su-status').textContent='';ss('s-signup');}
 function goLogin(){ss('s-login');setTimeout(()=>document.getElementById('lpw').focus(),100);}
 function applyName(){
   const n=settings.school;
-  const el=document.getElementById('hn');if(el)el.textContent=n;
-  const gs=document.getElementById('gate-school');if(gs)gs.textContent=n;
+  ['hn'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
   const ci=document.getElementById('ci-school');if(ci)ci.textContent=n;
   const at=document.getElementById('adm-title');if(at)at.textContent=n+' — Admin';
 }
@@ -423,47 +463,79 @@ function goCIDirect(){
   ss('s-ci');
 }
 
-// ══ GATE ═════════════════════════════════════════════════════
-let gCode='';
-function goGate(){
-  ss('s-gate');
-  document.getElementById('gate-school').textContent=settings.school;
-  makeGateQR();
-}
+// ══ DAILY CODE ═════════════════════════════════════════════
 function getDailyCode(){
   const d=today(),seed=d.replace(/-/g,'');
   let h=0;for(let i=0;i<seed.length;i++){h=(h<<5)-h+seed.charCodeAt(i);h|=0;}
-  const C='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let c='',hh=Math.abs(h);
+  const C='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='',hh=Math.abs(h);
   for(let i=0;i<6;i++){c+=C[hh%C.length];hh=Math.floor(hh/C.length)||Math.abs(h*(i+7));}
   return c;
 }
-function makeGateQR(){
-  const d=today();gCode=getDailyCode();
-  const el=document.getElementById('gate-qr');el.innerHTML='';
-  const url='https://annaselga.github.io/DTR_TSAJINHSNew/login.html?code='+gCode+'&date='+d;
-  new QRCode(el,{text:url,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
-  document.getElementById('gate-code').textContent=gCode;
-  document.getElementById('gate-code-date').textContent=d;
-  document.getElementById('gate-active').textContent=d;
+function getQRUrl(){
+  return 'https://annaselga.github.io/DTR_TSAJINHSNew/login.html?code='+getDailyCode()+'&date='+today();
 }
 
-// ══ CHECK-IN ══════════════════════════════════════════════════
+// ══ DASHBOARD QR ═══════════════════════════════════════════
+let dashQR=null;
+function makeDashQR(){
+  const el=document.getElementById('dash-qr');
+  el.innerHTML='';
+  dashQR=new QRCode(el,{text:getQRUrl(),width:180,height:180,correctLevel:QRCode.CorrectLevel.M});
+  document.getElementById('dash-code').textContent=getDailyCode();
+  document.getElementById('dash-code-date').textContent=today();
+}
+function copyQRLink(){
+  navigator.clipboard.writeText(getQRUrl()).then(()=>toast('🔗 Link copied!')).catch(()=>{
+    prompt('Copy this link:',getQRUrl());
+  });
+}
+function printQR(){
+  const d=today();
+  document.getElementById('pa-school').textContent=settings.school;
+  document.getElementById('pa-date').textContent=new Date(d+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('pa-code').textContent=getDailyCode();
+  const qrEl=document.getElementById('pa-qr');qrEl.innerHTML='';
+  new QRCode(qrEl,{text:getQRUrl(),width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+  setTimeout(()=>window.print(),300);
+}
+
+// ══ SCHEDULE ═══════════════════════════════════════════════
+async function saveSchedule(){
+  settings.schedIn=document.getElementById('sched-in').value;
+  settings.schedOut=document.getElementById('sched-out').value;
+  await fbPut('/settings',settings);
+  toast('✅ Schedule saved!');
+  loadDash();
+}
+function isLate(timeIn){
+  if(!timeIn||!settings.schedIn)return false;
+  const parse=t=>{const[tm,ap]=t.split(' ');let[h,m]=tm.split(':').map(Number);if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+m;};
+  const parse24=t=>{const[h,m]=t.split(':').map(Number);return h*60+m;};
+  return parse(timeIn)>parse24(settings.schedIn);
+}
+function isUndertime(timeOut){
+  if(!timeOut||!settings.schedOut)return false;
+  const parse=t=>{const[tm,ap]=t.split(' ');let[h,m]=tm.split(':').map(Number);if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+m;};
+  const parse24=t=>{const[h,m]=t.split(':').map(Number);return h*60+m;};
+  return parse(timeOut)<parse24(settings.schedOut);
+}
+
+// ══ CHECK-IN ═══════════════════════════════════════════════
 function initCheckin(){
   const p=new URLSearchParams(window.location.search);
-  const token=p.get('checkin'),date=p.get('date');
+  const token=p.get('checkin')||p.get('code'),date=p.get('date');
   if(!token)return;
   resetCI();
-  document.getElementById('ci-date').textContent=new Date(date+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('ci-date').textContent=new Date((date||today())+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   ss('s-ci');
-  if(token!==getDailyCode()){
-    document.getElementById('ci-form').innerHTML='<div style="text-align:center;padding:1rem"><div style="font-size:3rem">❌</div><p style="font-weight:700;color:var(--red);margin-top:.5rem">Invalid or Expired QR Code</p><p style="font-size:.8rem;color:var(--muted);margin-top:.5rem">Please scan today\'s QR code from the gate screen.</p></div>';
+  if(token.toUpperCase()!==getDailyCode()||date!==today()){
+    document.getElementById('ci-form').innerHTML='<div style="text-align:center;padding:1rem"><div style="font-size:3rem">❌</div><p style="font-weight:700;color:var(--red);margin-top:.5rem">Invalid or Expired QR Code</p><p style="font-size:.8rem;color:var(--muted);margin-top:.5rem">Please scan today\'s QR code from the admin.</p></div>';
   }
 }
 let pinV='',ciUser=null;
 function pp(d){if(pinV.length>=4)return;pinV+=d;dots();if(pinV.length===4)setTimeout(doCI,200);}
 function pdel(){pinV=pinV.slice(0,-1);dots();}
-function dots(e){for(let i=0;i<4;i++){const el=document.getElementById('pd'+i);if(el)el.className='pdot'+(i<pinV.length?(e?' err':' on'):'');}}
+function dots(e){for(let i=0;i<4;i++){const el=document.getElementById('pd'+i);if(el)el.className='pd'+(i<pinV.length?(e?' err':' on'):'');}}
 function ciErr(m){document.getElementById('ci-err').textContent=m;dots(true);pinV='';setTimeout(()=>dots(),600);}
 function resetCI(){
   pinV='';dots();ciUser=null;
@@ -478,26 +550,20 @@ async function doCI(){
   if(!empId){ciErr('Please enter your Employee ID.');return;}
   if(pinV.length<4){ciErr('Please enter your 4-digit PIN.');return;}
   load('Verifying...');
-  // Load person directly
-  const allPpl=await fbGet('/people');
-  const allSig=await fbGet('/signups');
+  const [allPpl,allSig]=await Promise.all([fbGet('/people'),fbGet('/signups')]);
   unload();
-  // Check signups
   const sigArr=allSig?Object.values(allSig).filter(x=>x):[];
-  const pend=sigArr.find(s=>s.id===empId&&s.status==='pending');
-  if(pend){ciErr('Account pending admin approval.');return;}
-  // Check people
+  if(sigArr.find(s=>s.id===empId&&s.status==='pending')){ciErr('Account pending admin approval.');return;}
   const pplArr=allPpl?Object.values(allPpl).filter(x=>x):[];
   const person=pplArr.find(p=>p.id===empId);
   if(!person){ciErr('Employee ID not found. Please register first.');return;}
   if(pinV!==(person.pin||'1234')){ciErr('Incorrect PIN. Try again.');return;}
   ciUser=person;
-  // Record attendance
   load('Recording attendance...');
   const t=today();
   const allRecs=await fbGet('/records');
   const recsArr=allRecs?Object.values(allRecs).filter(x=>x):[];
-  const todayRecs=recsArr.filter(r=>r.date===t&&r.personId===person.uid);
+  const todayRecs=recsArr.filter(r=>r.date===t&&(r.personId===person.uid||r.personId===person.id)).sort((a,b)=>a.uid-b.uid);
   const last=todayRecs[todayRecs.length-1];
   const isIn=!last||last.timeOut;
   const time=timeNow();
@@ -506,92 +572,79 @@ async function doCI(){
     if(isIn){
       await fbPut('/records/'+uid,{uid,date:t,personId:person.uid,name:person.name,type:person.type,section:person.section||'',timeIn:time,timeOut:null});
     }else{
-      await fbPut('/records/'+last.uid,{...last,timeOut:time});
+      await fbPut('/records/'+last.uid+'/timeOut',time);
     }
   }catch(e){unload();ciErr('Save failed: '+e.message);return;}
-  unload();
-  pinV='';dots();
+  unload();pinV='';dots();
   document.getElementById('ci-form').style.display='none';
   const res=document.getElementById('ci-res');
   res.style.display='block';
-  res.innerHTML=`<span class="ri">${isIn?'🟢':'🔴'}</span><div class="ra ${isIn?'in':'out'}">${isIn?'TIME IN':'TIME OUT'}</div><div style="font-size:1rem;font-weight:700;margin-bottom:3px">${person.name}</div><div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">${person.section||''}</div><div class="rt">${time}</div><div class="rs">${new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric'})}</div><button class="ci-again" onclick="resetCI();document.getElementById('ci-date').textContent=new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'})">← Log another</button>`;
+  const late=isIn&&isLate(time);
+  res.innerHTML=`<span class="ri">${isIn?'🟢':'🔴'}</span>
+    <div class="ra ${isIn?'in':'out'}">${isIn?'TIME IN':'TIME OUT'}</div>
+    ${late?'<div style="background:#fef9c3;color:#854d0e;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:4px">⚠️ LATE</div>':''}
+    <div style="font-size:1rem;font-weight:700;margin-bottom:3px">${person.name}</div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">${person.section||''}</div>
+    <div class="rt">${time}</div>
+    <div style="font-size:.75rem;color:var(--muted);margin-top:4px">${new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric'})}</div>
+    <button class="ci-again" onclick="resetCI();document.getElementById('ci-date').textContent=new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'})">← Log another</button>`;
   if((person.pin||'1234')==='1234')document.getElementById('ci-pin-change').style.display='block';
 }
 async function doChangePin(){
   const p1=document.getElementById('np1').value,p2=document.getElementById('np2').value;
   if(!/^\d{4}$/.test(p1)){toast('⚠️ PIN must be 4 digits.');return;}
   if(p1!==p2){toast('⚠️ PINs do not match.');return;}
-  if(!ciUser){return;}
+  if(!ciUser)return;
   load('Saving PIN...');
-  try{
-    await fbPut('/people/'+ciUser.uid+'/pin',p1);
-    unload();
-    document.getElementById('ci-pin-change').style.display='none';
-    toast('✅ PIN changed!');
-  }catch(e){unload();toast('❌ '+e.message);}
+  try{await fbPut('/people/'+ciUser.uid+'/pin',p1);unload();document.getElementById('ci-pin-change').style.display='none';toast('✅ PIN changed!');}
+  catch(e){unload();toast('❌ '+e.message);}
 }
 
-// ══ REGISTRATION — writes ONE entry directly to Firebase ═════
+// ══ REGISTRATION ═══════════════════════════════════════════
 async function doRegister(){
-  const name=document.getElementById('su-name').value.trim();
-  const id=document.getElementById('su-id').value.trim();
-  const type=document.getElementById('su-type').value;
-  const sec=document.getElementById('su-sec').value.trim();
-  const email=document.getElementById('su-email').value.trim();
+  const name=document.getElementById('su-name').value.trim(),id=document.getElementById('su-id').value.trim();
+  const type=document.getElementById('su-type').value,sec=document.getElementById('su-sec').value.trim(),email=document.getElementById('su-email').value.trim();
   if(!name||!id){toast('⚠️ Name and Employee ID are required.');return;}
   const status=document.getElementById('su-status');
-  status.textContent='Connecting to database...';
-  // Check for duplicates
+  status.style.color='var(--muted)';status.textContent='Checking...';
   load('Checking...');
   const [allPpl,allSig]=await Promise.all([fbGet('/people'),fbGet('/signups')]);
   unload();
   const pplArr=allPpl?Object.values(allPpl).filter(x=>x):[];
   const sigArr=allSig?Object.values(allSig).filter(x=>x):[];
-  if([...pplArr,...sigArr].find(p=>p.id===id)){
-    status.textContent='';
-    toast('⚠️ This Employee ID already exists.');return;
-  }
+  if([...pplArr,...sigArr].find(p=>p.id===id)){status.textContent='';toast('⚠️ This Employee ID already exists.');return;}
   const uid=Date.now();
   const entry={uid,name,id,type,section:sec,email,pin:'1234',status:'pending',signupDate:today()};
-  status.textContent='Saving to Firebase...';
+  status.textContent='Saving...';
   load('Saving registration...');
   try{
-    // Write DIRECTLY to /signups/UID — no array, no overwrite risk
     await fbPut('/signups/'+uid,entry);
-    unload();
-    status.textContent='';
-    // Verify it was saved
     const check=await fbGet('/signups/'+uid);
-    if(!check||check.id!==id){throw new Error('Verification failed — data may not have saved');}
+    if(!check||check.id!==id)throw new Error('Verification failed.');
+    unload();status.textContent='';
   }catch(e){
-    unload();
-    status.style.color='red';
-    status.textContent='❌ Error: '+e.message;
-    alert('❌ Registration failed!\n\n'+e.message+'\n\nPlease check internet and try again.');
-    return;
+    unload();status.style.color='red';status.textContent='❌ Error: '+e.message;
+    alert('❌ Registration failed!\n\n'+e.message);return;
   }
   document.getElementById('su-form').style.display='none';
   const done=document.getElementById('su-done');done.style.display='block';
-  done.innerHTML=`<div style="font-size:2.5rem">🎉</div><h3 style="font-size:1rem;font-weight:800;color:var(--green);margin:.5rem 0">✅ Registration Saved to Firebase!</h3><p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem">Wait for admin approval. Default PIN: <strong>1234</strong></p><div style="font-weight:700;font-size:.95rem">${name}</div><div style="font-size:.75rem;color:var(--muted)">${id} · ${TL[type]||type}</div><div style="display:inline-block;background:#fffbeb;color:var(--amber);border:1px solid #fcd34d;font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:6px">⏳ PENDING APPROVAL</div><div style="margin-top:1.25rem;display:flex;gap:.5rem;justify-content:center"><button class="btn btn-o btn-sm" onclick="goReg()">← Register another</button><button class="btn btn-o btn-sm" onclick="goHome()">🏠 Home</button></div>`;
-  toast('✅ Registration saved to Firebase!');
+  done.innerHTML=`<div style="font-size:2.5rem">🎉</div><h3 style="color:var(--green);margin:.5rem 0">✅ Registration Saved!</h3><p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem">Waiting for admin approval. Default PIN: <strong>1234</strong></p><div style="font-weight:700">${name}</div><div style="font-size:.75rem;color:var(--muted)">${id} · ${TL[type]||type}</div><div style="display:inline-block;background:#fffbeb;color:var(--amber);border:1px solid #fcd34d;font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:6px">⏳ PENDING APPROVAL</div><div style="margin-top:1.25rem;display:flex;gap:.5rem;justify-content:center"><button class="btn btn-o btn-sm" onclick="goReg()">← Register another</button><button class="btn btn-o btn-sm" onclick="goHome()">🏠 Home</button></div>`;
+  toast('✅ Registration saved!');
 }
 
-// ══ ADMIN LOGIN ═══════════════════════════════════════════════
+// ══ ADMIN LOGIN ════════════════════════════════════════════
 async function doLogin(){
   const pw=document.getElementById('lpw').value;
   document.getElementById('lerr').style.display='none';
-  load('Verifying...');
-  await loadSettings();
-  unload();
+  load('Verifying...');await loadSettings();unload();
   if(pw===settings.password){
     document.getElementById('lpw').value='';
-    ss('s-admin');
-    applyName();
-    loadDash();
-    loadNotif();
-  }else{
-    document.getElementById('lerr').style.display='block';
-  }
+    ss('s-admin');applyName();
+    document.getElementById('sched-in').value=settings.schedIn||'07:15';
+    document.getElementById('sched-out').value=settings.schedOut||'16:00';
+    makeDashQR();
+    loadDash();loadNotif();
+  }else{document.getElementById('lerr').style.display='block';}
 }
 
 // ══ ADMIN TABS ═════════════════════════════════════════════
@@ -603,172 +656,143 @@ function aTab(name,btn){
   if(name==='pend')loadPending();
   if(name==='ppl')loadPeople();
   if(name==='recs'){setDates();renderRecs();}
-  if(name==='set')document.getElementById('s-school').value=settings.school||'';
+  if(name==='set'){document.getElementById('s-school').value=settings.school||'';}
 }
 
-// ══ DASHBOARD ═════════════════════════════════════════════════
+// ══ DASHBOARD ══════════════════════════════════════════════
 async function loadDash(){
-  load('Loading dashboard...');
   const [allPpl,allRecs,allSig]=await Promise.all([fbGet('/people'),fbGet('/records'),fbGet('/signups')]);
-  unload();
   const ppl=allPpl?Object.values(allPpl).filter(x=>x):[];
   const recs=allRecs?Object.values(allRecs).filter(x=>x):[];
   const sigs=allSig?Object.values(allSig).filter(x=>x):[];
   const t=today();
   const todayR=recs.filter(r=>r.date===t);
-  document.getElementById('d-today').textContent=new Set(todayR.map(r=>r.personId)).size;
+  const unique=new Set(todayR.map(r=>r.personId)).size;
+  const lateCount=todayR.filter(r=>isLate(r.timeIn)).length;
+  document.getElementById('d-today').textContent=unique;
+  document.getElementById('d-ontime').textContent=unique-lateCount;
+  document.getElementById('d-late').textContent=lateCount;
   document.getElementById('d-total').textContent=ppl.length;
-  document.getElementById('d-pend').textContent=sigs.filter(s=>s.status==='pending').length;
+  document.getElementById('pnotif').textContent=sigs.filter(s=>s.status==='pending').length;
   const w=document.getElementById('d-tbl');
-  if(!todayR.length){w.innerHTML='<div class="empty"><div class="ei">📋</div><p>No attendance today.</p></div>';return;}
-  w.innerHTML=`
-    <div style="display:flex;justify-content:flex-end;margin-bottom:.75rem">
-      <button class="btn btn-d btn-sm" onclick="clearTodayRecs()">🗑️ Clear Today's Records</button>
-    </div>
-    <table><thead><tr><th>Name</th><th>Role</th><th>Dept</th><th>Time In</th><th>Time Out</th><th>Hours</th><th></th></tr></thead><tbody>
+  if(!todayR.length){w.innerHTML='<div class="empty" style="padding:1rem"><p>No attendance today.</p></div>';return;}
+  w.innerHTML=`<table><thead><tr><th>Name</th><th>Time In</th><th>Time Out</th><th>Status</th><th></th></tr></thead><tbody>
     ${todayR.map(r=>`<tr>
-      <td style="font-weight:600">${r.name}</td>
-      <td><span class="badge ${TC[r.type]||'b-t'}">${TL[r.type]||r.type}</span></td>
-      <td>${r.section||'-'}</td>
+      <td style="font-weight:600">${r.name}<div style="font-size:.68rem;color:var(--muted)">${r.section||''}</div></td>
       <td><span class="badge b-in">${r.timeIn}</span></td>
-      <td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td>
-      <td>${calcH(r.timeIn,r.timeOut)}</td>
-      <td><button class="btn btn-d btn-sm" onclick="delRecord(${r.uid})" title="Delete this record">🗑️</button></td>
+      <td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.75rem">Still in</span>'}</td>
+      <td>${isLate(r.timeIn)?'<span class="badge b-late">LATE</span>':r.timeOut&&isUndertime(r.timeOut)?'<span class="badge b-ut">UNDERTIME</span>':'<span class="badge b-in">OK</span>'}</td>
+      <td><button class="btn btn-d btn-sm" onclick="delRecord(${r.uid})">🗑️</button></td>
     </tr>`).join('')}
-    </tbody></table>`;
+  </tbody></table>`;
 }
-
 async function delRecord(uid){
-  if(!confirm('Delete this attendance record?'))return;
-  load('Deleting...');
-  await fbDel('/records/'+uid);
-  unload();
-  toast('🗑️ Record deleted.');
-  loadDash();
+  if(!confirm('Delete this record?'))return;
+  load('Deleting...');await fbDel('/records/'+uid);unload();toast('🗑️ Deleted.');loadDash();
 }
 async function clearTodayRecs(){
-  if(!confirm('Delete ALL of today\'s attendance records?'))return;
+  if(!confirm('Delete ALL today\'s records?'))return;
   load('Clearing...');
   const allRecs=await fbGet('/records');
   const recs=allRecs?Object.values(allRecs).filter(x=>x):[];
-  const t=today();
-  const todayR=recs.filter(r=>r.date===t);
-  await Promise.all(todayR.map(r=>fbDel('/records/'+r.uid)));
-  unload();
-  toast('🗑️ Today\'s records cleared.');
-  loadDash();
+  await Promise.all(recs.filter(r=>r.date===today()).map(r=>fbDel('/records/'+r.uid)));
+  unload();toast('🗑️ Cleared.');loadDash();
 }
-
 async function loadNotif(){
   const s=await fbGet('/signups');
-  const arr=s?Object.values(s).filter(x=>x):[];
-  const c=arr.filter(x=>x.status==='pending').length;
+  const c=s?Object.values(s).filter(x=>x&&x.status==='pending').length:0;
   const d=document.getElementById('pnotif');
   if(d){if(c>0){d.textContent=c;d.style.display='inline-block';}else d.style.display='none';}
 }
 
 // ══ REGISTRATIONS ══════════════════════════════════════════
 async function loadPending(){
-  load('Loading registrations...');
+  load('Loading...');
   const [allSig,allPpl]=await Promise.all([fbGet('/signups'),fbGet('/people')]);
   unload();
   const sigs=allSig?Object.values(allSig).filter(x=>x):[];
   const ppl=allPpl?Object.values(allPpl).filter(x=>x):[];
   const pend=sigs.filter(s=>s.status==='pending');
-  const pl=document.getElementById('pend-list');
-  pl.innerHTML=pend.length?pend.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:.75rem 0;border-bottom:1px solid var(--border)">
-    <div style="width:36px;height:36px;border-radius:50%;background:${AC[0]};color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0">${getInits(s.name)}</div>
-    <div style="flex:1"><div style="font-weight:600;font-size:.88rem">${s.name}</div><div style="font-size:.72rem;color:var(--muted)">${s.id} · <span class="badge ${TC[s.type]||'b-t'}">${TL[s.type]||s.type}</span>${s.section?' · '+s.section:''}${s.email?' · '+s.email:''}</div><div style="font-size:.68rem;color:var(--muted)">Registered: ${s.signupDate||''}</div></div>
-    <div style="display:flex;gap:4px"><button class="btn btn-s btn-sm" onclick="approveOne(${s.uid})">✅ Approve</button><button class="btn btn-d btn-sm" onclick="rejectOne(${s.uid})">✕</button></div>
-  </div>`).join(''):'<div class="empty"><div class="ei">✅</div><p>No pending registrations.</p></div>';
-  document.getElementById('appr-list').innerHTML=ppl.length?`<table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Dept</th><th>PIN</th><th></th></tr></thead><tbody>${ppl.map(p=>`<tr><td style="font-weight:600">${p.name}</td><td style="font-family:monospace;font-size:.8rem">${p.id}</td><td><span class="badge ${TC[p.type]||'b-t'}">${TL[p.type]||p.type}</span></td><td>${p.section||'-'}</td><td><button class="btn btn-a btn-sm" onclick="resetPin(${p.uid})">🔑 Reset</button></td><td><button class="btn btn-d btn-sm" onclick="delPerson(${p.uid})">🗑️</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty"><div class="ei">👤</div><p>No approved teachers yet.</p></div>';
+  document.getElementById('pend-list').innerHTML=pend.length?pend.map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:.75rem 0;border-bottom:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:50%;background:${AC[0]};color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0">${getInits(s.name)}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:.88rem">${s.name}</div>
+        <div style="font-size:.72rem;color:var(--muted)">${s.id} · ${TL[s.type]||s.type}${s.section?' · '+s.section:''}${s.email?' · '+s.email:''}</div>
+        <div style="font-size:.68rem;color:var(--muted)">Registered: ${s.signupDate||''}</div></div>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-s btn-sm" onclick="approveOne(${s.uid})">✅ Approve</button>
+        <button class="btn btn-d btn-sm" onclick="rejectOne(${s.uid})">✕</button>
+      </div>
+    </div>`).join(''):'<div class="empty"><div class="ei">✅</div><p>No pending registrations.</p></div>';
+  document.getElementById('appr-list').innerHTML=ppl.length?`<table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Dept</th><th>PIN</th><th></th></tr></thead><tbody>
+    ${ppl.map(p=>`<tr><td style="font-weight:600">${p.name}</td><td style="font-family:monospace;font-size:.8rem">${p.id}</td><td><span class="badge ${TC[p.type]||'b-t'}">${TL[p.type]||p.type}</span></td><td>${p.section||'-'}</td><td><button class="btn btn-a btn-sm" onclick="resetPin(${p.uid})">🔑 Reset</button></td><td><button class="btn btn-d btn-sm" onclick="delPerson(${p.uid})">🗑️</button></td></tr>`).join('')}
+  </tbody></table>`:'<div class="empty"><div class="ei">👤</div><p>No approved teachers yet.</p></div>';
   loadNotif();
 }
 async function approveOne(uid){
-  load('Approving...');
-  const sig=await fbGet('/signups/'+uid);
-  if(!sig){unload();toast('Not found.');return;}
-  await fbPut('/people/'+uid,{...sig,status:'approved'});
-  await fbDel('/signups/'+uid);
+  load('Approving...');const sig=await fbGet('/signups/'+uid);
+  if(!sig){unload();return;}
+  await fbPut('/people/'+uid,{...sig,status:'approved'});await fbDel('/signups/'+uid);
   unload();loadPending();toast('✅ '+sig.name+' approved!');
 }
 async function rejectOne(uid){
-  if(!confirm('Reject this registration?'))return;
-  load('Rejecting...');
-  await fbDel('/signups/'+uid);
-  unload();loadPending();toast('🗑️ Rejected.');
+  if(!confirm('Reject?'))return;
+  load('...');await fbDel('/signups/'+uid);unload();loadPending();toast('🗑️ Rejected.');
 }
 async function approveAll(){
-  if(!confirm('Approve ALL pending registrations?'))return;
-  load('Approving all...');
-  const allSig=await fbGet('/signups');
+  if(!confirm('Approve ALL pending?'))return;
+  load('Approving all...');const allSig=await fbGet('/signups');
   const sigs=allSig?Object.values(allSig).filter(x=>x&&x.status==='pending'):[];
-  if(!sigs.length){unload();toast('No pending registrations.');return;}
+  if(!sigs.length){unload();toast('No pending.');return;}
   await Promise.all(sigs.map(s=>fbPut('/people/'+s.uid,{...s,status:'approved'}).then(()=>fbDel('/signups/'+s.uid))));
-  unload();loadPending();toast('✅ All '+sigs.length+' approved!');
+  unload();loadPending();toast('✅ All approved!');
 }
 async function rejectAll(){
   if(!confirm('Reject ALL pending?'))return;
-  load('Rejecting all...');
-  const allSig=await fbGet('/signups');
+  load('...');const allSig=await fbGet('/signups');
   const sigs=allSig?Object.values(allSig).filter(x=>x&&x.status==='pending'):[];
   await Promise.all(sigs.map(s=>fbDel('/signups/'+s.uid)));
   unload();loadPending();toast('🗑️ All rejected.');
 }
 async function resetAllEmp(){
-  if(!confirm('Delete ALL employees? Cannot be undone!'))return;
-  if(!confirm('FINAL WARNING: This will delete ALL teacher data!'))return;
-  load('Resetting...');
-  await Promise.all([fbDel('/people'),fbDel('/signups'),fbDel('/records')]);
-  unload();loadPending();loadNotif();toast('🗑️ All data reset.');
+  if(!confirm('Delete ALL employees?'))return;if(!confirm('FINAL WARNING!'))return;
+  load('...');await Promise.all([fbDel('/people'),fbDel('/signups'),fbDel('/records')]);
+  unload();loadPending();toast('🗑️ Reset done.');
 }
 
-// ══ TEACHERS ══════════════════════════════════════════════════
+// ══ TEACHERS ═══════════════════════════════════════════════
 async function addTeacher(){
   const name=document.getElementById('m-name').value.trim(),id=document.getElementById('m-id').value.trim();
   const type=document.getElementById('m-type').value,sec=document.getElementById('m-sec').value.trim();
   if(!name||!id){toast('⚠️ Name and ID required.');return;}
-  load('Adding...');
-  const allPpl=await fbGet('/people');
+  load('Adding...');const allPpl=await fbGet('/people');
   const ppl=allPpl?Object.values(allPpl).filter(x=>x):[];
-  if(ppl.find(p=>p.id===id)){unload();toast('⚠️ ID already exists.');return;}
+  if(ppl.find(p=>p.id===id)){unload();toast('⚠️ ID exists.');return;}
   const uid=Date.now();
   await fbPut('/people/'+uid,{uid,name,id,type,section:sec,pin:'1234',status:'approved',signupDate:today()});
-  unload();
-  ['m-name','m-id','m-sec'].forEach(i=>document.getElementById(i).value='');
+  unload();['m-name','m-id','m-sec'].forEach(i=>document.getElementById(i).value='');
   loadPeople();toast('✅ '+name+' added!');
 }
 async function delPerson(uid){
-  if(!confirm('Delete this teacher?'))return;
-  load('Deleting...');
-  await fbDel('/people/'+uid);
-  unload();loadPeople();loadPending();toast('🗑️ Deleted.');
+  if(!confirm('Delete?'))return;load('...');await fbDel('/people/'+uid);unload();loadPeople();loadPending();toast('🗑️ Deleted.');
 }
 async function resetPin(uid){
-  if(!confirm('Reset PIN to 1234?'))return;
-  load('Resetting PIN...');
-  await fbPut('/people/'+uid+'/pin','1234');
-  unload();toast('🔑 PIN reset to 1234.');
+  if(!confirm('Reset PIN to 1234?'))return;load('...');await fbPut('/people/'+uid+'/pin','1234');unload();toast('🔑 PIN reset.');
 }
 async function loadPeople(){
-  load('Loading teachers...');
-  const allPpl=await fbGet('/people');
-  unload();
+  load('Loading...');const allPpl=await fbGet('/people');unload();
   const ppl=allPpl?Object.values(allPpl).filter(x=>x):[];
   const q=(document.getElementById('srch')||{value:''}).value.toLowerCase();
   const f=ppl.filter(p=>p.name.toLowerCase().includes(q)||p.id.toLowerCase().includes(q));
   const w=document.getElementById('ppl-tbl');
   if(!f.length){w.innerHTML='<div class="empty"><div class="ei">👤</div><p>No results.</p></div>';return;}
-  w.innerHTML=`<table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Dept</th><th>PIN</th><th></th></tr></thead><tbody>${f.map(p=>`<tr><td style="font-weight:600">${p.name}</td><td style="font-family:monospace;font-size:.8rem">${p.id}</td><td><span class="badge ${TC[p.type]||'b-t'}">${TL[p.type]||p.type}</span></td><td>${p.section||'-'}</td><td><button class="btn btn-a btn-sm" onclick="resetPin(${p.uid})">🔑 Reset</button></td><td><button class="btn btn-d btn-sm" onclick="delPerson(${p.uid})">🗑️</button></td></tr>`).join('')}</tbody></table>`;
+  w.innerHTML=`<table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Dept</th><th>PIN</th><th></th></tr></thead><tbody>
+    ${f.map(p=>`<tr><td style="font-weight:600">${p.name}</td><td style="font-family:monospace;font-size:.8rem">${p.id}</td><td><span class="badge ${TC[p.type]||'b-t'}">${TL[p.type]||p.type}</span></td><td>${p.section||'-'}</td><td><button class="btn btn-a btn-sm" onclick="resetPin(${p.uid})">🔑 Reset</button></td><td><button class="btn btn-d btn-sm" onclick="delPerson(${p.uid})">🗑️</button></td></tr>`).join('')}
+  </tbody></table>`;
 }
-function renderPeople(){loadPeople();}
 
-// ══ RECORDS ═══════════════════════════════════════════════════
-function setDates(){
-  const t=today();
-  if(!document.getElementById('f-from').value)document.getElementById('f-from').value=t;
-  if(!document.getElementById('f-to').value)document.getElementById('f-to').value=t;
-}
+// ══ RECORDS ════════════════════════════════════════════════
+function setDates(){const t=today();if(!document.getElementById('f-from').value)document.getElementById('f-from').value=t;if(!document.getElementById('f-to').value)document.getElementById('f-to').value=t;}
 function resetF(){document.getElementById('f-name').value='';setDates();renderRecs();}
 function calcH(ti,to){
   if(!ti||!to)return'-';
@@ -776,16 +800,23 @@ function calcH(ti,to){
   const d=p(to)-p(ti);return d>0?(d/60).toFixed(1)+'h':'-';
 }
 async function renderRecs(){
-  load('Loading records...');
-  const allRecs=await fbGet('/records');
-  unload();
+  load('Loading...');const allRecs=await fbGet('/records');unload();
   const recs=allRecs?Object.values(allRecs).filter(x=>x):[];
-  const from=document.getElementById('f-from').value,to=document.getElementById('f-to').value;
-  const name=document.getElementById('f-name').value.toLowerCase();
+  const from=document.getElementById('f-from').value,to=document.getElementById('f-to').value,name=document.getElementById('f-name').value.toLowerCase();
   const f=recs.filter(r=>{if(from&&r.date<from)return false;if(to&&r.date>to)return false;if(name&&!r.name.toLowerCase().includes(name))return false;return true;});
   const w=document.getElementById('recs-tbl');
-  if(!f.length){w.innerHTML='<div class="empty"><div class="ei">📋</div><p>No records found.</p></div>';return;}
-  w.innerHTML=`<table><thead><tr><th>Date</th><th>Name</th><th>Role</th><th>Dept</th><th>Time In</th><th>Time Out</th><th>Hours</th></tr></thead><tbody>${f.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<tr><td>${r.date}</td><td style="font-weight:600">${r.name}</td><td><span class="badge ${TC[r.type]||'b-t'}">${TL[r.type]||r.type}</span></td><td>${r.section||'-'}</td><td><span class="badge b-in">${r.timeIn}</span></td><td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.78rem">Still in</span>'}</td><td>${calcH(r.timeIn,r.timeOut)}</td></tr>`).join('')}</tbody></table>`;
+  if(!f.length){w.innerHTML='<div class="empty"><div class="ei">📋</div><p>No records.</p></div>';return;}
+  w.innerHTML=`<table><thead><tr><th>Date</th><th>Name</th><th>Role</th><th>Dept</th><th>Time In</th><th>Time Out</th><th>Hours</th><th>Status</th></tr></thead><tbody>
+    ${f.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<tr>
+      <td>${r.date}</td><td style="font-weight:600">${r.name}</td>
+      <td><span class="badge ${TC[r.type]||'b-t'}">${TL[r.type]||r.type}</span></td>
+      <td>${r.section||'-'}</td>
+      <td><span class="badge b-in">${r.timeIn}</span></td>
+      <td>${r.timeOut?`<span class="badge b-out">${r.timeOut}</span>`:'<span style="color:var(--muted);font-size:.75rem">Still in</span>'}</td>
+      <td>${calcH(r.timeIn,r.timeOut)}</td>
+      <td>${isLate(r.timeIn)?'<span class="badge b-late">LATE</span>':r.timeOut&&isUndertime(r.timeOut)?'<span class="badge b-ut">UNDERTIME</span>':'<span class="badge b-in">OK</span>'}</td>
+    </tr>`).join('')}
+  </tbody></table>`;
 }
 async function exportCSV(){
   const allRecs=await fbGet('/records');
@@ -793,35 +824,32 @@ async function exportCSV(){
   const from=document.getElementById('f-from')?document.getElementById('f-from').value:'';
   const to=document.getElementById('f-to')?document.getElementById('f-to').value:'';
   const f=recs.filter(r=>{if(from&&r.date<from)return false;if(to&&r.date>to)return false;return true;});
-  if(!f.length){toast('⚠️ No data to export.');return;}
-  const h=['Date','Name','Role','Department','Time In','Time Out','Hours'];
-  const rows=f.map(r=>[r.date,r.name,TL[r.type]||r.type,r.section||'',r.timeIn,r.timeOut||'',calcH(r.timeIn,r.timeOut)]);
+  if(!f.length){toast('⚠️ No data.');return;}
+  const h=['Date','Name','Role','Dept','Time In','Time Out','Hours','Status'];
+  const rows=f.map(r=>[r.date,r.name,TL[r.type]||r.type,r.section||'',r.timeIn,r.timeOut||'',calcH(r.timeIn,r.timeOut),isLate(r.timeIn)?'LATE':r.timeOut&&isUndertime(r.timeOut)?'UNDERTIME':'OK']);
   const csv=[h,...rows].map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
-  a.download='DTR_'+(from||'all')+'_'+(to||'all')+'.csv';a.click();toast('⬇️ CSV exported!');
+  a.download='DTR_'+(from||'all')+'_'+(to||'all')+'.csv';a.click();toast('⬇️ Exported!');
 }
 
-// ══ SETTINGS ══════════════════════════════════════════════════
+// ══ SETTINGS ═══════════════════════════════════════════════
 async function saveSettings(){
   const school=document.getElementById('s-school').value.trim();
   const pw=document.getElementById('s-pw').value,pw2=document.getElementById('s-pw2').value;
   if(school)settings.school=school;
   if(pw){if(pw!==pw2){toast('⚠️ Passwords do not match.');return;}settings.password=pw;document.getElementById('s-pw').value='';document.getElementById('s-pw2').value='';}
-  load('Saving...');await saveSettingsDB();unload();
-  applyName();toast('✅ Settings saved!');
+  load('Saving...');await fbPut('/settings',settings);unload();applyName();toast('✅ Saved!');
 }
 async function clearAll(){
-  if(!confirm('Delete ALL data? Cannot be undone!'))return;
-  if(!confirm('FINAL WARNING!'))return;
-  load('Clearing...');
-  await Promise.all([fbDel('/people'),fbDel('/records'),fbDel('/signups')]);
-  unload();loadDash();loadNotif();toast('🗑️ All data cleared.');
+  if(!confirm('Delete ALL data?'))return;if(!confirm('FINAL WARNING!'))return;
+  load('...');await Promise.all([fbDel('/people'),fbDel('/records'),fbDel('/signups')]);
+  unload();toast('🗑️ Cleared.');
 }
 
-// ══ INIT ══════════════════════════════════════════════════════
+// ══ INIT ═══════════════════════════════════════════════════
 loadSettings().then(()=>{
   applyName();
-  if(window.location.search.includes('checkin='))initCheckin();
+  if(window.location.search.includes('checkin=')||window.location.search.includes('code='))initCheckin();
 });
 </script>
 </body>
