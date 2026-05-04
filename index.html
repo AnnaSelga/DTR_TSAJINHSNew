@@ -79,10 +79,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);min-heig
 
 /* ── ADMIN PANEL ── */
 #s-admin{background:var(--bg)}
-.adm-hdr{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:.875rem 1.5rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.adm-hdr{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:.875rem 1.5rem;display:flex;flex-direction:column;gap:.75rem}
+.adm-hdr-top{display:flex;align-items:center;gap:10px}
 .adm-hdr h1{font-size:.95rem;font-weight:700}
 .adm-badge{background:rgba(251,191,36,.25);border:1px solid rgba(251,191,36,.5);color:#fbbf24;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px}
-.adm-hdr-btns{margin-left:auto;display:flex;gap:.5rem;flex-wrap:wrap}
+.adm-hdr-btns{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 .adm-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto}
 .adm-nav button{padding:.8rem 1.25rem;border:none;background:none;cursor:pointer;font-size:.8rem;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
 .adm-nav button.active{color:var(--blue);border-bottom-color:var(--blue2)}
@@ -281,13 +282,15 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
 <!-- ADMIN PANEL -->
 <div class="screen" id="s-admin">
   <div class="adm-hdr">
-    <span>🏫</span><h1 id="adm-title">Admin Panel</h1><span class="adm-badge">ADMIN</span>
+    <div class="adm-hdr-top">
+      <span>🏫</span><h1 id="adm-title">Admin Panel</h1><span class="adm-badge">ADMIN</span>
+      <button class="btn btn-sm" style="margin-left:auto;background:rgba(255,255,255,.1);border:none;color:#fff" onclick="goHome()">← Exit</button>
+    </div>
     <div class="adm-hdr-btns">
       <button class="btn btn-sm btn-or" onclick="showTodaysCode()">🔑 Today's Code</button>
       <button class="btn btn-sm btn-or" onclick="showWeeklyCodes()">📅 Generate Weekly Codes</button>
-      <button class="btn btn-sm btn-o" onclick="window.open('https://annaselga.github.io/DTR_TSAJINHSNew/login.html','_blank')" style="background:#fff">🌐 Open DTR Page ↗</button>
-      <button class="btn btn-sm btn-o" onclick="printQR()" style="background:#fff">🖨️ Print QR</button>
-      <button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:none;color:#fff" onclick="goHome()">← Exit</button>
+      <button class="btn btn-sm" style="background:#fff;border:1.5px solid var(--border);color:var(--text)" onclick="window.open('https://annaselga.github.io/DTR_TSAJINHSNew/login.html','_blank')">🌐 Open DTR Page ↗</button>
+      <button class="btn btn-sm" style="background:#fff;border:1.5px solid var(--border);color:var(--text)" onclick="printQR()">🖨️ Print QR</button>
     </div>
   </div>
   <div class="adm-nav">
