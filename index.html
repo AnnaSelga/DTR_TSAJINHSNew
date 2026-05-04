@@ -40,6 +40,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);color:va
 .hmenu-btn.gate:hover{background:rgba(52,211,153,0.18)}
 .hmenu-btn.signup{border-color:rgba(96,165,250,0.35);background:rgba(96,165,250,0.08)}
 .hmenu-btn.signup:hover{background:rgba(96,165,250,0.18)}
+.hmenu-btn.teacher{border-color:rgba(167,139,250,0.35);background:rgba(167,139,250,0.08)}
+.hmenu-btn.teacher:hover{background:rgba(167,139,250,0.18)}
 .hmenu-btn.admin{border-color:rgba(251,191,36,0.35);background:rgba(251,191,36,0.08)}
 .hmenu-btn.admin:hover{background:rgba(251,191,36,0.18)}
 
@@ -211,6 +213,11 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
         <span class="icon">✍️</span>
         <span class="label">Register</span>
         <span class="desc">New teacher sign-up</span>
+      </button>
+      <button class="hmenu-btn teacher" onclick="goTeacherLogin()" style="grid-column:1/-1">
+        <span class="icon">👤</span>
+        <span class="label">Teacher / Staff Login</span>
+        <span class="desc">Log your Time In / Time Out using Employee ID & PIN</span>
       </button>
       <button class="hmenu-btn admin" onclick="goLogin()" style="grid-column:1/-1">
         <span class="icon">🔐</span>
@@ -503,7 +510,11 @@ function goLogin(){showScreen('login');setTimeout(()=>document.getElementById('l
 function goAdmin(){
   showScreen('admin');
   document.getElementById('admin-school-title').textContent=settings.school+' — Admin';
-  refreshDashboard();updatePendingNotif();
+  refreshDashboard();
+  updatePendingNotif();
+  // Auto-refresh pending count every 10 seconds
+  clearInterval(window._adminPollTimer);
+  window._adminPollTimer=setInterval(updatePendingNotif,10000);
 }
 function applySchoolName(){
   document.getElementById('home-school-name').textContent=settings.school;
@@ -752,6 +763,10 @@ function aTab(name,btn){
 
 // ═══ DASHBOARD ══════════════════════════════════════════════
 function refreshDashboard(){
+  // Always read fresh
+  people=JSON.parse(localStorage.getItem('dtr_people')||'[]');
+  records=JSON.parse(localStorage.getItem('dtr_records')||'[]');
+  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
   const t=today(), recs=records.filter(r=>r.date===t);
   document.getElementById('d-today').textContent=new Set(recs.map(r=>r.personId)).size;
   document.getElementById('d-total').textContent=people.length;
@@ -772,11 +787,14 @@ function refreshDashboard(){
 
 // ═══ APPROVALS ══════════════════════════════════════════════
 function updatePendingNotif(){
+  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
   const c=signups.filter(s=>s.status==='pending').length;
   const dot=document.getElementById('pending-notif');
   if(c>0){dot.textContent=c;dot.style.display='inline-block';}else dot.style.display='none';
 }
 function approveSignup(uid){
+  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
+  people=JSON.parse(localStorage.getItem('dtr_people')||'[]');
   const idx=signups.findIndex(s=>s.uid===uid);
   if(idx<0)return;
   const s=signups.splice(idx,1)[0];
@@ -787,11 +805,15 @@ function approveSignup(uid){
 }
 function rejectSignup(uid){
   if(!confirm('Reject this registration?'))return;
+  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
   signups=signups.filter(s=>s.uid!==uid);
   save();renderSignupLists();updatePendingNotif();
   toast('🗑️ Registration rejected.');
 }
 function renderSignupLists(){
+  // Always read fresh from localStorage
+  signups=JSON.parse(localStorage.getItem('dtr_signups')||'[]');
+  people=JSON.parse(localStorage.getItem('dtr_people')||'[]');
   const pending=signups.filter(s=>s.status==='pending');
   document.getElementById('pending-list').innerHTML=pending.length?pending.map(s=>`
     <div style="display:flex;align-items:center;gap:10px;padding:.75rem 0;border-bottom:1px solid var(--border)">
