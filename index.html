@@ -44,41 +44,28 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);color:va
 .hmenu-btn.admin:hover{background:rgba(251,191,36,0.18)}
 
 /* ═══ GATE ═══ */
-#screen-gate{background:#060f1a;color:#fff}
-.gate-header{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06)}
-.gate-header-left{display:flex;align-items:center;gap:12px}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:livepulse 1.5s infinite}
-@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,0.5)}50%{opacity:.8;box-shadow:0 0 0 6px rgba(74,222,128,0)}}
-.gate-school-name{color:rgba(255,255,255,.8);font-size:.9rem;font-weight:600}
-#gate-clock{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px}
-#gate-date{font-size:.7rem;color:rgba(255,255,255,.4);text-align:right}
-.btn-exit{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.4);padding:.35rem .85rem;border-radius:8px;cursor:pointer;font-size:.75rem;transition:all .2s}
-.btn-exit:hover{border-color:rgba(255,255,255,.3);color:#fff}
-.gate-body{flex:1;display:grid;grid-template-columns:1fr 1fr;align-items:center}
-.gate-qr-side{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;border-right:1px solid rgba(255,255,255,.06);gap:1.5rem}
-.gate-qr-label{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.35)}
-.gate-qr-box{background:#fff;padding:1.25rem;border-radius:20px;box-shadow:0 0 60px rgba(37,99,235,.25)}
-.gate-qr-instruction p{color:rgba(255,255,255,.6);font-size:1rem;font-weight:600;margin-bottom:4px;text-align:center}
-.gate-qr-instruction small{color:rgba(255,255,255,.25);font-size:.75rem;display:block;text-align:center}
-.gate-token{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:.4rem .9rem;font-size:.7rem;color:rgba(255,255,255,.25);font-family:monospace}
-.gate-info-side{display:flex;flex-direction:column;padding:2rem;gap:1rem;overflow:hidden}
-.gate-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
-.gstat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem;text-align:center}
-.gstat .gnum{font-size:2rem;font-weight:800;color:#60a5fa}
-.gstat .glbl{font-size:.68rem;color:rgba(255,255,255,.35);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
-.gate-log-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3)}
-.gate-log{display:flex;flex-direction:column;gap:.5rem;max-height:320px;overflow-y:auto}
-.gate-log::-webkit-scrollbar{width:4px}
-.gate-log::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
-.log-entry{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.65rem .875rem;animation:fadeSlide .3s ease}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.log-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
-.log-name{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.log-meta{font-size:.68rem;color:rgba(255,255,255,.35)}
+/* ═══ GATE KIOSK ═══ */
+#screen-gate{background:linear-gradient(180deg,#0f2144 0%,#1a3a6b 100%);color:#fff;align-items:center;justify-content:center;position:relative;user-select:none}
+.gate-exit-btn{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);padding:.35rem .8rem;border-radius:8px;cursor:pointer;font-size:.72rem;transition:all .2s;z-index:10}
+.gate-exit-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+.gate-kiosk{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1rem;gap:.5rem;width:100%;max-width:520px}
+.gate-kiosk-school{font-size:.85rem;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.3px;margin-bottom:.25rem}
+.gate-kiosk-title{font-size:1.6rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:.1rem}
+.gate-kiosk-sub{font-size:.78rem;color:rgba(255,255,255,.35);margin-bottom:.75rem}
+.gate-big-clock{font-size:5.5rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:4px;color:#fff;line-height:1;text-shadow:0 0 40px rgba(96,165,250,.4)}
+.gate-big-date{font-size:1.1rem;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:1.25rem}
+.gate-qr-card{background:#fff;border-radius:24px;padding:1.5rem 1.5rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.75rem;box-shadow:0 8px 40px rgba(0,0,0,.35)}
+.gate-daily-code{font-size:2rem;font-weight:900;letter-spacing:.5rem;color:#e85d04;font-family:'Courier New',monospace}
+.gate-code-date{font-size:.75rem;color:#94a3b8;font-weight:500}
+.gate-instruction{margin-top:1rem;font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.6}
+.gate-instruction strong{color:#f97316}
+.gate-status-bar{display:flex;align-items:center;gap:8px;background:rgba(5,150,105,.15);border:1px solid rgba(52,211,153,.25);border-radius:20px;padding:.4rem 1rem;font-size:.72rem;color:#6ee7b7;margin-top:.75rem}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0;animation:livepulse 1.5s infinite}
+@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{opacity:.8;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+/* flash overlay support */
 .log-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:20px;display:block;text-align:center}
 .badge-in{background:rgba(5,150,105,.25);color:#34d399;border:1px solid rgba(52,211,153,.3)}
 .badge-out{background:rgba(220,38,38,.2);color:#f87171;border:1px solid rgba(248,113,113,.3)}
-.log-time{font-size:.68rem;color:rgba(255,255,255,.3);margin-top:2px;text-align:right}
 
 /* FLASH */
 .flash-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;background:rgba(0,0,0,.5)}
@@ -236,38 +223,24 @@ td{padding:.5rem .8rem;border-bottom:1px solid var(--border)}
 
 <!-- ═══ GATE DISPLAY ═══ -->
 <div class="screen" id="screen-gate">
-  <div class="gate-header">
-    <div class="gate-header-left">
+  <button class="gate-exit-btn" onclick="goHome()">✕ Exit</button>
+  <div class="gate-kiosk">
+    <div class="gate-kiosk-school" id="gate-school-display">School DTR</div>
+    <div class="gate-kiosk-title">⏱️ Daily Time Record</div>
+    <div class="gate-kiosk-sub">Scan the QR code below to Time In / Time Out</div>
+    <div class="gate-big-clock" id="gate-clock">12:00:00 AM</div>
+    <div class="gate-big-date" id="gate-date">Monday, January 1, 2025</div>
+    <div class="gate-qr-card">
+      <div id="gate-qr-code"></div>
+      <div class="gate-daily-code" id="gate-daily-code">——————</div>
+      <div class="gate-code-date" id="gate-code-date"></div>
+    </div>
+    <div class="gate-instruction">
+      Open <strong>DTR page</strong> on your phone → Login → <strong>Scan this QR code</strong>
+    </div>
+    <div class="gate-status-bar">
       <div class="live-dot"></div>
-      <span class="gate-school-name" id="gate-school-display">School DTR — Gate Attendance</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:1rem">
-      <div>
-        <div id="gate-clock">00:00:00</div>
-        <div id="gate-date"></div>
-      </div>
-      <button class="btn-exit" onclick="goHome()">✕ Exit</button>
-    </div>
-  </div>
-  <div class="gate-body">
-    <div class="gate-qr-side">
-      <div class="gate-qr-label">Scan to Record Attendance</div>
-      <div class="gate-qr-box"><div id="gate-qr-code"></div></div>
-      <div class="gate-qr-instruction">
-        <p>Use your phone to scan this QR code</p>
-        <small>QR refreshes daily — <span id="gate-token-display"></span></small>
-      </div>
-    </div>
-    <div class="gate-info-side">
-      <div class="gate-stats">
-        <div class="gstat"><div class="gnum" id="gs-present">0</div><div class="glbl">Present</div></div>
-        <div class="gstat"><div class="gnum" id="gs-in">0</div><div class="glbl">Time In</div></div>
-        <div class="gstat"><div class="gnum" id="gs-out">0</div><div class="glbl">Time Out</div></div>
-      </div>
-      <div class="gate-log-title">Recent Activity</div>
-      <div class="gate-log" id="gate-log">
-        <div style="color:rgba(255,255,255,.2);font-size:.8rem;text-align:center;padding:2rem 0">No attendance recorded yet today...</div>
-      </div>
+      <span>Connected | Code active for <span id="gate-active-date"></span></span>
     </div>
   </div>
 </div>
@@ -503,10 +476,14 @@ function timeNow(){return new Date().toLocaleTimeString('en-PH',{hour12:true})}
 // ═══ CLOCK ══════════════════════════════════════════════════
 function updateClocks(){
   const now=new Date();
-  const t=now.toLocaleTimeString('en-PH',{hour12:false});
+  const t12=now.toLocaleTimeString('en-PH',{hour12:true});
+  const tHome=now.toLocaleTimeString('en-PH',{hour12:false});
   const d=now.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  ['home-clock','gate-clock'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t});
-  ['home-date','gate-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=d});
+  const hEl=document.getElementById('home-clock'); if(hEl)hEl.textContent=tHome;
+  const hdEl=document.getElementById('home-date'); if(hdEl)hdEl.textContent=d;
+  // Gate kiosk big clock
+  const gcEl=document.getElementById('gate-clock'); if(gcEl)gcEl.textContent=t12;
+  const gdEl=document.getElementById('gate-date'); if(gdEl)gdEl.textContent=d;
 }
 setInterval(updateClocks,1000);
 updateClocks();
@@ -538,23 +515,29 @@ let gatePollTimer=null, gateRefreshTimer=null, gateToken='';
 
 function goGate(){
   showScreen('gate');
-  applySchoolName();
   generateGateQR();
-  updateGateStats();
-  renderGateLog();
-  gatePollTimer=setInterval(()=>{updateGateStats();renderGateLog();},3000);
-  gateRefreshTimer=setInterval(()=>{if(!gateToken.startsWith(today()))generateGateQR();},60000);
+  gateRefreshTimer=setInterval(()=>{if(!gateToken||getDailyCode(today())!==gateToken)generateGateQR();},60000);
 }
 function stopGate(){clearInterval(gatePollTimer);clearInterval(gateRefreshTimer);}
 
 function generateGateQR(){
   const d=today();
-  gateToken=d+'-'+settings.school.replace(/\s+/g,'').toUpperCase().slice(0,6);
-  const url='https://annaselga.github.io/DTR_TSAJINHSNew/?checkin='+encodeURIComponent(gateToken)+'&date='+d;
+  // Generate a random 6-char alphanumeric code seeded by date
+  const seed=d.replace(/-/g,'');
+  let hash=0; for(let i=0;i<seed.length;i++){hash=(hash<<5)-hash+seed.charCodeAt(i);hash|=0;}
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code=''; let h=Math.abs(hash);
+  for(let i=0;i<6;i++){code+=chars[h%chars.length];h=Math.floor(h/chars.length)||Math.abs(hash*(i+7));}
+  gateToken=code;
+  const url='https://annaselga.github.io/DTR_TSAJINHSNew/?checkin='+encodeURIComponent(code)+'&date='+d;
   const el=document.getElementById('gate-qr-code');
   el.innerHTML='';
   new QRCode(el,{text:url,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
-  document.getElementById('gate-token-display').textContent='Valid: '+d;
+  const codeEl=document.getElementById('gate-daily-code'); if(codeEl)codeEl.textContent=code;
+  const dateEl=document.getElementById('gate-code-date'); if(dateEl)dateEl.textContent=d;
+  const activeEl=document.getElementById('gate-active-date'); if(activeEl)activeEl.textContent=d;
+  const schoolEl=document.getElementById('gate-school-display'); if(schoolEl)schoolEl.textContent=settings.school;
+  applySchoolName();
 }
 
 function updateGateStats(){
@@ -597,6 +580,15 @@ function focusPin(){pinValue='';updatePinDisplay();}
 // ═══ CHECK-IN ═══════════════════════════════════════════════
 let checkinCurrentPerson=null;
 
+function getDailyCode(d){
+  const seed=d.replace(/-/g,'');
+  let hash=0; for(let i=0;i<seed.length;i++){hash=(hash<<5)-hash+seed.charCodeAt(i);hash|=0;}
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code=''; let h=Math.abs(hash);
+  for(let i=0;i<6;i++){code+=chars[h%chars.length];h=Math.floor(h/chars.length)||Math.abs(hash*(i+7));}
+  return code;
+}
+
 function initCheckin(){
   const params=new URLSearchParams(window.location.search);
   const token=params.get('checkin');
@@ -606,7 +598,7 @@ function initCheckin(){
   document.getElementById('ci-school-label').textContent=settings.school;
   document.getElementById('ci-date-display').textContent=
     new Date(date+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const expected=date+'-'+settings.school.replace(/\s+/g,'').toUpperCase().slice(0,6);
+  const expected=getDailyCode(date);
   if(token!==expected){
     document.getElementById('ci-form').innerHTML=`<div style="text-align:center;padding:1rem">
       <div style="font-size:3rem">❌</div>
