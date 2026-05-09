@@ -551,18 +551,18 @@ function getQRUrl(){
   return 'https://annaselga.github.io/DTR_TSAJINHSNew/login.html?code='+getDailyCode()+'&date='+today();
 }
 
-// ══ DASHBOARD QR ═══════════════════════════════════════════
-let dashQR=null;
 function makeDashQR(){
   const el=document.getElementById('dash-qr');
   el.innerHTML='';
-  dashQR=new QRCode(el,{text:getQRUrl(),width:180,height:180,correctLevel:QRCode.CorrectLevel.M});
+  // Encode ONLY the daily code — teacher must physically scan with camera
+  dashQR=new QRCode(el,{text:getDailyCode(),width:180,height:180,correctLevel:QRCode.CorrectLevel.M});
   document.getElementById('dash-code').textContent=getDailyCode();
   document.getElementById('dash-code-date').textContent=today();
 }
 function copyQRLink(){
-  navigator.clipboard.writeText(getQRUrl()).then(()=>toast('🔗 Link copied!')).catch(()=>{
-    prompt('Copy this link:',getQRUrl());
+  const url='https://annaselga.github.io/DTR_TSAJINHSNew/login.html';
+  navigator.clipboard.writeText(url).then(()=>toast('🔗 Login page link copied!')).catch(()=>{
+    prompt('Teacher Login Page:',url);
   });
 }
 function printQR(){
@@ -571,7 +571,8 @@ function printQR(){
   document.getElementById('pa-date').textContent=new Date(d+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   document.getElementById('pa-code').textContent=getDailyCode();
   const qrEl=document.getElementById('pa-qr');qrEl.innerHTML='';
-  new QRCode(qrEl,{text:getQRUrl(),width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+  // Print QR with just the code
+  new QRCode(qrEl,{text:getDailyCode(),width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
   setTimeout(()=>window.print(),300);
 }
 
