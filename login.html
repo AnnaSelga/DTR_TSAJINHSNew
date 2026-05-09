@@ -104,6 +104,9 @@ html,body{min-height:100%;background:var(--bg);font-family:'Segoe UI',system-ui,
 .hist-in{color:var(--green);font-size:.78rem;font-weight:700}
 .hist-out{color:var(--red);font-size:.78rem;font-weight:700}
 .hist-hours{font-size:.7rem;color:var(--muted)}
+.sum-card{background:#f8fafc;border-radius:10px;padding:.75rem .5rem;text-align:center;border:1.5px solid var(--border)}
+.sum-card .sn{font-size:1.4rem;font-weight:900}
+.sum-card .sl{font-size:.65rem;color:var(--muted);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
 
 /* SETTINGS */
 .settings-lbl{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem}
@@ -205,6 +208,13 @@ html,body{min-height:100%;background:var(--bg);font-family:'Segoe UI',system-ui,
 
     <!-- HISTORY -->
     <div class="tab-panel" id="panel-history">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.875rem">
+        <label style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Month:</label>
+        <input type="month" id="hist-month" style="padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;outline:none;flex:1" onchange="renderHistory()">
+      </div>
+      <!-- Monthly Summary -->
+      <div id="hist-summary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1rem"></div>
+      <!-- Records List -->
       <div id="history-list"><div class="history-empty">No records yet.</div></div>
     </div>
 
@@ -248,10 +258,8 @@ async function fbSet(path,data){
 const clean=v=>{if(!v)return[];const a=Array.isArray(v)?v:Object.values(v);return a.filter(x=>x&&typeof x==='object');};
 async function loadAll(){
   let [p,r,s,st]=await Promise.all([fbGet('/people'),fbGet('/records'),fbGet('/signups'),fbGet('/settings')]);
-  people =clean(p);
-  records=clean(r);
-  signups=clean(s);
-  settings=st&&st.school?st:{school:'School DTR',password:'admin123'};
+  people=clean(p); records=clean(r); signups=clean(s);
+  settings=st&&st.school?{...{school:'School DTR',schedIn:'07:15',schedOut:'16:00'},...st}:{school:'School DTR',schedIn:'07:15',schedOut:'16:00'};
 }
 async function saveRecs(){await fbSet('/records',records.length?records:null);}
 async function savePpl() {await fbSet('/people', people.length?people:null);}
@@ -328,7 +336,7 @@ function showDashboard(){
 }
 
 function updateStatus(){
-  const recs=records.filter(r=>r.date===todayStr()&&r.personId===currentUser.id);
+  const recs=records.filter(r=>r.date===todayStr()&&(r.personId===currentUser.uid||r.personId===currentUser.id));
   const last=recs[recs.length-1];
   const dot=document.getElementById('sdot'),lbl=document.getElementById('slbl'),st=document.getElementById('stime');
   if(!last){dot.className='status-dot none';lbl.textContent='No record today';st.textContent='';}
@@ -404,17 +412,41 @@ function getDailyCode(){
 async function processCode(code){
   if(code!==getDailyCode()){toast("❌ Invalid or expired code. Scan today's QR code at the gate.");return;}
   showLoad('Recording attendance...');
-  await loadAll();
+
+  // Load records FRESH from Firebase
+  const DB='https://schooldtr-b83bb-default-rtdb.asia-southeast1.firebasedatabase.app';
+  const recsRaw=await fetch(DB+'/records.json').then(r=>r.json()).catch(()=>null);
+  const recsArr=recsRaw?Object.values(recsRaw).filter(x=>x):[];
+
   const t=todayStr();
-  const recs=records.filter(r=>r.date===t&&r.personId===currentUser.id);
-  const last=recs[recs.length-1];
-  const isIn=!last||last.timeOut;
   const time=timeNow();
-  if(isIn)records.push({date:t,personId:currentUser.id,name:currentUser.name,type:currentUser.type,section:currentUser.section||'',timeIn:time,timeOut:null,uid:Date.now()});
-  else last.timeOut=time;
-  await saveRecs();
+
+  // Match by BOTH uid and id to handle any existing records
+  const todayRecs=recsArr.filter(r=>
+    r.date===t&&(r.personId===currentUser.uid||r.personId===currentUser.id)
+  ).sort((a,b)=>a.uid-b.uid);
+
+  const last=todayRecs[todayRecs.length-1];
+  const isIn=!last||last.timeOut;
+  const newUid=Date.now();
+
+  try{
+    if(isIn){
+      // Write new Time In record individually
+      await fetch(DB+'/records/'+newUid+'.json',{
+        method:'PUT',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({uid:newUid,date:t,personId:currentUser.uid||currentUser.id,name:currentUser.name,type:currentUser.type,section:currentUser.section||'',timeIn:time,timeOut:null})
+      });
+    }else{
+      // Update existing record's Time Out
+      await fetch(DB+'/records/'+last.uid+'/timeOut.json',{
+        method:'PUT',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(time)
+      });
+    }
+  }catch(e){hideLoad();toast('❌ Save failed: '+e.message);return;}
+
   hideLoad();
-  // Show result
   document.getElementById('scan-ui').style.display='none';
   const res=document.getElementById('attend-result');
   res.style.display='block';
@@ -441,16 +473,92 @@ function calcHrs(ti,to){
   const d=p(to)-p(ti);return d>0?(d/60).toFixed(1)+' hrs':'';
 }
 async function renderHistory(){
+  // Set default month to current
+  const mInput=document.getElementById('hist-month');
+  if(!mInput.value){
+    const now=new Date();
+    mInput.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  }
+  const [year,month]=mInput.value.split('-').map(Number);
+
   showLoad('Loading history...');
   await loadAll();
   hideLoad();
-  const mine=records.filter(r=>r.personId===currentUser.id).sort((a,b)=>b.date.localeCompare(a.date));
+
+  // Get this teacher's records for selected month
+  const mine=records.filter(r=>{
+    if(!(r.personId===currentUser.uid||r.personId===currentUser.id))return false;
+    const d=new Date(r.date+'T12:00:00');
+    return d.getFullYear()===year&&d.getMonth()+1===month;
+  }).sort((a,b)=>a.date.localeCompare(b.date));
+
+  // Get working days (Mon-Fri) in the month
+  const workDays=[];
+  const today=new Date().toLocaleDateString('en-CA');
+  const daysInMonth=new Date(year,month,0).getDate();
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(dateStr>today)break; // don't count future days
+    const dow=new Date(dateStr+'T12:00:00').getDay();
+    if(dow!==0&&dow!==6)workDays.push(dateStr); // exclude weekends
+  }
+
+  // Load schedule from Firebase settings
+  const sched=settings&&settings.schedIn?settings:{schedIn:'07:15',schedOut:'16:00'};
+  const parse12=t=>{if(!t)return 0;const[tm,ap]=t.split(' ');let[h,m]=tm.split(':').map(Number);if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+m;};
+  const parse24=t=>{if(!t)return 0;const[h,m]=t.split(':').map(Number);return h*60+m;};
+  const schedInMin=parse24(sched.schedIn);
+  const schedOutMin=parse24(sched.schedOut);
+
+  // Compute stats
+  let presentDays=0,lateDays=0,undertimeDays=0,absentDays=0;
+  const recordByDate={};
+  mine.forEach(r=>{recordByDate[r.date]=r;});
+
+  workDays.forEach(d=>{
+    const r=recordByDate[d];
+    if(!r){absentDays++;return;}
+    presentDays++;
+    if(parse12(r.timeIn)>schedInMin)lateDays++;
+    if(r.timeOut&&parse12(r.timeOut)<schedOutMin)undertimeDays++;
+  });
+
+  // Render summary
+  const summary=document.getElementById('hist-summary');
+  summary.innerHTML=`
+    <div class="sum-card"><div class="sn" style="color:var(--green)">${presentDays}</div><div class="sl">Present</div></div>
+    <div class="sum-card"><div class="sn" style="color:#854d0e">${lateDays}</div><div class="sl">Late</div></div>
+    <div class="sum-card"><div class="sn" style="color:var(--red)">${absentDays}</div><div class="sl">Absent</div></div>
+    <div class="sum-card"><div class="sn" style="color:var(--blue)">${undertimeDays}</div><div class="sl">Undertime</div></div>`;
+
+  // Render records
   const wrap=document.getElementById('history-list');
-  if(!mine.length){wrap.innerHTML='<div class="history-empty">No attendance records yet.</div>';return;}
-  wrap.innerHTML=mine.slice(0,30).map(r=>`<div class="hist-item">
-    <div><div class="hist-date">${new Date(r.date+'T12:00:00').toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric',year:'numeric'})}</div><div class="hist-meta">${r.section||''}</div></div>
-    <div style="text-align:right"><div class="hist-in">IN: ${r.timeIn}</div>${r.timeOut?`<div class="hist-out">OUT: ${r.timeOut}</div>`:'<div style="color:var(--muted);font-size:.7rem">Still in</div>'}<div class="hist-hours">${calcHrs(r.timeIn,r.timeOut)}</div></div>
-  </div>`).join('');
+  if(!mine.length&&workDays.length===0){wrap.innerHTML='<div class="history-empty">No working days yet this month.</div>';return;}
+
+  // Show all working days (present + absent)
+  const rows=workDays.map(d=>{
+    const r=recordByDate[d];
+    const dayLabel=new Date(d+'T12:00:00').toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric'});
+    if(!r){
+      return `<div class="hist-item">
+        <div><div class="hist-date">${dayLabel}</div></div>
+        <div style="text-align:right"><span style="background:#fee2e2;color:#991b1b;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px">ABSENT</span></div>
+      </div>`;
+    }
+    const late=parse12(r.timeIn)>schedInMin;
+    const ut=r.timeOut&&parse12(r.timeOut)<schedOutMin;
+    const status=late?'<span style="background:#fef9c3;color:#854d0e;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px">LATE</span>':ut?'<span style="background:#fee2e2;color:#991b1b;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px">UNDERTIME</span>':'<span style="background:#d1fae5;color:#065f46;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px">ON TIME</span>';
+    return `<div class="hist-item">
+      <div>
+        <div class="hist-date">${dayLabel}</div>
+        <div class="hist-meta">IN: <span class="hist-in">${r.timeIn}</span>${r.timeOut?' OUT: <span class="hist-out">'+r.timeOut+'</span>':' <span style="color:var(--muted);font-size:.7rem">No time out</span>'}</div>
+        <div class="hist-hours">${calcHrs(r.timeIn,r.timeOut)}</div>
+      </div>
+      <div>${status}</div>
+    </div>`;
+  });
+
+  wrap.innerHTML=rows.length?rows.join(''):'<div class="history-empty">No records this month.</div>';
 }
 
 // Settings
