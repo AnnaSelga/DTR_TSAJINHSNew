@@ -425,15 +425,35 @@ async function processCode(code){
 
   // GPS check (for GPS and QR+GPS modes)
   if(mode==='qr_gps'||mode==='gps'){
-    if(!navigator.geolocation){toast('❌ GPS not supported on this device.');return;}
-    showLoad('📍 Checking your location...');
-    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:10000})).catch(()=>null);
+    if(!navigator.geolocation){alert('❌ GPS not supported on this device.');return;}
+    showLoad('📍 Getting your location...');
+    const pos=await new Promise(resolve=>{
+      // Try low accuracy first (faster on Android)
+      navigator.geolocation.getCurrentPosition(
+        p=>resolve(p),
+        ()=>{
+          // Retry with high accuracy
+          navigator.geolocation.getCurrentPosition(
+            p=>resolve(p),
+            ()=>resolve(null),
+            {enableHighAccuracy:true,timeout:20000,maximumAge:0}
+          );
+        },
+        {enableHighAccuracy:false,timeout:10000,maximumAge:60000}
+      );
+    });
     hideLoad();
-    if(!pos){toast('❌ Cannot get location. Please enable GPS.');return;}
+    if(!pos){
+      alert('❌ Cannot get your location.\n\nPlease check:\n• Location/GPS is ON in Settings\n• Allow location for your browser:\n  Chrome → Settings → Site Settings → Location → Allow\n• Try again outside for better signal');
+      return;
+    }
     if(settings.gpsLat&&settings.gpsLng){
       const dist=gpsDistance(pos.coords.latitude,pos.coords.longitude,+settings.gpsLat,+settings.gpsLng);
-      const allowed=settings.gpsRadius||100;
-      if(dist>allowed){toast('❌ You are '+Math.round(dist)+'m away. Must be within '+allowed+'m of school.');return;}
+      const allowed=+settings.gpsRadius||100;
+      if(dist>allowed){
+        alert('❌ You are '+Math.round(dist)+'m away from school.\nMust be within '+allowed+'m to record attendance.');
+        return;
+      }
     }
   }
 
