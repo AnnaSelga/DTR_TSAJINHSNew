@@ -944,6 +944,7 @@ function applyVerifyModeUI(){
 }
 
 // ══ SETTINGS (saveSettings) ════════════════════════════════
+async function saveSettings(){
   const school=document.getElementById('s-school').value.trim();
   const pw=document.getElementById('s-pw').value,pw2=document.getElementById('s-pw2').value;
   if(school)settings.school=school;
