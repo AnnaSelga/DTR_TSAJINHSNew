@@ -304,6 +304,34 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
   <!-- DASHBOARD -->
   <div class="adm-tab active" id="at-dash">
 
+    <!-- Verification Mode -->
+    <div class="sched-section">
+      <h3>⚙️ DTR Verification Mode</h3>
+      <p>Choose how employees verify their Time In/Out</p>
+      <div class="fg" style="margin-bottom:.5rem">
+        <select id="verify-mode" onchange="saveVerifyMode()" style="font-size:.9rem;padding:.65rem .9rem">
+          <option value="qr">QR Code only (no GPS check)</option>
+          <option value="qr_gps">QR Code + GPS (most secure)</option>
+          <option value="gps">GPS only (sign-in, no QR)</option>
+          <option value="simple">Simple Sign-in (no verification)</option>
+        </select>
+      </div>
+      <div id="gps-settings" style="display:none">
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;padding:.75rem;font-size:.78rem;color:#1e40af;margin-bottom:.75rem">
+          📍 For GPS mode, set your school's location and allowed radius.
+        </div>
+        <div class="sched-grid">
+          <div class="fg"><label>School Latitude</label><input type="number" id="gps-lat" step="any" placeholder="e.g. 14.3132"></div>
+          <div class="fg"><label>School Longitude</label><input type="number" id="gps-lng" step="any" placeholder="e.g. 120.7641"></div>
+          <div class="fg"><label>Allowed Radius (meters)</label><input type="number" id="gps-radius" placeholder="e.g. 100" value="100"></div>
+          <div style="display:flex;align-items:flex-end;gap:.5rem">
+            <button class="btn btn-p btn-sm" onclick="saveGpsSettings()">💾 Save Location</button>
+            <button class="btn btn-o btn-sm" onclick="getMyLocation()">📍 Use My Location</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Work Schedule -->
     <div class="sched-section">
       <h3>⏰ Work Schedule</h3>
@@ -690,6 +718,7 @@ async function doLogin(){
     ss('s-admin');applyName();
     document.getElementById('sched-in').value=settings.schedIn||'07:15';
     document.getElementById('sched-out').value=settings.schedOut||'16:00';
+    applyVerifyModeUI();
     makeDashQR();
     loadDash();loadNotif();
   }else{document.getElementById('lerr').style.display='block';}
@@ -880,8 +909,41 @@ async function exportCSV(){
   a.download='DTR_'+(from||'all')+'_'+(to||'all')+'.csv';a.click();toast('⬇️ Exported!');
 }
 
-// ══ SETTINGS ═══════════════════════════════════════════════
-async function saveSettings(){
+// ══ VERIFICATION MODE ══════════════════════════════════════
+async function saveVerifyMode(){
+  const mode=document.getElementById('verify-mode').value;
+  settings.verifyMode=mode;
+  document.getElementById('gps-settings').style.display=(mode==='qr_gps'||mode==='gps')?'block':'none';
+  await fbPut('/settings/verifyMode',mode);
+  toast('✅ Verification mode saved!');
+}
+async function saveGpsSettings(){
+  const lat=parseFloat(document.getElementById('gps-lat').value);
+  const lng=parseFloat(document.getElementById('gps-lng').value);
+  const radius=parseInt(document.getElementById('gps-radius').value)||100;
+  if(isNaN(lat)||isNaN(lng)){toast('⚠️ Enter valid coordinates.');return;}
+  settings.gpsLat=lat;settings.gpsLng=lng;settings.gpsRadius=radius;
+  await fbPut('/settings',settings);toast('📍 School location saved!');
+}
+function getMyLocation(){
+  if(!navigator.geolocation){toast('⚠️ GPS not supported.');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    document.getElementById('gps-lat').value=pos.coords.latitude.toFixed(6);
+    document.getElementById('gps-lng').value=pos.coords.longitude.toFixed(6);
+    toast('📍 Got location! Click Save Location.');
+  },()=>toast('❌ Cannot get location. Enable GPS.'));
+}
+function applyVerifyModeUI(){
+  const mode=settings.verifyMode||'qr';
+  const sel=document.getElementById('verify-mode');if(sel)sel.value=mode;
+  const gps=document.getElementById('gps-settings');
+  if(gps)gps.style.display=(mode==='qr_gps'||mode==='gps')?'block':'none';
+  const lat=document.getElementById('gps-lat');if(lat&&settings.gpsLat)lat.value=settings.gpsLat;
+  const lng=document.getElementById('gps-lng');if(lng&&settings.gpsLng)lng.value=settings.gpsLng;
+  const rad=document.getElementById('gps-radius');if(rad&&settings.gpsRadius)rad.value=settings.gpsRadius;
+}
+
+// ══ SETTINGS (saveSettings) ════════════════════════════════
   const school=document.getElementById('s-school').value.trim();
   const pw=document.getElementById('s-pw').value,pw2=document.getElementById('s-pw2').value;
   if(school)settings.school=school;

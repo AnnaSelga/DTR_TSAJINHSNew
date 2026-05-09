@@ -409,8 +409,34 @@ function getDailyCode(){
   return code;
 }
 
+function gpsDistance(lat1,lon1,lat2,lon2){
+  const R=6371000,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
 async function processCode(code){
-  if(code!==getDailyCode()){toast("❌ Invalid or expired code. Scan today's QR code at the gate.");return;}
+  const mode=settings.verifyMode||'qr';
+
+  // QR validation (for QR and QR+GPS modes)
+  if(mode!=='simple'&&mode!=='gps'){
+    if(code!==getDailyCode()){toast("❌ Invalid or expired code. Scan today's QR code.");return;}
+  }
+
+  // GPS check (for GPS and QR+GPS modes)
+  if(mode==='qr_gps'||mode==='gps'){
+    if(!navigator.geolocation){toast('❌ GPS not supported on this device.');return;}
+    showLoad('📍 Checking your location...');
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:10000})).catch(()=>null);
+    hideLoad();
+    if(!pos){toast('❌ Cannot get location. Please enable GPS.');return;}
+    if(settings.gpsLat&&settings.gpsLng){
+      const dist=gpsDistance(pos.coords.latitude,pos.coords.longitude,+settings.gpsLat,+settings.gpsLng);
+      const allowed=settings.gpsRadius||100;
+      if(dist>allowed){toast('❌ You are '+Math.round(dist)+'m away. Must be within '+allowed+'m of school.');return;}
+    }
+  }
+
   showLoad('Recording attendance...');
 
   // Load records FRESH from Firebase
