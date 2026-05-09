@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<link rel="icon" href="taysan san jose.jpg">
 <title>Taysan San Jose INHS — DTR</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -640,8 +639,10 @@ async function doCI(){
   load('Recording attendance...');
   const t=today();
   const allRecs=await fbGet('/records');
-  const recsArr=allRecs?Object.values(allRecs).filter(x=>x):[];
-  const todayRecs=recsArr.filter(r=>r.date===t&&(r.personId===person.uid||r.personId===person.id)).sort((a,b)=>a.uid-b.uid);
+  // Use entries to preserve Firebase key
+  const recsEntries=allRecs?Object.entries(allRecs).filter(([k,v])=>v):[];
+  const recsArr=recsEntries.map(([key,val])=>({...val,_key:key}));
+  const todayRecs=recsArr.filter(r=>r.date===t&&(r.personId===person.uid||r.personId===person.id)).sort((a,b)=>(a.uid||0)-(b.uid||0));
   const last=todayRecs[todayRecs.length-1];
   const isIn=!last||last.timeOut;
   const time=timeNow();
@@ -650,7 +651,9 @@ async function doCI(){
     if(isIn){
       await fbPut('/records/'+uid,{uid,date:t,personId:person.uid,name:person.name,type:person.type,section:person.section||'',timeIn:time,timeOut:null});
     }else{
-      await fbPut('/records/'+last.uid+'/timeOut',time);
+      // Use Firebase key for reliable update
+      const firebaseKey=last._key||last.uid;
+      await fbPut('/records/'+firebaseKey+'/timeOut',time);
     }
   }catch(e){unload();ciErr('Save failed: '+e.message);return;}
   unload();pinV='';dots();

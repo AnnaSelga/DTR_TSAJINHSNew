@@ -459,18 +459,21 @@ async function processCode(code){
 
   showLoad('Recording attendance...');
 
-  // Load records FRESH from Firebase
-  const DB='https://schooldtr-b83bb-default-rtdb.asia-southeast1.firebasedatabase.app';
-  const recsRaw=await fetch(DB+'/records.json').then(r=>r.json()).catch(()=>null);
-  const recsArr=recsRaw?Object.values(recsRaw).filter(x=>x):[];
+  // Load records FRESH from Firebase — use entries to get Firebase keys
+  const DB2='https://schooldtr-b83bb-default-rtdb.asia-southeast1.firebasedatabase.app';
+  const recsRaw=await fetch(DB2+'/records.json').then(r=>r.json()).catch(()=>null);
+
+  // Use Object.entries to preserve Firebase key for updates
+  const recsEntries=recsRaw?Object.entries(recsRaw).filter(([k,v])=>v):[];
+  const recsArr=recsEntries.map(([key,val])=>({...val,_key:key}));
 
   const t=todayStr();
   const time=timeNow();
 
-  // Match by BOTH uid and id to handle any existing records
+  // Match today's records for this person
   const todayRecs=recsArr.filter(r=>
     r.date===t&&(r.personId===currentUser.uid||r.personId===currentUser.id)
-  ).sort((a,b)=>a.uid-b.uid);
+  ).sort((a,b)=>(a.uid||0)-(b.uid||0));
 
   const last=todayRecs[todayRecs.length-1];
   const isIn=!last||last.timeOut;
@@ -478,14 +481,15 @@ async function processCode(code){
 
   try{
     if(isIn){
-      // Write new Time In record individually
-      await fetch(DB+'/records/'+newUid+'.json',{
+      // Write new Time In record
+      await fetch(DB2+'/records/'+newUid+'.json',{
         method:'PUT',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({uid:newUid,date:t,personId:currentUser.uid||currentUser.id,name:currentUser.name,type:currentUser.type,section:currentUser.section||'',timeIn:time,timeOut:null})
       });
     }else{
-      // Update existing record's Time Out
-      await fetch(DB+'/records/'+last.uid+'/timeOut.json',{
+      // Update Time Out using Firebase key (_key) — more reliable than uid field
+      const firebaseKey=last._key||last.uid;
+      await fetch(DB2+'/records/'+firebaseKey+'/timeOut.json',{
         method:'PUT',headers:{'Content-Type':'application/json'},
         body:JSON.stringify(time)
       });
