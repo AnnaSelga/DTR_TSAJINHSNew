@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Gate Display — DTR</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:linear-gradient(160deg,#0d2347 0%,#1a3a6b 60%,#0f2144 100%);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  color:#fff;text-align:center;padding:2rem;
+  user-select:none;
+}
+
+.school-name{font-size:.95rem;color:rgba(255,255,255,.6);font-weight:500;letter-spacing:.3px;margin-bottom:.25rem}
+.title{font-size:1.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:.25rem}
+.subtitle{font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:1.5rem}
+
+.clock{font-size:5.5rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:4px;line-height:1;text-shadow:0 0 40px rgba(96,165,250,.3)}
+.date{font-size:1.1rem;color:rgba(255,255,255,.55);font-weight:500;margin-top:.5rem;margin-bottom:1.75rem}
+
+.qr-card{
+  background:#fff;border-radius:24px;
+  padding:1.5rem 1.5rem 1rem;
+  display:inline-flex;flex-direction:column;align-items:center;gap:.75rem;
+  box-shadow:0 12px 50px rgba(0,0,0,.4);
+}
+.daily-code{font-size:2.2rem;font-weight:900;letter-spacing:.6rem;color:#e85d04;font-family:'Courier New',monospace}
+.code-date{font-size:.78rem;color:#94a3b8;font-weight:500}
+
+.instruction{
+  margin-top:1.25rem;
+  font-size:.88rem;color:rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;
+}
+.instruction strong{color:#f97316}
+.instruction a{color:#60a5fa;text-decoration:none;font-weight:600}
+.instruction a:hover{color:#93c5fd}
+
+.status{
+  margin-top:.875rem;
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(5,150,105,.15);border:1px solid rgba(52,211,153,.25);
+  border-radius:20px;padding:.4rem 1rem;font-size:.72rem;color:#6ee7b7;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{opacity:.8;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="school-name" id="school-name">School DTR</div>
+<div class="title">⏱️ Daily Time Record</div>
+<div class="subtitle">Scan the QR code below to Time In / Time Out</div>
+
+<div class="clock" id="clock">--:--:-- --</div>
+<div class="date" id="date"></div>
+
+<div class="qr-card">
+  <div id="qr-code"></div>
+  <div class="daily-code" id="daily-code">------</div>
+  <div class="code-date" id="code-date"></div>
+</div>
+
+<div class="instruction">
+  📱 Open <a href="login.html" target="_blank"><strong>DTR page</strong></a> on your phone → Login → <strong>Scan this QR code</strong>
+</div>
+
+<div class="status">
+  <div class="dot"></div>
+  <span>Connected | Code active for <span id="active-date"></span></span>
+</div>
+
+<script>
+const DB='https://schooldtr-b83bb-default-rtdb.asia-southeast1.firebasedatabase.app';
+let currentCode='';
+
+// ── CLOCK ────────────────────────────────────────────────
+function tick(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleTimeString('en-PH',{hour12:true});
+  document.getElementById('date').textContent=now.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+setInterval(tick,1000);tick();
+
+// ── DAILY CODE ───────────────────────────────────────────
+function todayStr(){return new Date().toLocaleDateString('en-CA');}
+function getDailyCode(){
+  const d=todayStr(),seed=d.replace(/-/g,'');
+  let h=0;for(let i=0;i<seed.length;i++){h=(h<<5)-h+seed.charCodeAt(i);h|=0;}
+  const C='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='',hh=Math.abs(h);
+  for(let i=0;i<6;i++){c+=C[hh%C.length];hh=Math.floor(hh/C.length)||Math.abs(h*(i+7));}
+  return c;
+}
+
+// ── GENERATE QR ──────────────────────────────────────────
+function makeQR(){
+  currentCode=getDailyCode();
+  const d=todayStr();
+  const el=document.getElementById('qr-code');
+  el.innerHTML='';
+  new QRCode(el,{text:currentCode,width:240,height:240,correctLevel:QRCode.CorrectLevel.M});
+  document.getElementById('daily-code').textContent=currentCode;
+  document.getElementById('code-date').textContent=d;
+  document.getElementById('active-date').textContent=d;
+}
+
+// ── LOAD SCHOOL NAME ─────────────────────────────────────
+async function loadName(){
+  try{
+    const r=await fetch(DB+'/settings/school.json');
+    const name=await r.json();
+    if(name&&typeof name==='string'){
+      document.getElementById('school-name').textContent=name;
+    }
+  }catch(e){}
+}
+
+// ── AUTO REFRESH AT MIDNIGHT ─────────────────────────────
+function scheduleRefresh(){
+  const now=new Date();
+  const midnight=new Date(now);
+  midnight.setHours(24,0,5,0);
+  const ms=midnight-now;
+  setTimeout(()=>{makeQR();scheduleRefresh();},ms);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+loadName();
+makeQR();
+scheduleRefresh();
+</script>
+</body>
+</html>

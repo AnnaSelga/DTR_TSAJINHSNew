@@ -353,6 +353,7 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
           <div class="code-date" id="dash-code-date"></div>
         </div>
         <div class="qr-btns">
+          <button class="btn btn-or btn-sm" onclick="window.open('qr-display.html','_blank')">📺 Open Gate Display</button>
           <button class="btn btn-or btn-sm" onclick="printQR()">🖨️ Print QR</button>
           <button class="btn btn-o btn-sm" onclick="copyQRLink()">🔗 Copy Link</button>
         </div>
@@ -554,16 +555,14 @@ function getQRUrl(){
 function makeDashQR(){
   const el=document.getElementById('dash-qr');
   el.innerHTML='';
-  // Encode ONLY the daily code — teacher must physically scan with camera
-  dashQR=new QRCode(el,{text:getDailyCode(),width:180,height:180,correctLevel:QRCode.CorrectLevel.M});
+  const url='https://annaselga.github.io/DTR_TSAJINHSNew/login.html?code='+getDailyCode()+'&date='+today();
+  dashQR=new QRCode(el,{text:url,width:180,height:180,correctLevel:QRCode.CorrectLevel.M});
   document.getElementById('dash-code').textContent=getDailyCode();
   document.getElementById('dash-code-date').textContent=today();
 }
 function copyQRLink(){
-  const url='https://annaselga.github.io/DTR_TSAJINHSNew/login.html';
-  navigator.clipboard.writeText(url).then(()=>toast('🔗 Login page link copied!')).catch(()=>{
-    prompt('Teacher Login Page:',url);
-  });
+  const url='https://annaselga.github.io/DTR_TSAJINHSNew/login.html?code='+getDailyCode()+'&date='+today();
+  navigator.clipboard.writeText(url).then(()=>toast('🔗 Link copied!')).catch(()=>{prompt('Copy this link:',url);});
 }
 function printQR(){
   const d=today();
@@ -571,8 +570,8 @@ function printQR(){
   document.getElementById('pa-date').textContent=new Date(d+'T12:00:00').toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   document.getElementById('pa-code').textContent=getDailyCode();
   const qrEl=document.getElementById('pa-qr');qrEl.innerHTML='';
-  // Print QR with just the code
-  new QRCode(qrEl,{text:getDailyCode(),width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+  const url='https://annaselga.github.io/DTR_TSAJINHSNew/login.html?code='+getDailyCode()+'&date='+d;
+  new QRCode(qrEl,{text:url,width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
   setTimeout(()=>window.print(),300);
 }
 
