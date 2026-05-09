@@ -492,15 +492,22 @@ async function renderHistory(){
     return d.getFullYear()===year&&d.getMonth()+1===month;
   }).sort((a,b)=>a.date.localeCompare(b.date));
 
-  // Get working days (Mon-Fri) in the month
+  // Get working days (Mon-Fri) in the month — excluding holidays
+  const holidaysRaw=await fbGet('/holidays');
+  const holidayDates=new Set(holidaysRaw?Object.values(holidaysRaw).filter(x=>x).map(h=>h.date):[]);
+  const holidayDesc={};
+  if(holidaysRaw)Object.values(holidaysRaw).filter(x=>x).forEach(h=>{holidayDesc[h.date]=h.desc;});
+
   const workDays=[];
   const today=new Date().toLocaleDateString('en-CA');
   const daysInMonth=new Date(year,month,0).getDate();
   for(let d=1;d<=daysInMonth;d++){
     const dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    if(dateStr>today)break; // don't count future days
+    if(dateStr>today)break;
     const dow=new Date(dateStr+'T12:00:00').getDay();
-    if(dow!==0&&dow!==6)workDays.push(dateStr); // exclude weekends
+    if(dow===0||dow===6)continue; // skip weekends
+    if(holidayDates.has(dateStr))continue; // skip holidays
+    workDays.push(dateStr);
   }
 
   // Load schedule from Firebase settings
@@ -535,14 +542,33 @@ async function renderHistory(){
   const wrap=document.getElementById('history-list');
   if(!mine.length&&workDays.length===0){wrap.innerHTML='<div class="history-empty">No working days yet this month.</div>';return;}
 
-  // Show all working days (present + absent)
-  const rows=workDays.map(d=>{
-    const r=recordByDate[d];
+  // Show all working days + holidays
+  const allDays=[];
+  const tempDate=new Date(year,month-1,1);
+  while(tempDate.getMonth()===month-1){
+    const dateStr=tempDate.toLocaleDateString('en-CA');
+    if(dateStr>today)break;
+    const dow=tempDate.getDay();
+    if(dow!==0&&dow!==6){
+      if(holidayDates.has(dateStr))allDays.push({date:dateStr,type:'holiday'});
+      else allDays.push({date:dateStr,type:'work'});
+    }
+    tempDate.setDate(tempDate.getDate()+1);
+  }
+
+  const rows=allDays.map(({date:d,type})=>{
     const dayLabel=new Date(d+'T12:00:00').toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric'});
+    if(type==='holiday'){
+      return `<div class="hist-item">
+        <div><div class="hist-date">${dayLabel}</div><div style="font-size:.7rem;color:var(--muted)">🎌 ${holidayDesc[d]||'Holiday'}</div></div>
+        <span style="background:#dbeafe;color:#1e40af;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px">HOLIDAY</span>
+      </div>`;
+    }
+    const r=recordByDate[d];
     if(!r){
       return `<div class="hist-item">
         <div><div class="hist-date">${dayLabel}</div></div>
-        <div style="text-align:right"><span style="background:#fee2e2;color:#991b1b;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px">ABSENT</span></div>
+        <span style="background:#fee2e2;color:#991b1b;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px">ABSENT</span>
       </div>`;
     }
     const late=parse12(r.timeIn)>schedInMin;
@@ -557,7 +583,6 @@ async function renderHistory(){
       <div>${status}</div>
     </div>`;
   });
-
   wrap.innerHTML=rows.length?rows.join(''):'<div class="history-empty">No records this month.</div>';
 }
 

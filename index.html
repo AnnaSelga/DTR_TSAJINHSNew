@@ -405,6 +405,24 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
         <button class="btn btn-d btn-sm" onclick="clearAll()">🗑️ Clear All Data</button>
       </div>
     </div>
+
+    <!-- HOLIDAY MANAGEMENT -->
+    <div class="card" style="max-width:420px">
+      <h3>🎌 Holiday Management</h3>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:1rem">Holidays are excluded from absent count. Teachers won't be marked absent on these dates.</p>
+      <div style="display:flex;gap:.5rem;margin-bottom:1rem">
+        <div class="fg" style="flex:1;margin-bottom:0">
+          <label>Date</label>
+          <input type="date" id="h-date">
+        </div>
+        <div class="fg" style="flex:2;margin-bottom:0">
+          <label>Description</label>
+          <input type="text" id="h-desc" placeholder="e.g. Araw ng Kalayaan">
+        </div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="addHoliday()" style="margin-bottom:1rem">➕ Add Holiday</button>
+      <div id="holiday-list"><div class="empty" style="padding:1rem"><p>No holidays added yet.</p></div></div>
+    </div>
   </div>
 </div>
 
@@ -686,7 +704,7 @@ function aTab(name,btn){
   if(name==='pend')loadPending();
   if(name==='ppl')loadPeople();
   if(name==='recs'){setDates();renderRecs();}
-  if(name==='set'){document.getElementById('s-school').value=settings.school||'';}
+  if(name==='set'){document.getElementById('s-school').value=settings.school||'';loadHolidays();}
 }
 
 // ══ DASHBOARD ══════════════════════════════════════════════
@@ -872,8 +890,45 @@ async function saveSettings(){
 }
 async function clearAll(){
   if(!confirm('Delete ALL data?'))return;if(!confirm('FINAL WARNING!'))return;
-  load('...');await Promise.all([fbDel('/people'),fbDel('/records'),fbDel('/signups')]);
+  load('...');await Promise.all([fbDel('/people'),fbDel('/records'),fbDel('/signups'),fbDel('/holidays')]);
   unload();toast('🗑️ Cleared.');
+}
+
+// ══ HOLIDAYS ═══════════════════════════════════════════════
+async function addHoliday(){
+  const date=document.getElementById('h-date').value;
+  const desc=document.getElementById('h-desc').value.trim();
+  if(!date){toast('⚠️ Please select a date.');return;}
+  if(!desc){toast('⚠️ Please add a description.');return;}
+  load('Saving holiday...');
+  await fbPut('/holidays/'+date.replace(/-/g,''),{date,desc});
+  unload();
+  document.getElementById('h-date').value='';
+  document.getElementById('h-desc').value='';
+  loadHolidays();
+  toast('🎌 Holiday added!');
+}
+async function delHoliday(key){
+  if(!confirm('Remove this holiday?'))return;
+  load('...');await fbDel('/holidays/'+key);unload();loadHolidays();toast('🗑️ Holiday removed.');
+}
+async function loadHolidays(){
+  const raw=await fbGet('/holidays');
+  const holidays=raw?Object.values(raw).filter(x=>x):[];
+  const wrap=document.getElementById('holiday-list');
+  if(!holidays.length){
+    wrap.innerHTML='<div class="empty" style="padding:1rem"><p>No holidays added yet.</p></div>';
+    return;
+  }
+  holidays.sort((a,b)=>a.date.localeCompare(b.date));
+  wrap.innerHTML=holidays.map(h=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:.6rem 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:.875rem">${new Date(h.date+'T12:00:00').toLocaleDateString('en-PH',{weekday:'short',month:'long',day:'numeric',year:'numeric'})}</div>
+        <div style="font-size:.75rem;color:var(--muted)">🎌 ${h.desc}</div>
+      </div>
+      <button class="btn btn-d btn-sm" onclick="delHoliday('${h.date.replace(/-/g,'')}')">🗑️</button>
+    </div>`).join('');
 }
 
 // ══ INIT ═══════════════════════════════════════════════════
