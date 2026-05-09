@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTR Form — CS Form No. 48</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Arial',sans-serif;background:#f0f4f8;padding:1rem}
+
+/* CONTROLS */
+.controls{background:#fff;border-radius:12px;padding:1.25rem;margin-bottom:1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.controls h2{width:100%;font-size:1rem;color:#1a4a7a;margin-bottom:.25rem}
+.fg{display:flex;flex-direction:column;gap:4px;min-width:160px}
+.fg label{font-size:.68rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.fg select,.fg input{padding:.55rem .75rem;border:1.5px solid #dde4ef;border-radius:8px;font-size:.875rem;outline:none;color:#0f172a}
+.fg select:focus,.fg input:focus{border-color:#2563eb}
+.btn{padding:.6rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-size:.875rem;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+.btn-p{background:#1a4a7a;color:#fff}
+.btn-or{background:linear-gradient(135deg,#e85d04,#f97316);color:#fff}
+
+/* DTR FORM */
+.dtr-wrap{background:#fff;max-width:900px;margin:0 auto;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.1);border-radius:8px}
+
+.form-header{text-align:center;margin-bottom.5rem}
+.form-header .rep{font-size:.75rem;letter-spacing:.5px}
+.form-header .agency{font-size:.85rem;font-weight:700;margin:.2rem 0}
+.form-header .form-title{font-size:1.1rem;font-weight:900;letter-spacing:2px;margin:.3rem 0}
+.form-header .form-no{font-size:.7rem;color:#666}
+
+.info-row{display:flex;gap:0;margin:.75rem 0;border-bottom:1px solid #000}
+.info-field{flex:1;display:flex;align-items:flex-end;gap:.5rem;padding:.25rem .5rem;border-right:1px solid #000}
+.info-field:last-child{border-right:none}
+.info-field .lbl{font-size:.65rem;white-space:nowrap;font-weight:600}
+.info-field .val{flex:1;border-bottom:1px solid #000;font-size:.8rem;padding-bottom:1px;min-height:18px}
+.info-field .val.bold{font-weight:700}
+
+/* TABLE */
+.dtr-table{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:.5rem}
+.dtr-table th,.dtr-table td{border:1px solid #000;text-align:center;padding:2px 3px}
+.dtr-table th{background:#f5f5f5;font-weight:700;font-size:.68rem}
+.dtr-table .day-col{width:32px;font-weight:700}
+.dtr-table .time-col{width:70px}
+.dtr-table .ut-col{width:42px}
+.dtr-table tr.weekend td{background:#f0f0f0;color:#999}
+.dtr-table tr.holiday td{background:#fff3cd}
+.dtr-table .late{color:#dc2626;font-weight:700}
+.dtr-table .undertime{color:#d97706}
+.dtr-table tr.total-row td{font-weight:700;background:#f5f5f5}
+.dtr-table td.note{font-size:.6rem;text-align:left;padding:2px 4px;color:#555}
+
+/* SIGNATURE */
+.sig-section{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.sig-box{text-align:center}
+.sig-box .sig-line{border-top:1px solid #000;margin-top:2rem;padding-top:.25rem;font-size:.7rem;font-weight:700}
+.sig-box .sig-lbl{font-size:.62rem;color:#555}
+
+.certify-text{font-size:.65rem;margin-top:.75rem;margin-bottom:.25rem;font-style:italic}
+.verified-box{margin-top:.75rem;text-align:center}
+.verified-box .vl{display:inline-block;width:200px;border-top:1px solid #000;margin-top:2rem;padding-top:.25rem;font-size:.7rem;font-weight:700}
+
+/* PRINT */
+@media print{
+  body{background:#fff;padding:0}
+  .controls,.no-print{display:none!important}
+  .dtr-wrap{box-shadow:none;max-width:100%;padding:.5rem}
+  @page{size:A4;margin:1cm}
+}
+</style>
+</head>
+<body>
+
+<!-- CONTROLS -->
+<div class="controls no-print">
+  <h2>📋 Generate CS Form No. 48 — Daily Time Record</h2>
+  <div class="fg">
+    <label>Teacher</label>
+    <select id="sel-teacher">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  <div class="fg">
+    <label>Month</label>
+    <select id="sel-month">
+      <option value="1">January</option><option value="2">February</option>
+      <option value="3">March</option><option value="4">April</option>
+      <option value="5">May</option><option value="6">June</option>
+      <option value="7">July</option><option value="8">August</option>
+      <option value="9">September</option><option value="10">October</option>
+      <option value="11">November</option><option value="12">December</option>
+    </select>
+  </div>
+  <div class="fg">
+    <label>Year</label>
+    <input type="number" id="sel-year" value="2026" min="2024" max="2030" style="width:80px">
+  </div>
+  <button class="btn btn-p" onclick="generateForm()">📋 Generate DTR</button>
+  <button class="btn btn-or" onclick="window.print()">🖨️ Print Form</button>
+</div>
+
+<!-- DTR FORM -->
+<div class="dtr-wrap" id="dtr-form">
+  <div style="text-align:center;padding:3rem;color:#64748b">
+    Select a teacher and month above, then click Generate DTR.
+  </div>
+</div>
+
+<script>
+const DB='https://schooldtr-b83bb-default-rtdb.asia-southeast1.firebasedatabase.app';
+async function fbGet(p){
+  try{const r=await fetch(DB+p+'.json');return await r.json();}catch(e){return null;}
+}
+
+// Set current month/year
+const now=new Date();
+document.getElementById('sel-month').value=now.getMonth()+1;
+document.getElementById('sel-year').value=now.getFullYear();
+
+// Load teachers
+async function loadTeachers(){
+  const raw=await fbGet('/people');
+  const ppl=raw?Object.values(raw).filter(x=>x):[];
+  const sel=document.getElementById('sel-teacher');
+  sel.innerHTML='<option value="">-- Select Teacher --</option>';
+  ppl.sort((a,b)=>a.name.localeCompare(b.name));
+  ppl.forEach(p=>{
+    const o=document.createElement('option');
+    o.value=p.uid;
+    o.textContent=p.name+' ('+p.id+')';
+    o.dataset.name=p.name;
+    o.dataset.id=p.id;
+    o.dataset.type=p.type;
+    o.dataset.sec=p.section||'';
+    sel.appendChild(o);
+  });
+}
+loadTeachers();
+
+// Load settings
+let settings={school:'School DTR',schedIn:'07:15',schedOut:'16:00'};
+async function loadSettings(){
+  const s=await fbGet('/settings');
+  if(s&&s.school)settings={...settings,...s};
+}
+loadSettings();
+
+// Load holidays
+async function loadHolidays(){
+  const raw=await fbGet('/holidays');
+  const h=raw?Object.values(raw).filter(x=>x):[];
+  const set=new Set(h.map(x=>x.date));
+  const desc={};h.forEach(x=>{desc[x.date]=x.desc;});
+  return{set,desc};
+}
+
+// Parse time (12hr format) to minutes
+function toMin(t){
+  if(!t)return null;
+  try{
+    const[tm,ap]=t.split(' ');
+    let[h,m]=tm.split(':').map(Number);
+    if(ap==='PM'&&h!==12)h+=12;
+    if(ap==='AM'&&h===12)h=0;
+    return h*60+m;
+  }catch(e){return null;}
+}
+
+// Parse 24hr to minutes
+function to24(t){
+  if(!t)return null;
+  const[h,m]=t.split(':').map(Number);
+  return h*60+m;
+}
+
+// Format minutes to HH:MM
+function fmtTime(t){
+  if(!t)return '';
+  const[tm,ap]=t.split(' ');
+  const[h,m]=tm.split(':');
+  return h.padStart(2,'0')+':'+m;
+}
+
+// GENERATE FORM
+async function generateForm(){
+  const selEl=document.getElementById('sel-teacher');
+  const uid=selEl.value;
+  if(!uid){alert('Please select a teacher.');return;}
+  const opt=selEl.options[selEl.selectedIndex];
+  const name=opt.dataset.name;
+  const empId=opt.dataset.id;
+  const pos=opt.dataset.type==='teacher'?'Teacher':'Staff';
+  const dept=opt.dataset.sec||'';
+
+  const month=parseInt(document.getElementById('sel-month').value);
+  const year=parseInt(document.getElementById('sel-year').value);
+
+  document.getElementById('dtr-form').innerHTML='<div style="text-align:center;padding:2rem;color:#64748b">Loading records...</div>';
+
+  const [recsRaw,holidays]=await Promise.all([fbGet('/records'),loadHolidays()]);
+  const recs=recsRaw?Object.values(recsRaw).filter(x=>x):[];
+  const schedIn=to24(settings.schedIn)||7*60+15;
+  const schedOut=to24(settings.schedOut)||16*60;
+
+  // Group records by date for this teacher+month
+  const byDate={};
+  recs.forEach(r=>{
+    if(!(r.personId===uid||r.personId===empId))return;
+    const d=new Date(r.date+'T12:00:00');
+    if(d.getMonth()+1!==month||d.getFullYear()!==year)return;
+    if(!byDate[r.date])byDate[r.date]=[];
+    byDate[r.date].push(r);
+  });
+
+  const daysInMonth=new Date(year,month,0).getDate();
+  const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const monthName=monthNames[month-1];
+  const today=new Date().toLocaleDateString('en-CA');
+
+  let totalUTHours=0,totalUTMins=0;
+
+  // Build rows
+  let rows='';
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const dow=new Date(dateStr+'T12:00:00').getDay();
+    const isWeekend=dow===0||dow===6;
+    const isHoliday=holidays.set.has(dateStr);
+    const dayRecs=byDate[dateStr]||[];
+    const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const isFuture=dateStr>today;
+
+    let amArr='',amDep='',pmArr='',pmDep='',utH='',utM='',rowClass='',noteText='';
+
+    if(isWeekend){rowClass='weekend';noteText=dayNames[dow];}
+    else if(isHoliday){rowClass='holiday';noteText='Holiday: '+holidays.desc[dateStr];}
+    else if(!isFuture&&dayRecs.length>0){
+      // Sort by timeIn
+      dayRecs.sort((a,b)=>(toMin(a.timeIn)||0)-(toMin(b.timeIn)||0));
+      const first=dayRecs[0];
+      const last=dayRecs[dayRecs.length-1];
+
+      const timeInMin=toMin(first.timeIn);
+      const timeOutMin=last.timeOut?toMin(last.timeOut):null;
+
+      // AM = before 12:00, PM = after 12:00
+      if(timeInMin!==null){
+        if(timeInMin<12*60){
+          amArr=fmtTime(first.timeIn);
+          if(timeInMin>schedIn){amArr='<span class="late">'+amArr+'</span>';}
+        }else{
+          pmArr=fmtTime(first.timeIn);
+        }
+      }
+      if(timeOutMin!==null){
+        if(timeOutMin>=12*60){
+          pmDep=fmtTime(last.timeOut);
+          if(timeOutMin<schedOut){
+            // Undertime
+            const ut=schedOut-timeOutMin;
+            utH=Math.floor(ut/60)||'';
+            utM=ut%60||'';
+            totalUTHours+=Math.floor(ut/60);
+            totalUTMins+=ut%60;
+            pmDep='<span class="undertime">'+pmDep+'</span>';
+          }
+        }else{
+          amDep=fmtTime(last.timeOut);
+        }
+      }
+    }
+
+    rows+=`<tr class="${rowClass}">
+      <td class="day-col">${d}</td>
+      <td class="time-col">${amArr}</td>
+      <td class="time-col">${amDep}</td>
+      <td class="time-col">${pmArr}</td>
+      <td class="time-col">${pmDep}</td>
+      <td class="ut-col">${utH}</td>
+      <td class="ut-col">${utM}</td>
+      ${noteText?`<td class="note" style="font-size:.58rem;color:#777">${noteText}</td>`:'<td></td>'}
+    </tr>`;
+  }
+
+  // Normalize total undertime
+  totalUTHours+=Math.floor(totalUTMins/60);
+  totalUTMins=totalUTMins%60;
+
+  document.getElementById('dtr-form').innerHTML=`
+    <div class="form-header">
+      <div class="rep">Republic of the Philippines</div>
+      <div class="agency">${settings.school}</div>
+      <div class="form-title">DAILY TIME RECORD</div>
+      <div class="form-no">CS Form No. 48</div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin:.6rem 0;font-size:.75rem">
+      <div style="flex:2;border-bottom:1px solid #000;margin-right:2rem;padding-bottom:2px">
+        <span style="font-weight:700;font-size:.85rem">${name}</span>
+        <div style="font-size:.6rem;color:#666">(Name)</div>
+      </div>
+      <div style="flex:1">
+        <div style="border-bottom:1px solid #000;padding-bottom:2px;font-weight:700">${empId}</div>
+        <div style="font-size:.6rem;color:#666">Employee Number</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:2rem;margin:.4rem 0;font-size:.75rem">
+      <div style="flex:2">
+        <div style="border-bottom:1px solid #000;padding-bottom:2px">${pos}${dept?' — '+dept:''}</div>
+        <div style="font-size:.6rem;color:#666">Position / Department</div>
+      </div>
+      <div style="flex:1">
+        <div style="border-bottom:1px solid #000;padding-bottom:2px;font-weight:700">${monthName} ${year}</div>
+        <div style="font-size:.6rem;color:#666">For the Month of</div>
+      </div>
+    </div>
+
+    <div style="margin:.5rem 0;font-size:.65rem;font-style:italic;color:#555">
+      Official hours for arrival and departure: ${settings.schedIn} — ${settings.schedOut}
+    </div>
+
+    <table class="dtr-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="day-col">Day</th>
+          <th colspan="2">A.M.</th>
+          <th colspan="2">P.M.</th>
+          <th colspan="2">UNDERTIME</th>
+          <th rowspan="2" style="width:80px;font-size:.6rem">Remarks</th>
+        </tr>
+        <tr>
+          <th class="time-col">Arrival</th>
+          <th class="time-col">Departure</th>
+          <th class="time-col">Arrival</th>
+          <th class="time-col">Departure</th>
+          <th class="ut-col">Hours</th>
+          <th class="ut-col">Minutes</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+        <tr class="total-row">
+          <td colspan="5" style="text-align:right;font-size:.7rem;padding-right:.5rem">T O T A L</td>
+          <td>${totalUTHours||''}</td>
+          <td>${totalUTMins||''}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="certify-text">
+      I certify on my honor that the above is a true and correct report of the hours of work performed, record of which was made daily at the time of arrival at and departure from office.
+    </div>
+
+    <div class="sig-section">
+      <div class="sig-box">
+        <div class="sig-line">${name}</div>
+        <div class="sig-lbl">(Employee Signature Over Printed Name)</div>
+      </div>
+      <div class="sig-box">
+        <div style="font-size:.65rem;margin-bottom:.25rem">Verified as to prescribed office hours:</div>
+        <div class="sig-line">&nbsp;</div>
+        <div class="sig-lbl">(In-Charge of Attendance Signature Over Printed Name)</div>
+      </div>
+    </div>
+
+    <div style="margin-top:.75rem;font-size:.6rem;color:#999;text-align:right">
+      Generated: ${new Date().toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'})}
+    </div>`;
+}
+</script>
+</body>
+</html>

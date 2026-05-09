@@ -337,8 +337,16 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
       <h3>⏰ Work Schedule</h3>
       <p>Set the official work hours. Late and undertime are auto-computed based on this.</p>
       <div class="sched-grid">
-        <div class="fg"><label>Time In (Start)</label><input type="time" id="sched-in" value="07:15" onchange="saveSchedule()"></div>
-        <div class="fg"><label>Time Out (End)</label><input type="time" id="sched-out" value="16:00" onchange="saveSchedule()"></div>
+        <div class="fg">
+          <label>Time In (Start) — Morning</label>
+          <input type="time" id="sched-in" value="07:15" onchange="saveSchedule()">
+          <span style="font-size:.7rem;color:var(--muted)">⚠️ Use 24-hr format: 7:15 AM = <strong>07:15</strong>, 8:00 AM = <strong>08:00</strong></span>
+        </div>
+        <div class="fg">
+          <label>Time Out (End) — Afternoon</label>
+          <input type="time" id="sched-out" value="16:00" onchange="saveSchedule()">
+          <span style="font-size:.7rem;color:var(--muted)">⚠️ Use 24-hr format: 4:00 PM = <strong>16:00</strong>, 5:00 PM = <strong>17:00</strong></span>
+        </div>
         <div class="sched-note">ℹ️ Employee is <strong>LATE</strong> if Time In is after the Start time. <strong>UNDERTIME</strong> if Time Out is before End time.</div>
       </div>
     </div>
@@ -415,6 +423,7 @@ td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
         <div style="display:flex;gap:.5rem;align-items:flex-end">
           <button class="btn btn-o btn-sm" onclick="resetF()">🔄 Reset</button>
           <button class="btn btn-sm btn-a" onclick="exportCSV()">⬇ CSV</button>
+          <button class="btn btn-sm btn-or" onclick="window.open('dtr-form.html','_blank')">📋 CS Form 48</button>
         </div>
       </div>
     </div>
